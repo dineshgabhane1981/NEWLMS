@@ -397,6 +397,28 @@
     }
 
     function AddCurriculumToDB() {
-        alert("Submit");
+        var title = $('#CurriculumTitle').val();
+         
+         var table = $('#example').DataTable();
+        var activities = table.rows().data().toArray();
+       
+        $.ajax({
+                type: "POST",
+            url: '@Url.Action("AddCurriculumToDB")',
+                 data: '{selectedType: ' + JSON.stringify(activities) + '}',
+                //data: '{jsonData: ' + JSON.stringify(activities) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    OnSuccess(response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
     }
 </script>

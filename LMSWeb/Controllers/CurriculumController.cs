@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -46,6 +46,15 @@ namespace LMSWeb.Controllers
 
             tblCurriculum objCurriculum = new tblCurriculum();
             return View(objCurriculum);
+        }
+
+      
+        public ActionResult AddCurriculumToDB(string selectedType)
+        {
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = (object[])json_serializer.DeserializeObject(selectedType);
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
     }
 }
