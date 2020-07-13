@@ -1,0 +1,44 @@
+﻿@model LMSBL.DBModels.TblQuiz
+@{
+    ViewBag.Title = "View Quiz";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="launch-label">View Quiz</h4>
+
+@using (Html.BeginForm("SubmitQuiz", "Assignment", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <form class="form-inline">
+        @Html.HiddenFor(model => model.QuizId)
+        @Html.HiddenFor(model => model.hdnResponseData, new { @id = "hdnResponseData" })
+        @Html.HiddenFor(model => model.hdnReviewData, new { @id = "hdnReviewData" })
+        <div class="row col-12">
+            <div class="row col-12">
+                <label class="col-3 p-0">Quiz Name :  </label><div class="col-6 ml-0" style="font-size:20px;color:#00bf6f;">
+                    <b>  @Model.QuizName</b>
+                </div>
+            </div>
+            <div class="row col-12">
+                <label class="col-3 p-0">Quiz Description :  </label>
+                <div class="col-6 ml-0">@Model.QuizDescription</div>
+            </div>
+            <div class="row col-12">
+                <label class="col-3 p-0">Quiz Score :  </label>
+                @{
+//var ScorePercentage = (Model.Score * 100 / Model.TblQuestions.Count);
+
+                    <div class="col-9 ml-0" style="font-size:20px;"><span style="color:#00bf6f;"><b> Scored @Model.Score% of the questions correctly</b></span></div>
+                }
+            </div>
+        </div>       
+
+        <div id="dvQuestions"></div>
+       
+    </form>
+}
+
+<!-- include summernote css/js -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+<script src="~/assets/Quiz.js"></script>

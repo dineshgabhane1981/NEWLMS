@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/CSS/style.css" />
+    <link rel="stylesheet" href="~/CSS/bootstrap/css/bootstrap-steps.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
+
+    <script src="~/assets/SweetAlert.js"></script>
+
+</head>
+<body>
+    @{
+
+        LMSBL.DBModels.TblUser model = new LMSBL.DBModels.TblUser();
+        LMSBL.Repository.UserRepository ur = new LMSBL.Repository.UserRepository();
+        LMSWeb.App_Start.CommonFunctions common = new LMSWeb.App_Start.CommonFunctions();
+        LMSBL.Common.Exceptions newException = new LMSBL.Common.Exceptions();
+
+        model = (LMSBL.DBModels.TblUser)Session["UserSession"];
+        if (model == null)
+        {
+
+            var password = common.GetEncodePassword("123456");
+            model = ur.IsValidUser("j.panhuis@chello.nl", password, Request.Url.Host);
+        }
+
+        if (model == null)
+        {
+            Response.Redirect(Url.Action("Logout", "Login", null));
+        }
+        var baseURL = model.TenantURL;
+        var logo = "https://" + baseURL + "/assets/images/rt_logo.png";
+        if (!string.IsNullOrEmpty(model.TenantLogo))
+        {
+            logo = model.TenantLogo;
+        }
+        var fullname = model.FirstName + " " + model.LastName;
+        var helpDetails = "support@rockettech.co.nz \n Phone No: +919834545425";
+        var profileImage = model.profileImage;
+    }
+
+    <nav class="navbar navbar-expand-lg navbar-light main-nav">
+        @if (Request.Url.Host == "quiz.rockettech.co.nz" && model.RoleId == 3)
+        {
+            <a class="navbar-brand" href="@Url.Action("MyAssignments", "Assignment")"><img src="@logo" width="246" height="61"></a>
+        }
+        else
+        {
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")"><img src="@logo" width="246" height="61"></a>
+        }
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <ul class="nav navbar-nav navbar-right mt-lg-3">
+                @if (Request.Url.Host == "quiz.rockettech.co.nz" && model.RoleId == 3)
+                {
+
+                }
+                else
+                {
+                    <li class="nav-item @Html.IsSelected(controller: "Home", action: "Index")">
+                        <i class="fas fa-home"></i>
+                        <a class="nav-link @Html.IsSelected(controller: "Home", action: "Index")" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                }
+
+
+
+                @if (model.RoleId == 3)
+                {
+                    <li class="nav-item @Html.IsSelected(controller:"Assignment",action: "MyAssignments")">
+                        <i class="fas fa-book-open"></i>
+                        <a class="nav-link @Html.IsSelected(controller:"Assignment",action: "MyAssignments")" href="@Url.Action("MyAssignments", "Assignment")">My Learning</a>
+                    </li>
+                    <li class="nav-item @Html.IsSelected(controller:"Reports",action: "Index,DetailReport,AttemptReport")">
+                        <i class="fas fa-poll"></i>
+                        <a class="nav-link @Html.IsSelected(controller:"Reports",action: "Index,DetailReport,AttemptReport")" href="@Url.Action("Index", "Reports")">Reports</a>
+                    </li>
+                }
+                @if (model.RoleId == 2)
+                {
+
+                    <li class="nav-item @Html.IsSelected(controller:"User",action: "Index,AddUser,Upload")">
+                        <i class="fas fa-users"></i>
+                        <a class="nav-link @Html.IsSelected(controller:"User",action: "Index,AddUser,Upload")" href="@Url.Action("Index", "User")">Users</a>
+                    </li>
+                    <li class="dropdown mr-4">
+                        <a class="nav-link @Html.IsSelected(controller:"Courses,Quiz,Forum,Curriculum",action: "Index")" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-book-open"></i> Learning</a>
+                        <div class="dropdown-menu create-learning" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="@Url.Action("Index", "Courses")">
+                                <img class="course-img" src="~/assets/images/course.png" width="20%" />
+                                Course
+                            </a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Quiz")">
+                                <img class="quiz-image" src="~/assets/images/quiz.png" width="20%" />
+                                Quiz
+                            </a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Forum")">
+                                @*<i class="fas fa-comments" style="width:30%;" aria-hidden="true"></i>*@
+                                <img class="quiz-image" src="~/assets/images/Discussion.png" width="20%" />
+                                Forum
+                            </a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Curriculum")">
+                                @*<i class="fas fa-comments" style="width:30%;" aria-hidden="true"></i>*@
+                                <img class="quiz-image" src="~/assets/images/Curriculum-Icon.png" width="20%" />
+                                Curriculum
+                            </a>
+                        </div>
+                    </li>
+                    <li class="dropdown mr-4">
+                        <a class="nav-link @Html.IsSelected(controller:"Reports",action: "LearningCompletionReport,UserReport,UserProgressReport,LearningProgressCompletionReport,HighScoreUsersReport")" href="#" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-poll"></i> Reports</a>
+                        <div class="dropdown-menu create-learning" aria-labelledby="dropdownMenuButton1">
+                            <a class="dropdown-item" href="@Url.Action("LearningCompletionReport", "Reports")">
+                                <i class="fas fa-book-open"></i>
+                                Learning
+                            </a>
+                            <a class="dropdown-item" href="@Url.Action("UserReport", "Reports", new { isActive = false })">
+                                <i class="fas fa-users"></i>
+                                User
+                            </a>
+                        </div>
+                    </li>
+                }
+                @if (model.RoleId == 1)
+                {
+                }
+                <li class="nav-item mobile-hide">
+                    <a class="nav-link" href="#"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       title="@Html.Raw(helpDetails)">
+                        <i class="far fa-question-circle"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item user-details">
+                    <span class="user-name">@fullname</span>
+                    @*<p class="user-role">Student</p>*@
+                </li>
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if (profileImage != "")
+                        {
+                            <img id="user_img" class="fas fa-user-circle mb-4" width="20" height="20" src="@profileImage" />
+                        }
+                        else
+                        {
+                            <i class="fas fa-user-circle font24"></i>
+                        }
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right user-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="@Url.Action("MyProfile", "Account")"><i class="fas fa-user"></i> My Profile</a>
+                        <a class="dropdown-item" href="@Url.Action("Logout", "Login")"><i class="fas fa-power-off red-color"></i> Log Out</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div>
+        <div id="divLoading" style="display:none; margin-top: -9em;margin-left: -15em; position: fixed; left: 50%; top: 50%; width: 30em; height: 18em;  z-index: 30001; opacity: 0.8;">
+            <p style="position: absolute; color: White; top: 50%; left: 50%;">               
+                <img src="~/assets/images/preloader.gif">
+            </p>
+        </div>
+         
+        @RenderBody()
+    </div>
+    <footer class="footer">
+        <div class="container-fluid">
+            <span class="text-muted">&copy; 2019 - 2020 Rocket Technologies Limited</span>
+            <div class="terms-policy">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="@Url.Action("TermsAndConditions", "Home")" target="_blank">Terms & Conditions</a></li>
+                    <li class="list-inline-item"><a href="https://www.rockettech.co.nz/#about" target="_blank">About us</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </footer>
+    <script src="~/Scripts/slimscroll/jquery.slimscroll.js"></script>
+    <script src="~/Scripts/lib/main-js.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

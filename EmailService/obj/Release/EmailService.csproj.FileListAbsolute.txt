@@ -1,0 +1,16 @@
+E:\Projects\V2\LMS\EmailService\bin\Release\EmailService.exe.config
+E:\Projects\V2\LMS\EmailService\bin\Release\EmailService.exe
+E:\Projects\V2\LMS\EmailService\bin\Release\EmailService.pdb
+E:\Projects\V2\LMS\EmailService\bin\Release\LMSBL.dll
+E:\Projects\V2\LMS\EmailService\bin\Release\EntityFramework.dll
+E:\Projects\V2\LMS\EmailService\bin\Release\System.Web.Mvc.dll
+E:\Projects\V2\LMS\EmailService\bin\Release\LMSBL.pdb
+E:\Projects\V2\LMS\EmailService\bin\Release\LMSBL.dll.config
+E:\Projects\V2\LMS\EmailService\bin\Release\EntityFramework.xml
+E:\Projects\V2\LMS\EmailService\bin\Release\System.Web.Mvc.xml
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.csprojAssemblyReference.cache
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.ProjectInstaller.resources
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.csproj.GenerateResource.cache
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.csproj.CopyComplete
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.exe
+E:\Projects\V2\LMS\EmailService\obj\Release\EmailService.pdb

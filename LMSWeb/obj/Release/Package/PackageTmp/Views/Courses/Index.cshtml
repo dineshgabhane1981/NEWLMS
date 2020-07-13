@@ -1,0 +1,129 @@
+﻿@model List<LMSBL.DBModels.tblCourse>
+
+@{
+    ViewBag.Title = "Get All Courses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row pt-3">
+    <div class="col-6 col-sm-6 col-md-6">
+
+    </div>
+    <div class="form-inline form-group col-4 col-sm-4 col-md-4">
+
+    </div>
+    <div class="form-group col-2 col-sm-2 col-md-2">
+        <button type="button" onclick="location.href='@Url.Action("AddCourse", "Courses")';return false;"
+            class="btn pl-5 pr-5 text-center btn-warning pull-right">Add</button>
+    </div>
+</div>
+<table  class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Course Name
+            </th>
+            <th>
+                Course Description
+            </th>
+            <th>
+                Course Type
+            </th>
+            <th>
+                Course URL
+            </th>
+            <th>
+                Created Date
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentModuleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentModuleDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentModuleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentModuleURL)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.createdOn)
+            </td>
+            
+
+            <td>
+                <button type="button" onclick="location.href='@Url.Action("EditCourse", "Courses",new { id = item.ContentModuleId })';return false;"
+                        class="btn text-center btn-warning">
+                    Edit
+                </button>
+                @*<button type="button" class="btn  text-center btn-warning"
+                onclick="ConfirmationAlert('@item.CourseName','@item.CourseId',true)">
+                Delete
+            </button>*@
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+<script type="text/javascript">
+    function ConfirmationAlert(Name, Id, IsActive) {
+        debugger;
+        var data = {
+            id: Id
+        }
+        var strDelete = "";
+        if (IsActive == true) {
+            strDelete = "Deactivate";
+        }
+        else {
+            strDelete = "Activate";
+        }
+        swal({
+            title: "Are you sure you want to " + strDelete + " Course " + Name + " ?",
+            text: "You are going to " + strDelete + " the tenant",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: strDelete,
+            cancelButtonText: "Cancel",
+
+        }).then((isConfirm) => {
+            if (isConfirm.value == true) {
+                $.ajax({
+                    url: "/Courses/DeleteCourse",
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        var baseUrl = "/Courses/Index";
+                        if (result == 1) {
+                            window.location.href = baseUrl
+                        }
+                        else {
+                            alert('Something went wrong');
+                        }
+
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+
+            } else {
+                swal("Cancelled", "Cancelled", "error");
+            }
+        });
+    }
+</script>
