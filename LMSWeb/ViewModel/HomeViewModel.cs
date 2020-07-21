@@ -13,6 +13,7 @@ namespace LMSWeb.ViewModel
         public int NotStartedCount { get; set; }
         public int InProgressCount { get; set; }
         public int CompletedCount { get; set; }
+        public tblForum announcement { get; set; }
 
         public List<HomeModel> lstActivities { get; set; }
     }

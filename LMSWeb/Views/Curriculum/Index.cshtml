@@ -144,18 +144,39 @@
     <div class="modal-content">
         @*<span class="close">&times;</span>*@
         
-        <div id="dvAxtivities">
+        <div id="dvAxtivities" >
             Select User/s
             <select id="lstUsers" name="lstUsers" size="5" multiple>
-            </select>
-            <br /> <br /> <br />
-            <button type="button" id="btnAddActivityToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+            </select><br />
+            Due Date <input type="datetime" id="dtDueDate" class="input100 datepicker" />
+            <br /> <br /> 
+            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
             <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
         </div>
-        <div style="float:left;">fgasd sd fasdf asdf sdafasd fasd fasdfasdf sdf sdf sd fsdf sdaf sda </div>
+        <div>
+            <div class="row mt-3" id="dvAssignedUsers">
+                <div class="table-responsive">
+                    <table id="tblAssignedUsers" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>User Name</th>
+                                <th>User Id</th>
+                                <th>Due Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 <script>
+    var assignedUsers = [];
     $(document).ready(function () {
         $('#activityTable').DataTable({
             "aaSorting": [[0, "desc"]],
@@ -190,6 +211,36 @@
             table.draw();
             table.rowReordering();
         });
+
+        
+
+        $('#dtDueDate').datepicker({
+            format: 'mm/dd/yyyy',
+            showWeek: true
+        }).datepicker("setDate", new Date());
+
+        
+        var table = $('#tblAssignedUsers').DataTable({
+            "data": assignedUsers,
+            "paging": false,
+               "columns": [
+                 { data: "index" },
+                   { data: "UserName" },
+                 { data: "DueDate" },
+                 { data: "UserId" },                 
+                 { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [2] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+        $('#tblAssignedUsers_filter').hide();
+
+        $('#btnAddUsersToList').on("click", function () {
+             AddUsersToList();
+         });
 
 });
      
@@ -239,6 +290,81 @@
             $("#dvAxtivities").show();
     }
 
+    function AddUsersToList() {
+        var isSelected = false;
+        var status = true;
+        var srNo = assignedUsers.length;
+        $('#lstAxtivities option').each(function(index) {
+          if(($(this).is(':selected')))
+          {
+              var oldValue = this.value;
+
+              $.each(assignedUsers, function (index, value) {
+
+                  if (value.UserId == oldValue) {
+                      status = false;
+                  }
+
+              });
+              if (status) {
+                  srNo++;
+                  optionItem = {}
+                  optionItem["index"] = srNo;
+                  optionItem["UserName"] = this.text;
+                  optionItem["DueDate"] = $('#dtDueDate').val();
+                  optionItem["UserId"] = this.value;
+                  optionItem["delete"] = "<input type='button' id='" + this.value + "' onclick='DeleteActivity(" + this.value + ")' value='Delete'>";
+                  assignedUsers.push(optionItem);
+                  isSelected = true;
+
+              }
+          }
+
+        });
+        if (!status) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'This Activity already added to Curriculum!'
+            })
+        }
+        else if (!isSelected) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select Activity!'
+            })
+        }
+        else {
+           var table1 = $('#example').DataTable();
+            table1.destroy();
+
+           var table = $('#example').DataTable({
+               "data": assignedUsers,
+               "paging": false,
+               "columns": [
+                 { data: "index" },
+                   { data: "activityText" },
+                 { data: "activityType" },
+                 { data: "activityId" },
+                 { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+            $('#example_filter').hide();
+            Swal.fire(
+                    'Added!',
+                    'Activity Added successfully!',
+                    'success'
+                )
+        }
+
+        console.log(assignedUsers);
+    }
 
     </script>
 

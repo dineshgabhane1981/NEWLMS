@@ -87,8 +87,6 @@ namespace LMSWeb.Controllers
             }
 
 
-
-
             return Json(userItems, JsonRequestBehavior.AllowGet);
         }
 

@@ -837,6 +837,7 @@
     <Content Include="Views\Curriculum\Index.cshtml" />
     <Content Include="Views\Curriculum\testing.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
+    <Content Include="Views\Forum\ForumList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -101,5 +101,15 @@ namespace LMSWeb.Controllers
             }
 
         }
+
+
+        public ActionResult ForumList()
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            var lstForum = fr.GetAllForumsForLearner(sessionUser.UserId);
+            return View(lstForum);
+        }
+
+
     }
 }

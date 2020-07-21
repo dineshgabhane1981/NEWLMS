@@ -17,6 +17,7 @@ namespace LMSWeb.Controllers
     {
         Exceptions newException = new Exceptions();
         HomeRepository hm = new HomeRepository();
+        ForumRepository fm = new ForumRepository();
         public ActionResult Index()
         {
             try
@@ -41,7 +42,12 @@ namespace LMSWeb.Controllers
                     homeViewModel.CompletedCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus== "Completed");
                     homeViewModel.InProgressCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus == "InProgress");
                     homeViewModel.NotStartedCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus == "Not Started");
-                     
+
+                    var forum = fm.GetForumByForumType(model.TenantId);
+                    homeViewModel.announcement = forum[0];
+
+
+
                     return View("LearnerHome", homeViewModel);
                 }                
             }

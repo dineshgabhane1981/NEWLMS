@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using LMSBL.Common;
 using System.IO;
 using System.Configuration;
+using System.Web.UI;
 
 namespace LMSBL.Repository
 {
@@ -118,9 +119,82 @@ namespace LMSBL.Repository
         {
             try
             {
+                string result = string.Empty;
                 db.parameters.Clear();
                 db.AddParameter("@forumId", SqlDbType.Int, forumId);
                 DataSet ds = db.FillData("sp_ForumGetById");
+                List<tblForum> forumDetails = ds.Tables[0].AsEnumerable().Select(dr => new tblForum
+                {
+                    ForumId = Convert.ToInt32(dr["ForumId"]),
+                    Title = Convert.ToString(dr["Title"]),
+                    Description = Convert.ToString(dr["Description"]),
+                    ForumType = Convert.ToInt32(dr["ForumType"]),
+                    CreatedBy = Convert.ToInt32(dr["CreatedBy"]),
+                    IsBrodcast = Convert.ToBoolean(dr["IsBrodcast"]),
+                    CreatedDate = Convert.ToDateTime(dr["CreatedDate"]),
+                    TenantId = Convert.ToInt32(dr["TenantId"])
+
+                }).ToList();
+                return forumDetails;
+
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public List<tblForum> GetForumByForumType(int tenantId)
+        {
+            try
+            {
+                string result = string.Empty;
+                db.parameters.Clear();
+                //db.AddParameter("@forumType", SqlDbType.Int, forumType);
+                db.AddParameter("@tenantId",SqlDbType.Int, tenantId);
+                //db.AddParameter("@isBrodcast",SqlDbType.Int,isBrodcast);
+                DataSet ds = db.FillData("sp_GetForumByForumType");
+                List<tblForum> forumsDetailsByType = ds.Tables[0].AsEnumerable().Select(dr => new tblForum
+                {
+                    ForumId = Convert.ToInt32(dr["ForumId"]),
+                    Title = Convert.ToString(dr["Title"]),
+                    Description = Convert.ToString(dr["Description"]),
+                    ForumType = Convert.ToInt32(dr["ForumType"]),
+                    CreatedBy = Convert.ToInt32(dr["CreatedBy"]),
+                    IsBrodcast = Convert.ToBoolean(dr["IsBrodcast"]),
+                    CreatedDate = Convert.ToDateTime(dr["CreatedDate"]),
+                    TenantId = Convert.ToInt32(dr["TenantId"])
+                }).ToList();
+                return forumsDetailsByType;
+                //if (ds != null)
+                //{
+                //    if (ds.Tables.Count > 0)
+                //    {
+                //        if (ds.Tables[0].Rows.Count > 0)
+                //        {
+                //            result = ds.Tables[0].Rows[0][2].ToString();
+                //        }
+                //    }
+                //}
+                //return result;
+
+            }
+            catch(Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+
+            }
+        }
+
+        public List<tblForum> GetAllForumsForLearner(int userId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@Userid", SqlDbType.Int, userId);
+                DataSet ds = db.FillData("sp_ViewAllAssignedForum");
                 List<tblForum> forumDetails = ds.Tables[0].AsEnumerable().Select(dr => new tblForum
                 {
                     ForumId = Convert.ToInt32(dr["ForumId"]),
