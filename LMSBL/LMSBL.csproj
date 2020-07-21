@@ -69,6 +69,7 @@
     <Compile Include="DBModels\TblAssignmentAndTracking.cs" />
     <Compile Include="DBModels\tblCourse.cs" />
     <Compile Include="DBModels\tblCurriculum.cs" />
+    <Compile Include="DBModels\tblCurriculumActivity.cs" />
     <Compile Include="DBModels\tblEmails.cs" />
     <Compile Include="DBModels\tblForum.cs" />
     <Compile Include="DBModels\tblForumReply.cs" />

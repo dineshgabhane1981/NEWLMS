@@ -1,0 +1,429 @@
+﻿﻿@model LMSBL.DBModels.tblCurriculum
+
+@{
+    ViewBag.Title = "testing";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<style>
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    th.hide_me, td.hide_me {
+        display: none;
+    }
+</style>
+<!—Jquery Datatable css -->
+
+<!—Jquery Js script -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!—Jquery Datatable js script -->
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css" />
+
+
+@Html.AntiForgeryToken()
+
+<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+    @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Message"])))
+    {
+        if (Convert.ToString(TempData["Message"]) == "1")
+        {
+            <script>swal.fire("Forum Saved Successfully")
+                        .then((value) => {
+                            window.location.href = "Index";
+                        });</script>
+        }
+        else
+        {
+            <script>swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There is problem in saving Forum!'
+                    })</script>
+        }
+
+    }
+    <div class="row justify-content-center h-100">
+        <div class="col align-self-center add-user-section ">
+            <div class="col">
+                @if (Model.CurriculumId == 0)
+                {
+                    <h4 class="mt-3 ml-2 mb-3">New Curriculum</h4>
+                }
+                else
+                {
+                    <h4 class="mt-3 ml-2 mb-3">Edit Curriculum</h4>
+                }
+            </div>
+            <div class="row pt-5 pl-4">
+                <div class="col-sm-6">
+
+                    @Html.HiddenFor(model => model.CurriculumId)
+
+                    @Html.TextBoxFor(model => model.CurriculumTitle, new { @class = "input100", placeholder = "Curriculum Title" })
+
+                    <button type="button" id="btnAddActivity" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add Activity</button>
+                </div>
+
+
+
+
+
+            </div>
+            <div class="row mt-3" id="dvActivityData">
+                <div class="table-responsive">
+                    <table id="example" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Activity Text</th>
+                                <th>Activity Type</th>
+                                <th>Activity Id</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br />
+            <div class="row justify-content-end pr-4">
+                <button type="submit" id="btnCurriculumSubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                <button type="submit" onclick="location.href='@Url.Action("Index", "Curriculum")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        @*<span class="close">&times;</span>*@
+        Activity Type
+        <select id="lstActivityType" class="input100">
+            <option value="0">Select</option>
+            <option value="1">Course</option>
+            <option value="2">Survey</option>
+            <option value="3">Forum</option>
+        </select>
+        <div id="dvAxtivities">
+            Select activities
+            <select id="lstAxtivities" name="lstAxtivities" size="5" multiple>
+            </select>
+            <br /> <br /> <br />
+            <button type="button" id="btnAddActivityToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+        </div>
+    </div>
+
+</div>
+
+
+<button type="button" id="btnExtract">Extract Records</button>
+
+
+<script>
+
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("btnAddActivity");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+
+    var btnClose = document.getElementById("btnPopupClose");
+
+    btnClose.onclick = function() {
+          modal.style.display = "none";
+    }
+
+    var curriculumActivities = [];
+    var activityType = "";
+    $(document).ready(function () {
+
+        $("#dvAxtivities").hide();
+        $("#lstActivityType").on("change", function () {
+            var selectedType = $("#lstActivityType option:selected").val();
+            if (selectedType == 0) {
+                $("#dvAxtivities").hide();
+            }
+            else {
+
+                ShowData(selectedType);
+                SetType(selectedType);
+            }
+        });
+
+         $('#btnAddActivityToList').on("click", function () {
+             AddActivityToList();
+         });
+
+        $('#btnCurriculumSubmit').on("click", function () {
+             AddCurriculumToDB();
+         });
+
+
+
+        var jsonString = JSON.stringify(curriculumActivities);
+
+        var table = $('#example').DataTable({
+            "data": curriculumActivities,
+            "paging": false,
+               "columns": [
+                 { data: "index" },
+                 { data: "activityText" },
+                 { data: "activityType" },
+                 { data: "activityId" },
+                 { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+        $('#example_filter').hide();
+
+        $('#btnExtract').on("click", function () {
+            ExtractRecordInList();
+        });
+
+    });
+
+     function ShowData(selectedType) {
+            $.ajax({
+                type: "POST",
+                 url: '@Url.Action("GetActivities")',
+                data: '{selectedType: ' + JSON.stringify(selectedType) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    OnSuccess(response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
+        }
+    function OnSuccess(response) {
+            var data = response;
+            $('[id*=lstAxtivities]').empty();
+            var listBox = $('[id*=lstAxtivities]');
+            $.map(data, function (item) {
+                var option = document.createElement('option');
+                option.text = item.Name;
+                option.value = item.Value;
+                listBox[0].append(option);
+            });
+            $("#dvAxtivities").show();
+    }
+
+    function SetType(selectedType) {
+        if (selectedType == "1") {
+            activityType="Course"
+        }
+        if (selectedType == "2") {
+            activityType="Survey"
+        }
+        if (selectedType == "3") {
+            activityType="Forum"
+        }
+    }
+
+    function AddActivityToList() {
+        var isSelected = false;
+        var srNo = curriculumActivities.length;
+        $('#lstAxtivities option').each(function(index) {
+          if(($(this).is(':selected')))
+          {
+              srNo++;
+              optionItem = {}
+              optionItem["index"] = srNo;
+              optionItem["activityText"] = this.text;
+              optionItem["activityType"] = activityType;
+              optionItem["activityId"] = this.value;
+              optionItem["delete"] = "<input type='button' id='" + this.value + "' onclick='DeleteActivity(" +this.value + ")' value='Delete'>";
+              curriculumActivities.push(optionItem);
+              isSelected = true;
+          }
+
+        });
+        if (!isSelected) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select Activity!'
+            })
+        }
+        else {
+           var table1 = $('#example').DataTable();
+            table1.destroy();
+
+           var table = $('#example').DataTable({
+               "data": curriculumActivities,
+               "paging": false,
+               "columns": [
+                 { data: "index" },
+                   { data: "activityText" },
+                 { data: "activityType" },
+                 { data: "activityId" },
+                 { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+        $('#example_filter').hide();
+        }
+        console.log(curriculumActivities);
+    }
+
+    function DeleteActivity(id) {
+
+         Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this Activity from Curriculum!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                 var table1 = $('#example').DataTable();
+                var data = table1.rows().data().toArray();
+                curriculumActivities = data;
+                curriculumActivities = curriculumActivities.filter(function (item) {
+                return item.activityId != id;
+                })
+
+                $.each(curriculumActivities, function (index, value) {
+
+                    value.index = index+1;
+
+                });
+
+        var table1 = $('#example').DataTable();
+            table1.destroy();
+
+           var table = $('#example').DataTable({
+               "data": curriculumActivities,
+               "paging": false,
+               "columns": [
+                 { data: "index" },
+                   { data: "activityText" },
+                 { data: "activityType" },
+                 { data: "activityId" },
+                 { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+        $('#example_filter').hide();
+                Swal.fire(
+                    'Deleted!',
+                    'Activity has been deleted.',
+                    'success'
+                )
+            }
+        })
+
+
+
+    }
+
+    function ExtractRecordInList() {
+        var table = $('#example').DataTable();
+        var data = table.rows().data().toArray();
+        console.log(data)
+    }
+
+    function AddCurriculumToDB() {
+        var title = $('#CurriculumTitle').val();
+         
+         var table = $('#example').DataTable();
+        var activities = table.rows().data().toArray();
+        console.log(JSON.stringify(activities))
+
+
+
+        //var newData = '[{"index":1,"activityText":"Couese by Baji","activityType":"Course","activityId":"5"},{"index":2,"activityText":"Course By Dinesh","activityType":"Course","activityId":"4"}]';
+       //alert(111)
+        $.ajax({
+                type: "POST",
+            url: '@Url.Action("AddCurriculumToDB")',
+                 data: '{selectedType: ' + JSON.stringify(activities) + '}',
+                //data: '{jsonData: ' + JSON.stringify(activities) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    OnSuccess(response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
+    }
+</script>

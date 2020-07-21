@@ -14,6 +14,6 @@ namespace LMSBL.DBModels
         public int CreatedBy { get; set; }
         public int TenantId { get; set; }
 
-
+        public virtual ICollection<tblCurriculumActivity> TblCurriculumActivity { get; set; }
     }
 }

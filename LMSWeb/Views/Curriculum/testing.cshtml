@@ -73,18 +73,20 @@
     {
         if (Convert.ToString(TempData["Message"]) == "1")
         {
-            <script>swal.fire("Forum Saved Successfully")
-                        .then((value) => {
-                            window.location.href = "Index";
-                        });</script>
+            <script>
+                swal.fire("Forum Saved Successfully")
+                    .then((value) => {
+                        window.location.href = "Index";
+                    });</script>
         }
         else
         {
-            <script>swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'There is problem in saving Forum!'
-                    })</script>
+            <script>
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'There is problem in saving Forum!'
+                })</script>
         }
 
     }
@@ -165,10 +167,6 @@
     </div>
 
 </div>
-
-
-<button type="button" id="btnExtract">Extract Records</button>
-
 
 <script>
 
@@ -289,15 +287,24 @@
         $('#lstAxtivities option').each(function(index) {
           if(($(this).is(':selected')))
           {
-              srNo++;
-              optionItem = {}
-              optionItem["index"] = srNo;
-              optionItem["activityText"] = this.text;
-              optionItem["activityType"] = activityType;
-              optionItem["activityId"] = this.value;
-              optionItem["delete"] = "<input type='button' id='" + this.value + "' onclick='DeleteActivity(" +this.value + ")' value='Delete'>";
-              curriculumActivities.push(optionItem);
-              isSelected = true;
+              var status = true;
+              $.each(curriculumActivities, function (index, valueOld) {
+                  if (valueOld.activityId == this.value) {
+                      status = false;
+                  }
+                  
+              });
+              if (status) {
+                  srNo++;
+                  optionItem = {}
+                  optionItem["index"] = srNo;
+                  optionItem["activityText"] = this.text;
+                  optionItem["activityType"] = activityType;
+                  optionItem["activityId"] = this.value;
+                  optionItem["delete"] = "<input type='button' id='" + this.value + "' onclick='DeleteActivity(" + this.value + ")' value='Delete'>";
+                  curriculumActivities.push(optionItem);
+                  isSelected = true;
+              }
           }
 
         });
@@ -389,23 +396,29 @@
 
 
     }
-
-    function ExtractRecordInList() {
-        var table = $('#example').DataTable();
-        var data = table.rows().data().toArray();
-        console.log(data)
-    }
-
+    
     function AddCurriculumToDB() {
-        var title = $('#CurriculumTitle').val();
-         
-         var table = $('#example').DataTable();
-        var activities = table.rows().data().toArray();
-       
-        $.ajax({
+
+        if ($('#CurriculumTitle').val() == null || $("#CurriculumTitle").val() == "") {
+            swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter curriculum title!'
+                })
+        }
+        else
+        {
+            var title = $('#CurriculumTitle').val();
+            var table = $('#example').DataTable();
+            var activities = table.rows().data().toArray();
+            $.each(activities, function (index, value) {
+                value.delete = "";
+            });
+
+            $.ajax({
                 type: "POST",
-            url: '@Url.Action("AddCurriculumToDB")',
-                 data: '{selectedType: ' + JSON.stringify(activities) + '}',
+                url: '@Url.Action("AddCurriculumToDB")',
+                data: '{jsonData: ' + JSON.stringify(JSON.stringify(activities)) + ',title:' + JSON.stringify(title) + ' }',
                 //data: '{jsonData: ' + JSON.stringify(activities) + '}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -414,11 +427,12 @@
                 },
                 failure: function (response) {
                     swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went Wrong!'
-                })
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went Wrong!'
+                    })
                 }
             });
+        }
     }
 </script>

@@ -93,128 +93,152 @@ namespace LMSWeb.Controllers
                 List<TblQuiz> lstAllQuiz = new List<TblQuiz>();
                 if (sessionUser == null)
                 {
+                    TenantRepository tr = new TenantRepository();
+                    List<TblTenant> tenantDetails = new List<TblTenant>();
+                    string host = Request.Url.Host;
 
-                    if (string.IsNullOrEmpty(code))
+                    var tenantList1 = tr.VerifyTenantDomain(host);
+                    if (tenantList1.Count > 0)
                     {
-                        return Redirect("https://pumplace.plek.co/oidc/auth?client_id=1663f8ca-7b8a-42eb-ae3b-845e32be1baf&scope=openid&response_type=code&redirect_uri=https://quiz.rockettech.co.nz/");
-                    }
-                    else
-                    {
-                        using (var client = new HttpClient())
+                        if (tenantList1[0].TenantId == 6)
                         {
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                            client.DefaultRequestHeaders.Add("Access-Control-Allow-Origin", "*");
-                            string tokenApi = "https://pumplace.plek.co/oidc/token";
-                            var values = new Dictionary<string, string>();
-                            values.Add("client_id", "1663f8ca-7b8a-42eb-ae3b-845e32be1baf");
-                            values.Add("client_secret", "TZD4Jr837e6uymsJdyxH2jk8qxGQiK7gXDCmYqtC");
-                            values.Add("grant_type", "authorization_code");
-                            values.Add("code", code);
-                            values.Add("redirect_uri", "https://quiz.rockettech.co.nz/");
-
-                            var content = new FormUrlEncodedContent(values);
-
-                            var responseTask = await client.PostAsync(tokenApi, content);
-                            var result = await responseTask.Content.ReadAsStringAsync();
-                            var data = (JObject)JsonConvert.DeserializeObject(result);
-                            string token = data["access_token"].Value<string>();//Access Token Received                           
-
-                            //Now get User Details
-                            string userApi = "https://pumplace.plek.co/oidc/me";
-
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-
-                            HttpResponseMessage response = await client.GetAsync(userApi);
-                            if (response.IsSuccessStatusCode)
+                            if (string.IsNullOrEmpty(code))
                             {
-                                string jsondata = await response.Content.ReadAsStringAsync();
-
-                                var userData = (JObject)JsonConvert.DeserializeObject(jsondata);
-                                string email = userData["email"].Value<string>();
-                                string name = userData["username"].Value<string>();
-
-                                var userId = ur.IsUserExist(email, Request.Url.Host);
-
-                                if (userId == 0)
+                                return Redirect("https://pumplace.plek.co/oidc/auth?client_id=1663f8ca-7b8a-42eb-ae3b-845e32be1baf&scope=openid&response_type=code&redirect_uri=https://quiz.rockettech.co.nz/");
+                            }
+                            else
+                            {
+                                using (var client = new HttpClient())
                                 {
-                                    try
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                                    client.DefaultRequestHeaders.Add("Access-Control-Allow-Origin", "*");
+                                    string tokenApi = "https://pumplace.plek.co/oidc/token";
+                                    var values = new Dictionary<string, string>();
+                                    values.Add("client_id", "1663f8ca-7b8a-42eb-ae3b-845e32be1baf");
+                                    values.Add("client_secret", "TZD4Jr837e6uymsJdyxH2jk8qxGQiK7gXDCmYqtC");
+                                    values.Add("grant_type", "authorization_code");
+                                    values.Add("code", code);
+                                    values.Add("redirect_uri", "https://quiz.rockettech.co.nz/");
+
+                                    var content = new FormUrlEncodedContent(values);
+
+                                    var responseTask = await client.PostAsync(tokenApi, content);
+                                    var result = await responseTask.Content.ReadAsStringAsync();
+                                    var data = (JObject)JsonConvert.DeserializeObject(result);
+                                    string token = data["access_token"].Value<string>();//Access Token Received                           
+
+                                    //Now get User Details
+                                    string userApi = "https://pumplace.plek.co/oidc/me";
+
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                                    HttpResponseMessage response = await client.GetAsync(userApi);
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        //Create user
-                                        TblUser newUser = new TblUser();
-                                        newUser.FirstName = name;
-                                        newUser.EmailId = email;
-                                        newUser.RoleId = 3;
-                                        newUser.IsActive = true;
-                                        newUser.CreatedBy = 1;
-                                        CommonFunctions common = new CommonFunctions();
-                                        newUser.Password = common.GetEncodePassword("123456");
+                                        string jsondata = await response.Content.ReadAsStringAsync();
 
-                                        TenantRepository tr = new TenantRepository();
-                                        var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
-                                        newUser.TenantId = tenantList[0].TenantId;
+                                        var userData = (JObject)JsonConvert.DeserializeObject(jsondata);
+                                        string email = userData["email"].Value<string>();
+                                        string name = userData["username"].Value<string>();
 
-                                        var newUserId = ur.AddUser(newUser);
+                                        var userId = ur.IsUserExist(email, Request.Url.Host);
 
-                                        if (newUserId > 0)
+                                        if (userId == 0)
                                         {
-                                            //Assign Quiz to Newly Created User
-                                            newException.AddDummyException("111 - " + QuizId);
-                                            var objQuiz = quizRepository.GetQuizByID(QuizId);
-                                            if (objQuiz != null)
+                                            try
                                             {
+                                                //Create user
+                                                TblUser newUser = new TblUser();
+                                                newUser.FirstName = name;
+                                                newUser.EmailId = email;
+                                                newUser.RoleId = 3;
+                                                newUser.IsActive = true;
+                                                newUser.CreatedBy = 1;
+                                                CommonFunctions common = new CommonFunctions();
+                                                newUser.Password = common.GetEncodePassword("123456");
 
-                                                if (objQuiz[0] != null)
+                                                
+                                                var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
+                                                newUser.TenantId = tenantList[0].TenantId;
+
+                                                var newUserId = ur.AddUser(newUser);
+
+                                                if (newUserId > 0)
                                                 {
-                                                    if (objQuiz[0].TenantId == 6)
+                                                    //Assign Quiz to Newly Created User
+                                                    newException.AddDummyException("111 - " + QuizId);
+                                                    var objQuiz = quizRepository.GetQuizByID(QuizId);
+                                                    if (objQuiz != null)
                                                     {
-                                                        var assign = quizRepository.AssignQuiz(QuizId, newUserId, null);
+
+                                                        if (objQuiz[0] != null)
+                                                        {
+                                                            if (objQuiz[0].TenantId == 6)
+                                                            {
+                                                                var assign = quizRepository.AssignQuiz(QuizId, newUserId, null);
+                                                            }
+                                                        }
+                                                    }
+                                                    userId = newUserId;
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                newException.AddException(ex);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //check Quiz assigned or not                                    
+
+                                            var isAssigned = quizRepository.CheckQuizAssignedUser(QuizId, userId);
+                                            if (!isAssigned)
+                                            {
+                                                newException.AddDummyException("222 - " + QuizId);
+                                                var objQuiz = quizRepository.GetQuizByID(QuizId);
+                                                if (objQuiz != null)
+                                                {
+                                                    if (objQuiz[0] != null)
+                                                    {
+                                                        if (objQuiz[0].TenantId == 6)
+                                                        {
+                                                            var assign = quizRepository.AssignQuiz(QuizId, userId, null);
+                                                        }
                                                     }
                                                 }
                                             }
-                                            userId = newUserId;
+
                                         }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        newException.AddException(ex);
+
+                                        List<TblUser> tblUser = ur.GetUserById(userId);
+                                        Session["UserSession"] = tblUser[0];
+                                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, userId);
+
+                                        JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                                        json_serializer.MaxJsonLength = int.MaxValue;
+                                        lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
+
+                                        isPlek = true;
                                     }
                                 }
-                                else
-                                {
-                                    //check Quiz assigned or not                                    
-
-                                    var isAssigned = quizRepository.CheckQuizAssignedUser(QuizId, userId);
-                                    if (!isAssigned)
-                                    {
-                                        newException.AddDummyException("222 - " + QuizId);
-                                        var objQuiz = quizRepository.GetQuizByID(QuizId);
-                                        if (objQuiz != null)
-                                        {
-                                            if (objQuiz[0] != null)
-                                            {
-                                                if (objQuiz[0].TenantId == 6)
-                                                {
-                                                    var assign = quizRepository.AssignQuiz(QuizId, userId, null);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                }
-
-                                List<TblUser> tblUser = ur.GetUserById(userId);
-                                Session["UserSession"] = tblUser[0];
-                                lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, userId);
-
-                                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                                json_serializer.MaxJsonLength = int.MaxValue;
-                                lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
-
-                                isPlek = true;
                             }
+                        }
+                        if (tenantList1[0].TenantId == 9)
+                        {
+                            //newException.AddDummyException("In - 111 ");
+                            CommonFunctions common = new CommonFunctions();
+                            var password = common.GetEncodePassword("123456");
+                            TblUser tblUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);                            
+                            lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, tblUser.UserId);
+
+                            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                            json_serializer.MaxJsonLength = int.MaxValue;
+                            lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
+                            //newException.AddDummyException("In - 222 ");
+                            isPlek = true;
                         }
                     }
 
@@ -228,10 +252,10 @@ namespace LMSWeb.Controllers
                         //check Quiz assigned or not
 
                         var isAssigned = quizRepository.CheckQuizAssignedUser(QuizId, sessionUser.UserId);
-                        newException.AddDummyException(Convert.ToString(isAssigned));
+                        //newException.AddDummyException(Convert.ToString(isAssigned));
                         if (!isAssigned)
                         {
-                            newException.AddDummyException("333 - " + QuizId);
+                            //newException.AddDummyException("333 - " + QuizId);
                             var objQuiz = quizRepository.GetQuizByID(QuizId);
                             if (objQuiz != null)
                             {
@@ -255,6 +279,20 @@ namespace LMSWeb.Controllers
                             json_serializer.MaxJsonLength = int.MaxValue;
                             lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
                         }
+                    }
+                    if (sessionUser.TenantId == 9)
+                    {
+                        //newException.AddDummyException("In - 111 ");
+                        CommonFunctions common = new CommonFunctions();
+                        var password = common.GetEncodePassword("123456");
+                        TblUser tblUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
+                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, tblUser.UserId);
+
+                        JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                        json_serializer.MaxJsonLength = int.MaxValue;
+                        lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
+                        //newException.AddDummyException("In - 222 ");
+                        isPlek = true;
                     }
                     else
                     {
@@ -295,9 +333,10 @@ namespace LMSWeb.Controllers
             TblUser sessionUser = (TblUser)Session["UserSession"];
             if (sessionUser == null)
             {
+                //newException.AddDummyException("In - 333 ");
                 CommonFunctions common = new CommonFunctions();
                 var password = common.GetEncodePassword("123456");
-                sessionUser = ur.IsValidUser("j.panhuis@chello.nl", password, Request.Url.Host);
+                sessionUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
             }
             if (sessionUser.RoleId == 2)
             {
@@ -471,11 +510,28 @@ namespace LMSWeb.Controllers
             bool isPlek = false;
             try
             {
-                newException.AddDummyException("In - 1 ");
+                //newException.AddDummyException("In - 1 ");
 
                 TblUser sessionUser = (TblUser)Session["UserSession"];
-                if (sessionUser.TenantId == 6)
+                if (sessionUser == null)
                 {
+                    //newException.AddDummyException("In - 444 ");
+                    CommonFunctions common = new CommonFunctions();
+                    var password = common.GetEncodePassword("123456");
+                    sessionUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
+                    Session["UserSession"] = sessionUser;
+                    isPlek = true;
+                }
+                if (sessionUser.TenantId == 9)
+                {
+                    CommonFunctions common = new CommonFunctions();
+                    var password = common.GetEncodePassword("123456");
+                    sessionUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
+                    Session["UserSession"] = sessionUser;
+                    isPlek = true;
+                }
+                if (sessionUser.TenantId == 6)
+                {                    
                     isPlek = true;
                 }
                 List<TblQuiz> lstAllQuiz = new List<TblQuiz>();
@@ -486,7 +542,10 @@ namespace LMSWeb.Controllers
                 lstAllQuiz[0].TblResponses = quizResponses;
 
                 var noOfQuestions = lstAllQuiz[0].TblQuestions.Where(x => x.QuestionTypeId == 1 || x.QuestionTypeId == 2).Count();
+                //newException.AddDummyException("In - noOfQuestions " + noOfQuestions);
                 var score = quizRepository.GetQuizScoreByUserID(QuizId, sessionUser.UserId, attempt);
+
+                //newException.AddDummyException("In - Score " + score.Score);
                 if (score.Score == 0)
                 {
                     lstAllQuiz[0].Score = "0";
@@ -495,15 +554,21 @@ namespace LMSWeb.Controllers
                 {
                     lstAllQuiz[0].Score = Convert.ToString(Math.Round(Convert.ToDecimal(score.Score * 100 / noOfQuestions), 2));
                 }
-                newException.AddDummyException("In - 6 ");
+                //newException.AddDummyException("In - 6 ");
                 JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                 json_serializer.MaxJsonLength = int.MaxValue;
                 lstAllQuiz[0].hdnReviewData = json_serializer.Serialize(lstAllQuiz[0]);
-                newException.AddDummyException("In - 7 ");
+                //newException.AddDummyException("In - 7 ");
                 if (isPlek)
+                {
+                    //newException.AddDummyException("In - PLEK ");
                     return View("ReviewQuizLearnerForPlek", lstAllQuiz[0]);
+                }
                 else
+                {
+                    //newException.AddDummyException("Out - PLEK ");
                     return View("ReviewQuizLearner", lstAllQuiz[0]);
+                }
             }
             catch (Exception ex)
             {
@@ -517,15 +582,15 @@ namespace LMSWeb.Controllers
 
         public async Task<ActionResult> LaunchCourse(int CourseId, string code)
         {
-            
+
             TblUser sessionUser = (TblUser)Session["UserSession"];
             var courseBaseURL = System.Configuration.ConfigurationManager.AppSettings["CourseBaseURL"];
             if (sessionUser == null)
             {
-               
+
                 if (string.IsNullOrEmpty(code))
                 {
-                    
+
                     CourseSession courseSession = new CourseSession();
                     courseSession.CourseId = CourseId;
                     Session["CourseId"] = CourseId;
@@ -533,7 +598,7 @@ namespace LMSWeb.Controllers
                 }
                 else
                 {
-                    
+
                     using (var client = new HttpClient())
                     {
                         client.DefaultRequestHeaders.Accept.Clear();
@@ -569,13 +634,13 @@ namespace LMSWeb.Controllers
                             var userData = (JObject)JsonConvert.DeserializeObject(jsondata);
                             string email = userData["email"].Value<string>();
                             string name = userData["username"].Value<string>();
-                            
+
                             var userId = ur.IsUserExist(email, Request.Url.Host);
-                            
+
                             if (userId == 0)
                             {
                                 try
-                                {                                    
+                                {
                                     //Create user
                                     TblUser newUser = new TblUser();
                                     newUser.FirstName = name;
@@ -590,9 +655,9 @@ namespace LMSWeb.Controllers
                                     var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
                                     newUser.TenantId = tenantList[0].TenantId;
 
-                                    var newUserId = ur.AddUser(newUser);                                   
-                                    var assign = cr.AssignCourse(CourseId, newUserId, null);                                    
-                                    userId = newUserId;                                    
+                                    var newUserId = ur.AddUser(newUser);
+                                    var assign = cr.AssignCourse(CourseId, newUserId, null);
+                                    userId = newUserId;
 
                                 }
                                 catch (Exception ex)
@@ -603,18 +668,18 @@ namespace LMSWeb.Controllers
                             else
                             {
                                 try
-                                {                                    
+                                {
                                     var isAssigned = cr.CheckCourseAssignedUser(CourseId, userId);
                                     if (!isAssigned)
-                                    {                                         
-                                        var assign = cr.AssignCourse(CourseId, userId, null);                                        
+                                    {
+                                        var assign = cr.AssignCourse(CourseId, userId, null);
                                     }
                                 }
                                 catch (Exception ex)
                                 {
                                     newException.AddException(ex);
                                 }
-                            }                            
+                            }
 
                             var urlNew = courseBaseURL + "?AID=" + CourseId + "&LID=" + userId;
                             return Redirect(urlNew);
@@ -622,7 +687,7 @@ namespace LMSWeb.Controllers
                         }
                     }
                 }
-            }            
+            }
 
             var url = courseBaseURL + "?AID=" + CourseId + "&LID=" + sessionUser.UserId;
             return Redirect(url);

@@ -1459,19 +1459,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/20/2019 17:39:40</publishTime>
     </File>
     <File Include="bin/LMSBL.dll">
-      <publishTime>06/18/2020 19:21:17</publishTime>
+      <publishTime>07/14/2020 17:40:56</publishTime>
     </File>
     <File Include="bin/LMSBL.dll.config">
       <publishTime>11/23/2019 11:45:36</publishTime>
     </File>
     <File Include="bin/LMSBL.pdb">
-      <publishTime>06/18/2020 19:21:17</publishTime>
+      <publishTime>07/14/2020 17:40:56</publishTime>
     </File>
     <File Include="bin/LMSWeb.dll">
-      <publishTime>06/18/2020 20:10:01</publishTime>
+      <publishTime>07/14/2020 18:36:41</publishTime>
     </File>
     <File Include="bin/LMSWeb.pdb">
-      <publishTime>06/18/2020 20:10:01</publishTime>
+      <publishTime>07/14/2020 18:36:41</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.TelemetryCorrelation.dll">
       <publishTime>11/23/2019 10:39:36</publishTime>
@@ -1783,7 +1783,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/23/2019 10:39:33</publishTime>
     </File>
     <File Include="CSS/style.css">
-      <publishTime>06/06/2020 17:47:52</publishTime>
+      <publishTime>07/13/2020 14:01:26</publishTime>
     </File>
     <File Include="DBScript/CompleteScript_19Feb2020.sql">
       <publishTime>02/19/2020 11:55:43</publishTime>
@@ -1951,7 +1951,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/19/2020 19:36:16</publishTime>
     </File>
     <File Include="Views/Courses/CourseList.cshtml">
-      <publishTime>06/02/2020 16:54:08</publishTime>
+      <publishTime>07/13/2020 14:01:26</publishTime>
     </File>
     <File Include="Views/Courses/DeleteCourse.cshtml">
       <publishTime>02/19/2020 19:36:16</publishTime>
@@ -1962,8 +1962,20 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Courses/Index.cshtml">
       <publishTime>02/19/2020 19:36:16</publishTime>
     </File>
+    <File Include="Views/Curriculum/AddCurriculum.cshtml">
+      <publishTime>07/13/2020 14:19:57</publishTime>
+    </File>
+    <File Include="Views/Curriculum/Index.cshtml">
+      <publishTime>07/13/2020 14:20:26</publishTime>
+    </File>
+    <File Include="Views/Curriculum/testing.cshtml">
+      <publishTime>07/14/2020 16:00:15</publishTime>
+    </File>
     <File Include="Views/Forum/AddForum.cshtml">
-      <publishTime>06/18/2020 09:37:11</publishTime>
+      <publishTime>07/13/2020 14:22:54</publishTime>
+    </File>
+    <File Include="Views/Forum/Index.cshtml">
+      <publishTime>07/13/2020 14:23:28</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>11/23/2019 10:39:33</publishTime>
@@ -2086,7 +2098,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/26/2020 17:19:33</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutNew.cshtml">
-      <publishTime>06/07/2020 22:17:33</publishTime>
+      <publishTime>07/13/2020 14:24:23</publishTime>
     </File>
     <File Include="Views/Tenant/AddTenant.cshtml">
       <publishTime>01/24/2020 15:38:16</publishTime>
@@ -2143,7 +2155,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/14/2020 01:07:51</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/18/2020 19:22:24</publishTime>
+      <publishTime>07/14/2020 17:40:59</publishTime>
     </File>
   </ItemGroup>
 </Project>

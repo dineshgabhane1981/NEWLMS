@@ -11,12 +11,25 @@
     <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
         @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Message"])))
         {
-            <script>
-                swal.fire("Course Saved Successfully")
-                    .then((value) => {
-                        window.location.href = "Index";
-                    });
-            </script>
+            if (Convert.ToString(TempData["Message"]) == "1")
+            {
+                <script>
+                    swal.fire("Forum Saved Successfully")
+                        .then((value) => {
+                            window.location.href = "Index";
+                        });
+                </script>
+            }
+            else
+            {
+                <script>
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There is problem in saving Forum!'
+                    })
+                </script>
+            }
 
         }
         <div class="row justify-content-center h-100">
@@ -38,7 +51,7 @@
 
                         @Html.TextBoxFor(model => model.Title, new { @class = "input100", placeholder = "Forum Title" })
                         @Html.TextBoxFor(model => model.Description, new { @class = "input100", placeholder = "Forum Description" })
-                        @Html.TextBoxFor(model => model.ForumType, "{0:#.#}", new { @class = "input100" })
+
 
                         @Html.DropDownListFor(x => Model.ForumType, new SelectList(new List<Object>{
                               new { value = "1" , text = "Announcement"  },
@@ -48,7 +61,7 @@
                             @Html.CheckBoxFor(model => model.IsBrodcast) Is Broadcast
                         </div>
                     </div>
-                     
+
                 </div>
                 <div class="row justify-content-end pr-4">
                     <button type="submit" id="btnForumSubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
@@ -63,3 +76,15 @@
 }
 
 <script src="~/assets/Validations.js"></script>
+<script>
+    $(document).ready(function () {
+        if ($("#ForumTypeList").val() == "1") {
+            $("#dvIsBrodcast").show();
+        }
+        else {
+            $("#dvIsBrodcast").hide();
+        }
+    })
+
+
+</script>
