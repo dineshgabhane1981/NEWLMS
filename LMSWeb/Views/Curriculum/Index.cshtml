@@ -161,8 +161,8 @@
                             <tr>
                                 <th>Sr. No.</th>
                                 <th>User Name</th>
-                                <th>User Id</th>
                                 <th>Due Date</th>
+                                <th>User Id</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -231,7 +231,7 @@
                  { data: "delete" }
 
             ],
-            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [2] }],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
             "rowReorder": {
                 dataSrc: "index"
             }
@@ -294,7 +294,8 @@
         var isSelected = false;
         var status = true;
         var srNo = assignedUsers.length;
-        $('#lstAxtivities option').each(function(index) {
+        console.log(srNo)
+        $('#lstUsers option').each(function(index) {
           if(($(this).is(':selected')))
           {
               var oldValue = this.value;
@@ -336,26 +337,24 @@
             })
         }
         else {
-           var table1 = $('#example').DataTable();
+           var table1 = $('#tblAssignedUsers').DataTable();
             table1.destroy();
 
-           var table = $('#example').DataTable({
+           var table = $('#tblAssignedUsers').DataTable({
                "data": assignedUsers,
                "paging": false,
                "columns": [
                  { data: "index" },
-                   { data: "activityText" },
-                 { data: "activityType" },
-                 { data: "activityId" },
+                   { data: "UserName" },
+                 { data: "DueDate" },
+                 { data: "UserId" },                 
                  { data: "delete" }
 
             ],
-            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
-            "rowReorder": {
-                dataSrc: "index"
-            }
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }] 
+             
         });
-            $('#example_filter').hide();
+            $('#tblAssignedUsers_filter').hide();
             Swal.fire(
                     'Added!',
                     'Activity Added successfully!',
