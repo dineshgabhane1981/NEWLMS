@@ -1,6 +1,6 @@
 ﻿﻿@model List<LMSBL.DBModels.tblCurriculum>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Curriculum List";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
     <style>
@@ -148,10 +148,12 @@
             Select User/s
             <select id="lstUsers" name="lstUsers" size="5" multiple>
             </select><br />
-            Due Date <input type="datetime" id="dtDueDate" class="input100 datepicker" />
+            Due Date <input type="datetime" id="dtDueDate" class="input100 datepicker" />            
             <br /> <br /> 
+            
             <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
             <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+        
         </div>
         <div>
             <div class="row mt-3" id="dvAssignedUsers">
@@ -170,8 +172,9 @@
                         </tbody>
                     </table>
                 </div>
+                <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                
             </div>
-
         </div>
     </div>
 </div>
@@ -240,9 +243,13 @@
 
         $('#btnAddUsersToList').on("click", function () {
              AddUsersToList();
+        });
+
+        $('#btnAssignUsers').on("click", function () {
+             AssignUsersInDB();
          });
 
-});
+    });
      
     var modal = document.getElementById("myModal");
     var btnClose = document.getElementById("btnPopupClose");
@@ -363,6 +370,63 @@
         }
 
         console.log(assignedUsers);
+    }
+
+    function DeleteActivity(id) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this User from List!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                 var table1 = $('#tblAssignedUsers').DataTable();
+                var data = table1.rows().data().toArray();
+                assignedUsers = data;
+                assignedUsers = assignedUsers.filter(function (item) {
+                return item.UserId != id;
+                })
+
+                $.each(assignedUsers, function (index, value) {
+                    value.index = index+1;
+                });
+                
+        var table1 = $('#tblAssignedUsers').DataTable();
+            table1.destroy();
+
+        var table = $('#tblAssignedUsers').DataTable({
+            "data": assignedUsers,
+            "paging": false,
+            "columns": [
+                { data: "index" },
+                { data: "UserName" },
+                { data: "DueDate" },
+                { data: "UserId" },                 
+                { data: "delete" }
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+        $('#example_filter').hide();
+                Swal.fire(
+                    'Deleted!',
+                    'User has been deleted.',
+                    'success'
+                )
+            }
+        })       
+    }
+
+    function AssignUsersInDB() {
+         var table = $('#tblAssignedUsers').DataTable();
+        var userList = table.rows().data().toArray();
+
+        console.log(userList)
     }
 
     </script>
