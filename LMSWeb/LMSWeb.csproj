@@ -182,6 +182,7 @@
     <Compile Include="Controllers\callbackController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CurriculumController.cs" />
+    <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\EnquiryController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -838,6 +839,8 @@
     <Content Include="Views\Curriculum\testing.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Forum\ForumList.cshtml" />
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\EmailTemplate\UpdateEmailTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -847,6 +850,7 @@
     <Folder Include="uploads\" />
     <Folder Include="Views\callback\" />
     <Folder Include="Views\Enquiry\" />
+    <Folder Include="Views\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

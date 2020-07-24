@@ -84,6 +84,8 @@
     <Compile Include="DBModels\TblResetPassword.cs" />
     <Compile Include="DBModels\tblRespons.cs" />
     <Compile Include="DBModels\TblStatus.cs" />
+    <Compile Include="DBModels\tblTemplate.cs" />
+    <Compile Include="DBModels\tblTemplateAssign.cs" />
     <Compile Include="DBModels\TblTenant.cs" />
     <Compile Include="DBModels\TblUser.cs" />
     <Compile Include="DBModels\TblUserRole.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Repository\CoursesRepository.cs" />
     <Compile Include="Repository\CurriculumRepository.cs" />
     <Compile Include="Repository\DataRepository.cs" />
+    <Compile Include="Repository\EmailTemplateRepository.cs" />
     <Compile Include="Repository\ForumRepository.cs" />
     <Compile Include="Repository\HomeRepository.cs" />
     <Compile Include="Repository\LoginRepository.cs" />
