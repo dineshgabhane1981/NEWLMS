@@ -53,5 +53,43 @@ namespace LMSWeb.Controllers
             }
 
         }
+        [HttpPost]
+        public ActionResult UpdateTemplate(tblTemplateAssign objTemplate)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var id = 0;
+                    TblUser sessionUser = (TblUser)Session["UserSession"];                    
+                    objTemplate.TenantId = sessionUser.TenantId;
+                   
+                    
+                      id = etr.UpdateEmailTemplate(objTemplate);
+                    
+                    if (id > 0)
+                    {
+                       
+                        TempData["Message"] = "Template Updated Successfully";
+                    }
+                    else
+                    {
+                        TempData["Message"] = "2";
+                    }
+
+                    
+                }
+                return View("UpdateEmailTemplate", objTemplate);
+
+                //return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "2";
+                newException.AddException(ex);
+                return View("Index", objTemplate);
+            }
+        }
     }
 }

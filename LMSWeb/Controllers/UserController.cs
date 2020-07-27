@@ -16,6 +16,7 @@ namespace LMSWeb.Controllers
 {
     public class UserController : Controller
     {
+        EmailTemplateRepository Er = new EmailTemplateRepository();
         UserRepository ur = new UserRepository();
         RolesRepository rr = new RolesRepository();
         TenantRepository tr = new TenantRepository();
@@ -156,15 +157,19 @@ namespace LMSWeb.Controllers
                         var baseURL = Request.Url.Host;
                         var url = baseURL + @Url.Action("ChangePassword", "Login", new { t = token });
                         var link = "<a href='" + url + "'>Click Here</a>";
-                        var emailBody = "Welcome To LMS. </br> Please click below link to Login </br>";
-                        emailBody = emailBody + link;
+                        var emailTemplate = Er.GetEmailTemplateAssignsById(1);
+                        string emailbody = emailTemplate[0].EmailBody;
+                        emailbody = emailbody.Replace("{UserName}", "Admin");
+                        emailbody= emailbody.Replace("{link}", link);
+                       // var emailBody = "Welcome To LMS. </br> Please click below link to Login </br>";
+                       // emailBody = emailBody + link;
                         var result = ur.AddToken(objUser.EmailId, token);
 
                         var emailSubject = System.Configuration.ConfigurationManager.AppSettings["emailSubject"];
                         tblEmails objEmail = new tblEmails();
                         objEmail.EmailTo = objUser.EmailId;
                         objEmail.EmailSubject = emailSubject;
-                        objEmail.EmailBody = emailBody;
+                        objEmail.EmailBody = emailbody;
 
                         result = ur.InsertEmail(objEmail);
 

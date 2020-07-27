@@ -76,5 +76,37 @@ namespace LMSBL.Repository
 
         }
 
+        public int UpdateEmailTemplate(tblTemplateAssign obj)
+        {
+
+            int status = 0;
+            int templateId = 0;
+            try
+            {
+                db.AddParameter("@tenantId", SqlDbType.Int, obj.TenantId);
+                db.AddParameter("@templateId", SqlDbType.Int, obj.TemplateId);
+                db.AddParameter("@emailSubject", SqlDbType.Text, obj.EmailSubject);
+                db.AddParameter("@emailbody", SqlDbType.Text, obj.EmailBody);
+                //db.AddParameter("@datecreated", SqlDbType.DateTime, obj.DateCreated);
+                db.AddParameter("@templateIdoutput", SqlDbType.Int, ParameterDirection.Output);
+                 status = db.ExecuteQuery("sp_UpdateEmailTemplate");
+                templateId = Convert.ToInt32(db.parameters[4].Value);
+                
+
+                if (templateId > 0)
+                {
+                    status = templateId;
+                }
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                //throw ex;
+                status = -2;
+            }
+            return status;
+        }
+
+
     }
 }
