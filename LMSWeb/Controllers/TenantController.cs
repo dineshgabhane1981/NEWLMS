@@ -236,7 +236,7 @@ namespace LMSWeb.Controllers
                     else
                     {
                         TempData["Message"] = "Not Saved Successfully";
-                        return View(objUser);
+                        return View("AddTenantUser",objUser);
                     }
                 }
                 return View("AddTenantUser", objUser);

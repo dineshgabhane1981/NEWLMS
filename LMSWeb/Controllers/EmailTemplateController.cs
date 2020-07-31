@@ -53,7 +53,8 @@ namespace LMSWeb.Controllers
             }
 
         }
-        [HttpPost]
+        
+        [HttpPost, ValidateInput(false)]
         public ActionResult UpdateTemplate(tblTemplateAssign objTemplate)
         {
             try
