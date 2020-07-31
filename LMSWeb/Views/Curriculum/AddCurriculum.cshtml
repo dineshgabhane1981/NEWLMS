@@ -174,14 +174,16 @@
         var btn = document.getElementById("btnAddActivity");
         var span = document.getElementsByClassName("close")[0];
         btn.onclick = function() {
-          modal.style.display = "block";
+          //modal.style.display = "block";
+            $("#myModal").show(1000);
         }
 
 
     var btnClose = document.getElementById("btnPopupClose");
 
     btnClose.onclick = function() {
-          modal.style.display = "none";
+          //modal.style.display = "none";
+        $("#myModal").hide(1000);
     }
 
     var curriculumActivities = [];

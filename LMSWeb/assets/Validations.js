@@ -99,8 +99,8 @@ function TenantValidation() {
     return true;
 }
 
-function CourseValidation() {
-    var returnStatus = false;
+function CourseValidation() {    
+    var returnStatus = true;
     if ($("#ContentModuleName").val() == "") {
         alert("Please enter Course Name");
         $("#ContentModuleName").focus();
@@ -154,14 +154,10 @@ function CourseValidation() {
             }
         }
     }
-    if (returnStatus) {
-        
-
-        $("#divLoading").show();
-         
+    if (returnStatus) {        
         return true;
     }
-    else {
+    else {        
         return false;
     }
 }

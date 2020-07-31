@@ -12,5 +12,7 @@ namespace LMSBL.DBModels
         public int UserId { get; set; }
         public string ForumReply { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public List<tblForumReply> lstReply { get; set; }
     }
 }

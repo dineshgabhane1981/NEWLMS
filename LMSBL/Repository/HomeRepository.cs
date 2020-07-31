@@ -40,6 +40,56 @@ namespace LMSBL.Repository
                     ActivityRating = Convert.ToString(dr["ActivityRating"])
 
                 }).ToList();
+
+                foreach(var item in activityDetails)
+                {
+                    if(item.ActivityType== "Curriculum")
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@CurriculumId", SqlDbType.Int, item.ActivityId);
+                        db.AddParameter("@UserId", SqlDbType.Int, UserId);                        
+                        DataSet ds1 = db.FillData("sp_CurriculumGetActivityStatus");
+                        if(ds1!=null)
+                        {
+                            if(ds1.Tables.Count>0)
+                            {
+                                int totalCount = 0;
+                                int inProgress = 0;
+                                int completed = 0;
+                                foreach(DataRow row in ds1.Tables[0].Rows)
+                                {
+                                    if(Convert.ToString(row["ActivityType"])!= "Forum")
+                                    {
+                                        totalCount++;
+                                        if(Convert.ToString(row["ActivityStatus"])== "InProgress")
+                                        {
+                                            inProgress++;
+                                        }
+                                        if (Convert.ToString(row["ActivityStatus"]) == "Completed")
+                                        {
+                                            completed++;
+                                        }
+
+                                    }
+                                }
+                                if(inProgress>0)
+                                {
+                                    item.ActivityStatus = "InProgress";
+                                }
+                                else if(completed>0 && completed==totalCount)
+                                {
+                                    item.ActivityStatus = "Completed";
+                                }
+                                else
+                                {
+                                    item.ActivityStatus = "Not Started";
+                                }
+                            }
+                        }
+                    }
+                }
+
+
                 return activityDetails;
             }
             catch (Exception ex)
