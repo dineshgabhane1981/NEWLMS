@@ -56,7 +56,7 @@ namespace LMSBL.Repository
                 {
                     ActivityId = Convert.ToInt32(dr["ActivityId"]),
                     ActivityText = Convert.ToString(dr["ActivityText"]),
-                    ActivityType = Convert.ToString(dr["ActivityType"]),                    
+                    ActivityType = Convert.ToString(dr["ActivityType"]),
                     ActivityOrder = Convert.ToInt32(dr["ActivityOrder"])
                 }).ToList();
 
@@ -136,8 +136,8 @@ namespace LMSBL.Repository
 
         public int AddCurriculumToDB(object[] objData, tblCurriculum obj)
         {
-            int CurriculumId = 0;          
-           
+            int CurriculumId = 0;
+
             if (obj.CurriculumId == 0)
             {
                 db.parameters.Clear();
@@ -155,7 +155,7 @@ namespace LMSBL.Repository
             {
                 db.parameters.Clear();
                 db.AddParameter("@CurriculumId", SqlDbType.Int, obj.CurriculumId);
-                db.AddParameter("@CurriculumTitle", SqlDbType.NText, obj.CurriculumTitle);                
+                db.AddParameter("@CurriculumTitle", SqlDbType.NText, obj.CurriculumTitle);
                 db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
                 var status = db.ExecuteQuery("sp_CurriculumEdit");
                 if (Convert.ToInt32(db.parameters[2].Value) > 0)
@@ -188,6 +188,40 @@ namespace LMSBL.Repository
                     }
                 }
             }
+            if (obj.CurriculumId > 0)
+            {
+                var DS = GetAssignedCurriculumUsers(obj.CurriculumId);
+                if (DS != null)
+                {
+                    if (DS.Count > 0)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@CurriculumId", SqlDbType.Int, Convert.ToInt32(obj.CurriculumId));
+                        db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                        var isDelete = db.ExecuteQuery("sp_CurriculumDeleteAssignedUsers");
+                        if (Convert.ToInt32(db.parameters[1].Value) > 0)
+                        {
+                            isDelete = 1;
+                        }
+
+                        foreach (var item in DS)
+                        {
+                            db.parameters.Clear();
+                            db.AddParameter("@CurriculumId", SqlDbType.Int, Convert.ToInt32(obj.CurriculumId));
+                            db.AddParameter("@UserId", SqlDbType.Int, Convert.ToInt32(item.UserId));
+                            db.AddParameter("@DueDate", SqlDbType.DateTime, Convert.ToDateTime(item.DueDate));
+                            db.AddParameter("@result", SqlDbType.Int, ParameterDirection.Output);
+                            var result = db.ExecuteQuery("sp_CurriculumAssign");
+
+                            if (Convert.ToInt32(db.parameters[3].Value) > 0)
+                            {
+                                CurriculumId = 1;
+                            }
+                        }
+
+                    }
+                }
+            }
 
             return CurriculumId;
         }
@@ -198,7 +232,7 @@ namespace LMSBL.Repository
             {
                 db.parameters.Clear();
                 db.AddParameter("@curriculumId", SqlDbType.Int, curriculumId);
-                DataSet ds = db.FillData("sp_GetAssignedCurriculumUsers");
+                DataSet ds = db.FillData("sp_GetCurriculumUsersToAssign");
                 return ds;
             }
             catch (Exception ex)
@@ -206,6 +240,84 @@ namespace LMSBL.Repository
                 newException.AddException(ex);
                 throw ex;
             }
+        }
+
+        public List<tblCurriculumAssignment> GetAssignedCurriculumUsers(int curriculumId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@curriculumId", SqlDbType.Int, curriculumId);
+                DataSet ds = db.FillData("sp_GetCurriculumAssignedUsers");
+
+                List<tblCurriculumAssignment> lstCurriculumUsers = ds.Tables[0].AsEnumerable().Select(dr => new tblCurriculumAssignment
+                {
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    DueDate = Convert.ToDateTime(dr["DueDate"]).ToString("MM/dd/yyyy")
+                }).ToList();
+
+                return lstCurriculumUsers;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public int AssignCurriculumToDB(object[] objData, string cId)
+        {
+            int CurriculumId = 0;
+            if (objData != null)
+            {
+                db.parameters.Clear();
+                db.AddParameter("@CurriculumId", SqlDbType.Int, Convert.ToInt32(cId));
+                db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                var isDelete = db.ExecuteQuery("sp_CurriculumDeleteAssignedUsers");
+                if (Convert.ToInt32(db.parameters[1].Value) > 0)
+                {
+                    isDelete = 1;
+                }
+                if (isDelete == 1)
+                {
+                    foreach (Dictionary<string, object> item in objData)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@CurriculumId", SqlDbType.Int, Convert.ToInt32(cId));
+                        db.AddParameter("@UserId", SqlDbType.Int, Convert.ToInt32(item["UserId"]));
+                        db.AddParameter("@DueDate", SqlDbType.DateTime, Convert.ToDateTime(item["DueDate"]));
+                        db.AddParameter("@result", SqlDbType.Int, ParameterDirection.Output);
+                        var result = db.ExecuteQuery("sp_CurriculumAssign");
+
+                        if (Convert.ToInt32(db.parameters[3].Value) > 0)
+                        {
+                            CurriculumId = 1;
+                        }
+                    }
+                }
+            }             
+
+            return CurriculumId;
+        }
+
+        public DataSet GetCurriculumActivitiesById(int CurriculumId,int UserId)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@CurriculumId", SqlDbType.Int, CurriculumId);
+                db.AddParameter("@UserId", SqlDbType.Int, UserId);
+                ds = db.FillData("sp_CurriculumGetActivitiesForLearner");
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+            
         }
     }
 }

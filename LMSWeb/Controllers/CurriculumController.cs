@@ -8,6 +8,7 @@ using LMSBL.DBModels;
 using LMSBL.Repository;
 using System.Data;
 using LMSBL;
+using System.Net;
 
 namespace LMSWeb.Controllers
 {
@@ -121,5 +122,43 @@ namespace LMSWeb.Controllers
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult AssignCurriculum(string jsonData, string CId)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+                        
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = null;
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                objData = (object[])json_serializer.DeserializeObject(jsonData);
+            }
+            var result = cc.AssignCurriculumToDB(objData, CId);
+
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetAssignedUsers(string cId)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            List<tblCurriculumAssignment> lstAssignedUsers = new List<tblCurriculumAssignment>();
+            lstAssignedUsers = cc.GetAssignedCurriculumUsers(Convert.ToInt32(cId));
+            
+            return Json(lstAssignedUsers, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

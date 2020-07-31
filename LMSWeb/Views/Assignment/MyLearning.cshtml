@@ -12,7 +12,7 @@
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     <div class="row mb-1">
         <div class="col">
-            <h4>Assigned Activities (Course/Quiz)</h4>
+            <h4>Assigned Activities</h4>
         </div>
     </div>
     <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
@@ -50,10 +50,12 @@
                         {
                             if (Model.Count > 0)
                             {
+                                var cId = 0;
 
                                 foreach (var activity in Model)
                                 {
-
+                                    cId++;
+                                    var isCurriculum = false;
                                     <tr>
                                         <td>@activity.ActivityName</td>
                                         <td>@activity.ActivityType</td>
@@ -116,44 +118,73 @@
                                         }
                                         @if (activity.ActivityType == "Course")
                                         {
-                                    <td style="text-align:center;">
+                                            <td style="text-align:center;">
 
-                                        @if (activity.ActivitySubType == "Scorm1.2")
-                                        {
-                                            //<a href="@baseURL?AID=@activity.ActivityId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>                                            
-                                            <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
-                                        }
-                                        @if (activity.ActivitySubType == "Other")
-                                        {
-                                            <a href="@CourseOtherBaseURL\ContentModules\@activity.ActivityId@activity.ActivityURL" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
-                                        }
+                                                @if (activity.ActivitySubType == "Scorm1.2")
+                                                {
+                                                    //<a href="@baseURL?AID=@activity.ActivityId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
+                                                    <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
+                                                }
+                                                @if (activity.ActivitySubType == "Other")
+                                                {
+                                                    <a href="@CourseOtherBaseURL\ContentModules\@activity.ActivityId@activity.ActivityURL" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
+                                                }
 
-                                        &nbsp;
-                                        @if (activity.ActivityRating == "0" && activity.ActivityStatus == "Completed")
-                                        {
-                                            <a href="@Url.Action("RatingAndFeedback", "Assignment", new { ActivityId = activity.ActivityId, LearningType = "Course" })" class="login" title="Give Rating"><i class="fas fa-star"></i></a>
+                                                &nbsp;
+                                                @if (activity.ActivityRating == "0" && activity.ActivityStatus == "Completed")
+                                                {
+                                                    <a href="@Url.Action("RatingAndFeedback", "Assignment", new { ActivityId = activity.ActivityId, LearningType = "Course" })" class="login" title="Give Rating"><i class="fas fa-star"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a><i class="fas fa-star"></i></a>
+                                                }
+                                            </td>
                                         }
-                                        else
+                                        @if (activity.ActivityType == "Curriculum")
                                         {
-                                            <a><i class="fas fa-star"></i></a>
-                                        }
-                                    </td>
+
+                                            isCurriculum = true;
+                                            var imgId = "imgExpand" + cId;
+                                            <td style="text-align:center;">
+                                                <img id="@imgId" src="~/assets/images/details_open.png" style="cursor:pointer;" onclick="ShowActivities(@cId,@activity.ActivityId);" />
+
+                                            </td>
+
                                         }
                                     </tr>
+                                    if (isCurriculum)
+                                    {
+                                        var dynamicIdTr = "trActivities" + cId;
+                                        var dynamicIdDiv = "dvActivities" + cId;
+                                        <tr id="@dynamicIdTr" style="display:none;">
+                                            <td colspan="7">
+                                                <div id="@dynamicIdDiv" style="display:none;" class="table-responsive">
+
+                                                </div>
+                                            </td>
+                                            <td style="display:none;"></td>
+                                            <td style="display:none;"></td>
+                                            <td style="display:none;"></td>
+                                            <td style="display:none;"></td>
+                                            <td style="display:none;"></td>
+                                            <td style="display:none;"></td>
+                                        </tr>
+                                    }
 
                                 }
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="8" align="center">No Learning Available</td>
+                                    <td colspan="7" align="center">No Learning Available</td>
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
-                                <td colspan="8">No Learning Available</td>
+                                <td colspan="7">No Learning Available</td>
                             </tr>
                         }
                     </tbody>
@@ -165,9 +196,9 @@
 <script>
     $(document).ready(function () {
         $('#activityTable').DataTable({
-            "aaSorting": [3, "desc"],
+            "aaSorting": [],
             "paging": true,
-            "ordering": true,
+            "ordering": false,
             "info": true,
             "bFilter": true,
             "pageLength": 10,
@@ -206,6 +237,131 @@
         //$(".first.paginate_button, .last.paginate_button").hide();
     });
 
+    function ShowActivities(id,CurriculumId) {
+
+        if ($("#dvActivities" + id).is(":visible")) {
+            $("#dvActivities" + id).hide(1000);
+            $("#trActivities" + id).hide(1000);
+
+            $("#imgExpand"+id).attr("src", "/assets/images/details_open.png");
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                 url: '@Url.Action("GetCurriculumActivities")',
+                data: '{cId: ' + JSON.stringify(CurriculumId) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    BindActivities(id,response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
+
+
+        }
+
+    }
+
+    function BindActivities(id,data) {
+        console.log(data);
+        var htmlStr = "<table border=\"2\" style=\"background-color:gray;\" class=\"table\">";
+        htmlStr += "<tr>"
+        htmlStr += "<th scope=\"col\">Activity Name</th>";
+        htmlStr += "<th scope=\"col\" style=\"text-align:center;\">Type</th>";
+        htmlStr += "<th scope=\"col\" style=\"text-align:center;\">Duration (Mins)</th>";
+        htmlStr += "<th scope=\"col\">Due Date</th>";
+        htmlStr += "<th scope=\"col\">Attempted Date</th>";
+        htmlStr += "<th scope=\"col\" style=\"text-align:center;\">Status</th>";
+        htmlStr += "<th scope=\"col\" style=\"text-align:center;\">Action</th>";
+        var isAttempt = false;
+        var isStop = false;
+        htmlStr += "</tr>";
+        $.map(data, function (item) {
+            htmlStr += "<tr>"
+            htmlStr += "<td>" + item.ActivityText + "</td>";
+            htmlStr += "<td style=\"text-align:center;\">" + item.ActivityType + "</td>";
+            console.log(item.Duration)
+            if (item.Duration == null || item.Duration =="") {
+                htmlStr += "<td style=\"text-align:center;\"> - </td>";
+            }
+            else {
+                htmlStr += "<td style=\"text-align:center;\">" + item.Duration + ":00</td>";
+            }
+            htmlStr += "<td>" + item.DueDate + "</td>";
+            htmlStr += "<td>" + item.CompletionDate + "</td>";
+
+             if(item.ActivityType=="Forum") {
+                 htmlStr += "<td></td>";
+             }
+             else if (item.ActivityStatus == "Not Started") {
+                 htmlStr += "<td class=\"mobile-hide\" style=\"text-align:center;\"><i class=\"far fa-clock\"></i></td>";
+             }
+             else if (item.ActivityStatus == "InProgress")
+             {
+                 htmlStr += "<td class=\"mobile-hide\" style=\"text-align:center;\"><i class=\"far fa-hourglass orange-color\"></i></td>";
+             }
+             else if (item.ActivityStatus == "Completed")
+             {
+                 htmlStr += "<td class=\"mobile-hide\" style=\"text-align:center;\"><i class=\"far fa-check-circle green-color\"></i></td>";
+             }
+
+            
+                if (item.ActivityType == "Survey" && !isAttempt) {
+
+                    var urlLink = "@Url.Action("LaunchQuiz", "Assignment")";
+                    urlLink = urlLink + "?QuizId=" + item.ActivityId;
+                    console.log(urlLink);
+                    htmlStr += "<td style=\"text-align:center;\">";
+                    htmlStr += "<a href=" + urlLink + " class=\"login\" title=\"Launch Quiz\"><img src=\"/assets/images/launch.png\" /></a></td>";
+
+                }
+                else if (item.ActivityType == "Forum") {
+                    htmlStr += "<td style=\"text-align:center;\">";
+                    var urlLink = "@Url.Action("PostComment", "Forum")";
+                    urlLink = urlLink + "?forumId=" + item.ActivityId;
+                    htmlStr += "<a href=" + urlLink + " class=\"login\" title=\"View\"><img src=\"/assets/images/eye.png\"  /></a></td>";
+                }
+                else if (item.ActivityType == "Course" && !isAttempt) {
+                    var urlLink = "@Url.Action("LaunchCourse", "Assignment")";
+                    urlLink = urlLink + "?CourseId=" + item.ActivityId;
+
+                    htmlStr += "<td style=\"text-align:center;\">";
+                    htmlStr += "<a href=" + urlLink + " class=\"login\" title=\"Launch Course\" target=\"_blank\"><img src=\"/assets/images/launch.png\" /></a></td>";
+
+                }
+                else {
+                    htmlStr += "<td></td>";
+                }
+             
+
+            if (item.ActivityStatus == "Completed" && item.ActivityType != "Forum") {
+                isAttempt = false;
+            }
+            else {
+                isAttempt = true;
+            }
+
+
+              htmlStr +="</tr>"
+         });
+
+        htmlStr += "</table>";
+        $("#dvActivities" + id).html(htmlStr)
+
+
+
+        $("#trActivities" + id).show(1000);
+        $("#dvActivities" + id).show(1000);
+        $("#imgExpand"+id).attr("src", "/assets/images/details_close.png");
+
+    }
 
 </script>
 <style>

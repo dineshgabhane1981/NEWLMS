@@ -167,18 +167,7 @@ namespace LMSBL.Repository
                     TenantId = Convert.ToInt32(dr["TenantId"])
                 }).ToList();
                 return forumsDetailsByType;
-                //if (ds != null)
-                //{
-                //    if (ds.Tables.Count > 0)
-                //    {
-                //        if (ds.Tables[0].Rows.Count > 0)
-                //        {
-                //            result = ds.Tables[0].Rows[0][2].ToString();
-                //        }
-                //    }
-                //}
-                //return result;
-
+                
             }
             catch(Exception ex)
             {
@@ -214,6 +203,58 @@ namespace LMSBL.Repository
                 newException.AddException(ex);
                 throw ex;
             }
+        }
+
+        public List<tblForumReply> GetForumReplyForLearner(int forumId, int userId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@ForumId", SqlDbType.Int, forumId);
+                db.AddParameter("@Userid", SqlDbType.Int, userId);
+                DataSet ds = db.FillData("sp_ForumGetAllReply");
+                List<tblForumReply> replyList = ds.Tables[0].AsEnumerable().Select(dr => new tblForumReply
+                {
+                    ForumId = Convert.ToInt32(dr["ForumId"]),
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    ForumReply = Convert.ToString(dr["ForumReply"]),
+                    CreatedDate = Convert.ToDateTime(dr["CreatedDate"])
+                    
+
+                }).ToList();
+                return replyList;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public int AddForumReply(tblForumReply obj)
+        {
+            int status = 0;             
+            try
+            {
+
+                db.AddParameter("@ForumId", SqlDbType.Int, obj.ForumId);
+                db.AddParameter("@UserId", SqlDbType.Int, obj.UserId);
+                db.AddParameter("@ForumReply", SqlDbType.NText, obj.ForumReply);
+                
+                db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                status = db.ExecuteQuery("sp_ForumReplyAdd");
+                if (Convert.ToInt32(db.parameters[3].Value) > 0)
+                {
+                    status = Convert.ToInt32(db.parameters[3].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                //throw ex;
+                status = -2;
+            }
+            return status;
         }
 
     }

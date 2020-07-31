@@ -20,7 +20,7 @@ namespace LMSWeb.Controllers
         // GET: Login
         public ActionResult Index(string code)
         {
-            newException.AddDummyException("Login HIT");
+            //newException.AddDummyException("Login HIT");
             TblUser user = new TblUser();
 
             List<TblTenant> tenantDetails = new List<TblTenant>();
@@ -35,19 +35,18 @@ namespace LMSWeb.Controllers
                 {
                     if (tenantList[0].TenantId == 6)
                     {
-                        newException.AddDummyException("in Login");
-                        newException.AddDummyException("Code - " + code);
+                        
+                        //newException.AddDummyException("Code - " + code);
                         if (!string.IsNullOrEmpty(code))
                         {
                             if (!string.IsNullOrEmpty(Convert.ToString(Session["CourseId"])))
-                            {
+                            {                               
                                 
-                                newException.AddDummyException("1212");
                                 return RedirectToAction("LaunchCourse", "Assignment", new { @CourseId = Convert.ToInt32(Session["CourseId"]), @code = code });
                             }
                             else
                             {
-                                newException.AddDummyException("in Quiz");
+                                //newException.AddDummyException("in Quiz");
                                 int quizId = 0;
                                 if(string.IsNullOrEmpty(Convert.ToString(Session["QuizId"])))
                                 {
@@ -57,7 +56,7 @@ namespace LMSWeb.Controllers
 
                                 foreach (var item in sessions)
                                 {
-                                    newException.AddDummyException("Quiz Id in list - " + item.QuizId);
+                                    
                                     if (item.isUsed == false)
                                     {
                                         quizId = item.QuizId;
@@ -65,9 +64,8 @@ namespace LMSWeb.Controllers
                                         break;
                                     }
 
-                                }
-                                newException.AddDummyException("Code in Quiz - "+ code);
-                                newException.AddDummyException("QuizId in Quiz - " + quizId);
+                                }                               
+                                
                                 return RedirectToAction("LaunchQuiz", "Assignment", new { @QuizId = quizId, @code = code });
                             }
                         }

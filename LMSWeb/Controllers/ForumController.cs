@@ -110,6 +110,29 @@ namespace LMSWeb.Controllers
             return View(lstForum);
         }
 
+        public ActionResult PostComment(int forumId)
+        {
+            tblForumReply objForumReply = new tblForumReply();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            var lstReply = fr.GetForumReplyForLearner(forumId, sessionUser.UserId);
+            objForumReply.lstReply = lstReply;
+            return View(objForumReply);
+
+        }
+
+        public ActionResult AddReply(int forumId,string forumReply)
+        {
+
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            tblForumReply objForumReply = new tblForumReply();
+            objForumReply.ForumId = forumId;
+            objForumReply.UserId = sessionUser.UserId;
+            objForumReply.ForumReply = forumReply;
+
+            var status = fr.AddForumReply(objForumReply);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

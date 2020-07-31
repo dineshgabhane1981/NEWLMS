@@ -1,4 +1,5 @@
-﻿var count = 0;
+﻿var VideoAudioLink = "http://localhost:7777/QuizMedia/";
+var count = 0;
 var optionCount = 2;
 var quizQueIds = [];
 var currentIndex = 0;
@@ -912,13 +913,13 @@ function LaunchQuizNew(QuizLaunchData) {
             queHTML += "</li>";
         }
         if (value.QuestionTypeId == 4) {
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId + ".mp4";             
+            var source = VideoAudioLink + value.QuestionId + ".mp4";             
             queHTML += "<li>";
             queHTML += "<video src=" + source + " width=\"90%\"  controls=\"controls\" controlsList=\"nodownload\" oncontextmenu=\"return false;\" />";
             queHTML += "</li>";
         }
         if (value.QuestionTypeId == 5) {
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId + ".mp3";  
+            var source = VideoAudioLink + value.QuestionId + ".mp3";  
             queHTML += "<li>";
             queHTML += "<audio controls=\"controls\" width=\"90%\" controlsList=\"nodownload\" oncontextmenu=\"return false; \">";
             queHTML += "<source src=" + source + " type=\"audio/mpeg\" /></audio>";
@@ -1079,14 +1080,14 @@ function ViewQuiz(QuizViewData) {
             queHTML += "</li>";
         }
         if (value.QuestionTypeId == 4) {           
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId+".mp4";               
+            var source = VideoAudioLink + value.QuestionId+".mp4";               
                 queHTML += "<li>";
                 queHTML +="<video src="+source+" width=\"90%\" controls=\"controls\" controlsList=\"nodownload\" oncontextmenu=\"return false;\" />";
                 queHTML += "</li>";
             
         }
         if (value.QuestionTypeId == 5) {
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId + ".mp3";     
+            var source = VideoAudioLink + value.QuestionId + ".mp3";     
             queHTML += "<li>";
             queHTML += "<audio controls=\"controls\" width=\"90%\" controlsList=\"nodownload\" oncontextmenu=\"return false; \">";
             queHTML += "<source src=" + source + " type=\"audio/mpeg\" /></audio>";
@@ -1390,13 +1391,13 @@ function ReviewQuiz(QuizReviewData) {
             
         }
         if (value.QuestionTypeId == 4) {
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId + ".mp4";  
+            var source = VideoAudioLink + value.QuestionId + ".mp4";  
             queHTML += "<div>";
             queHTML += "<video src=" + source + " width=\"90%\" controls=\"controls\" controlsList=\"nodownload\" oncontextmenu=\"return false;\" />";
             queHTML += "</div>";
         }
         if (value.QuestionTypeId == 5) {
-            var source = "http://localhost:7777/QuizMedia/" + value.QuestionId + ".mp3";  
+            var source = VideoAudioLink + value.QuestionId + ".mp3";  
             queHTML += "<div>";
             queHTML += "<audio controls=\"controls\" width=\"90%\" controlsList=\"nodownload\" oncontextmenu=\"return false; \">";
             queHTML += "<source src=" + source + " type=\"audio/mpeg\" /></audio>";

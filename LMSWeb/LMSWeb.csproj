@@ -196,6 +196,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\CurriculumActivities.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MyLearningViewModel.cs" />
     <Compile Include="ViewModel\QuizAssignViewModel.cs" />
@@ -217,6 +218,8 @@
     <Content Include="assets\images\card-img-3.jpg" />
     <Content Include="assets\images\card-img.jpg" />
     <Content Include="assets\images\check-img.png" />
+    <Content Include="assets\images\details_close.png" />
+    <Content Include="assets\images\details_open.png" />
     <Content Include="assets\images\favicon.ico" />
     <Content Include="assets\images\rt_logo.png" />
     <Content Include="assets\images\course.png" />
@@ -841,6 +844,7 @@
     <Content Include="Views\Forum\ForumList.cshtml" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Views\EmailTemplate\UpdateEmailTemplate.cshtml" />
+    <Content Include="Views\Forum\PostComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
