@@ -23,6 +23,7 @@
         overflow: auto; /* Enable scroll if needed */
         background-color: rgb(0,0,0); /* Fallback color */
         background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+       
     }
 
     /* Modal Content */
@@ -31,7 +32,8 @@
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 80%;
+        width: 60%;
+        border-radius: 25px;
     }
 
     /* The Close Button */
@@ -144,23 +146,30 @@
     </div>
 
 </div>
-<div id="myModal" class="modal">
+<div id="myModal" class="modal ">
 
     <!-- Modal content -->
-    <div class="modal-content">
+    <div class="modal-content" >         
         @*<span class="close">&times;</span>*@
-        Activity Type
-        <select id="lstActivityType" class="input100">
-            <option value="0">Select</option>
-            <option value="1">Course</option>
-            <option value="2">Survey</option>
-            <option value="3">Forum</option>
-        </select>
-        <div id="dvAxtivities">
-            Select activities
-            <select id="lstAxtivities" name="lstAxtivities" size="5" multiple>
+        <div class="row" style="margin-left:20px;">
+            <label class="col-3 p-0">
+                Select Activity Type
+            </label>
+            <select id="lstActivityType" class="input100">
+                <option value="0">Select</option>
+                <option value="1">Course</option>
+                <option value="2">Survey</option>
+                <option value="3">Forum</option>
             </select>
-            <br /> <br /> <br />
+        </div>
+        <div id="dvAxtivities" class="row" style="margin-left:20px; margin-bottom:20px;">
+            <label class="col-3 p-0">
+                Select activities
+            </label>
+                <select id="lstAxtivities" name="lstAxtivities" size="5" style="width:300px;" multiple>
+                </select>                 
+        </div>
+        <div class="row justify-content-end pr-4"> 
             <button type="button" id="btnAddActivityToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
             <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
         </div>
@@ -169,13 +178,14 @@
 </div>
 
 <script>
-
         var modal = document.getElementById("myModal");
         var btn = document.getElementById("btnAddActivity");
         var span = document.getElementsByClassName("close")[0];
         btn.onclick = function() {
           //modal.style.display = "block";
-            $("#myModal").show(1000);
+            $("#lstActivityType").val(0);
+            $("#dvAxtivities").hide();
+            $("#myModal").show(800);
         }
 
 
@@ -304,13 +314,10 @@
           if(($(this).is(':selected')))
           {
               var oldValue = this.value;
-
               $.each(curriculumActivities, function (index, value) {
-
                   if (value.activityId == oldValue) {
                       status = false;
                   }
-
               });
               if (status) {
                   srNo++;

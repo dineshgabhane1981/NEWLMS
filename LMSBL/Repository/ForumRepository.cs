@@ -218,6 +218,8 @@ namespace LMSBL.Repository
                     ForumId = Convert.ToInt32(dr["ForumId"]),
                     UserId = Convert.ToInt32(dr["UserId"]),
                     ForumReply = Convert.ToString(dr["ForumReply"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    ProfileImage = Convert.ToString(dr["profileImage"]),
                     CreatedDate = Convert.ToDateTime(dr["CreatedDate"])
                     
 
