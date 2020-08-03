@@ -30,7 +30,8 @@
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 80%;
+        width: 70%;
+        border-radius: 25px;
     }
 
     /* The Close Button */
@@ -58,7 +59,7 @@
         if (Convert.ToString(TempData["Message"]) == "-1")
         {
             <script>
-    swal.fire({
+                swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Something went Wrong!'
@@ -145,17 +146,21 @@
     <div class="modal-content">
         @*<span class="close">&times;</span>*@
 
-        <div id="dvAxtivities">
-            Select User/s
-            <select id="lstUsers" name="lstUsers" size="5" multiple>
-            </select><br />
-            Due Date <input type="datetime" id="dtDueDate" class="input100 datepicker" />
-            <br /> <br />
-
-            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
-            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
-
+        <div id="dvAxtivities" class="row" style="margin-left:20px;margin-bottom:20px;">
+            <label class="col-2 p-0">
+                Select User/s
+            </label>
+            <select id="lstUsers" name="lstUsers" size="5" style="width:300px;" multiple>
+            </select>
         </div>
+        <div style="margin-left:20px;">
+            <label class="col-2 p-0">
+                Due Date
+            </label>
+            <input type="datetime" id="dtDueDate" class="input100 datepicker" />
+            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+        </div>
+
         <div>
             <div class="row mt-3" id="dvAssignedUsers">
                 <div class="table-responsive">
@@ -173,9 +178,12 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
 
             </div>
+        </div>
+        <div class="row justify-content-end pr-4" style="margin-top:20px;">
+            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
         </div>
     </div>
 </div>
@@ -215,9 +223,7 @@
             table.draw();
             table.rowReordering();
         });
-
-
-
+               
         $('#dtDueDate').datepicker({
             format: 'mm/dd/yyyy',
             showWeek: true
@@ -287,7 +293,7 @@
                 }
             });
 
-
+        $("#dtDueDate").datepicker().datepicker("setDate", new Date());
        $("#myModal").show(1000);
           //modal.style.display = "block";
     }
@@ -349,21 +355,21 @@
             swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'This Activity already added to Curriculum!'
+                text: 'This User already added to List!'
             })
         }
         else if (!isSelected) {
             swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Please select Activity!'
+                text: 'Please select User!'
             })
         }
         else {
            DrawTable();
             Swal.fire(
                     'Added!',
-                    'Activity Added successfully!',
+                    'User Added successfully!',
                     'success'
                 )
         }
@@ -419,7 +425,7 @@
                      swal.fire({
                        icon: 'success',
                         title: 'Assigned',
-                        text: 'Curriculum Assigned Successfully!'
+                        text: 'Changes Saved Successfully!'
                     }).then((value) => {
                         assignedUsers = [];
                         modal.style.display = "none";
