@@ -25,6 +25,7 @@ namespace LMSWeb.Controllers
         QuizRepository quizRepository = new QuizRepository();
         ReportRepository rpt = new ReportRepository();
         Exceptions newException = new Exceptions();
+        CurriculumRepository cc = new CurriculumRepository();
         // GET: Reports
         public ActionResult Index()
         {
@@ -41,25 +42,58 @@ namespace LMSWeb.Controllers
             }
         }
 
-        public ActionResult DetailReport(int activityId, string UserId)
+        public ActionResult DetailReport(int activityId, string UserId, string cId)
         {
             try
             {
-                newException.AddDummyException("entered");
+                //newException.AddDummyException("entered");
                 TblUser sessionUser = new TblUser();
                 sessionUser = (TblUser)Session["UserSession"];
-                if (!string.IsNullOrEmpty(UserId))
-                {
-                    sessionUser.UserId = Convert.ToInt32(UserId);
-                }
                 
-                var attemptList = rpt.GetDetailReportForLearner(sessionUser.UserId, sessionUser.TenantId, activityId);
-                newException.AddDummyException("after");
-                return View(attemptList);
+                if (!string.IsNullOrEmpty(cId))
+                {
+                    List<CurriculumActivities> lstCurriculumActivities = new List<CurriculumActivities>();
+                    DataSet Data = cc.GetCurriculumActivitiesById(Convert.ToInt32(activityId), sessionUser.UserId);
+
+                    if (Data != null)
+                    {
+                        if (Data.Tables.Count > 0)
+                        {
+                            if (Data.Tables[0].Rows.Count > 0)
+                            {
+                                foreach (var item in Data.Tables[0].Rows)
+                                {
+                                    lstCurriculumActivities = Data.Tables[0].AsEnumerable().Select(dr => new CurriculumActivities
+                                    {
+                                        ActivityId = Convert.ToInt32(dr["ActivityId"]),
+                                        ActivityText = Convert.ToString(dr["ActivityText"]),
+                                        ActivityType = Convert.ToString(dr["ActivityType"]),
+                                        DueDate = Convert.ToString(dr["DueDate"]),
+                                        ActivityStatus = Convert.ToString(dr["ActivityStatus"]),
+                                        CompletionDate = Convert.ToString(dr["CompletionDate"]),
+                                        Duration = Convert.ToString(dr["Duration"]),
+                                        Score = Convert.ToString(dr["Score"])
+                                    }).ToList();
+                                }
+                            }
+                        }
+                    }
+                    return View("CurriculumActivities", lstCurriculumActivities);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(UserId))
+                    {
+                        sessionUser.UserId = Convert.ToInt32(UserId);
+                    }
+                    var attemptList = rpt.GetDetailReportForLearner(sessionUser.UserId, sessionUser.TenantId, activityId);
+                    //newException.AddDummyException("after");
+                    return View(attemptList);
+                }
             }
             catch (Exception ex)
             {
-                newException.AddDummyException("error");
+                //newException.AddDummyException("error");
                 newException.AddException(ex);
                 return View();
             }

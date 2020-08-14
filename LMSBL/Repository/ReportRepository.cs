@@ -37,6 +37,67 @@ namespace LMSBL.Repository
                     ActivityCompletionTime = Convert.ToString(dr["ActivityCompletionTime"])
 
                 }).ToList();
+
+                foreach (var item in mainRpt)
+                {
+                    if (item.ActivityType == "Curriculum")
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@CurriculumId", SqlDbType.Int, item.ActivityId);
+                        db.AddParameter("@UserId", SqlDbType.Int, userId);
+                        DataSet ds1 = db.FillData("sp_CurriculumGetActivityStatus");
+                        if (ds1 != null)
+                        {
+                            if (ds1.Tables.Count > 0)
+                            {
+                                int totalCount = 0;
+                                int inProgress = 0;
+                                int completed = 0;
+                                string dateAttempted = string.Empty;
+                                foreach (DataRow row in ds1.Tables[0].Rows)
+                                {
+                                    if (Convert.ToString(row["ActivityType"]) != "Forum")
+                                    {
+                                        totalCount++;
+                                        if (Convert.ToString(row["ActivityStatus"]) == "InProgress")
+                                        {
+                                            inProgress++;
+                                        }
+                                        if (Convert.ToString(row["ActivityStatus"]) == "Completed")
+                                        {
+                                            completed++;
+                                        }
+                                        if(!string.IsNullOrEmpty(Convert.ToString(row["AttemptedDate"])))
+                                        {
+                                            dateAttempted = Convert.ToString(row["AttemptedDate"]);
+                                        }
+
+                                    }
+                                }
+                                if (inProgress > 0)
+                                {
+                                    item.ActivityAttempts = "1";
+                                }
+                                else if (completed > 0 && completed == totalCount)
+                                {
+                                    item.ActivityAttempts = "1";
+                                }
+                                else if (completed > 0)
+                                {
+                                    item.ActivityAttempts = "1";
+                                }
+                                else
+                                {
+                                    item.ActivityAttempts = "0";
+                                }
+                                if(!string.IsNullOrEmpty(dateAttempted))
+                                {
+                                    item.ActivityAttemptedDate = dateAttempted;
+                                }
+                            }
+                        }
+                    }
+                }
                 return mainRpt;
             }
             catch (Exception ex)
@@ -259,6 +320,7 @@ namespace LMSBL.Repository
             }
 
         }
+
 
     }
 }
