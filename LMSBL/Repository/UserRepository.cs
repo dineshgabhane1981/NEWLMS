@@ -73,7 +73,8 @@ namespace LMSBL.Repository
                     RoleName = Convert.ToInt32(dr["roleId"]) == 2 ? Roles.Admin.ToString() : Roles.Learner.ToString(),//Convert.ToString(dr["roleName"]),
                     IsActive = Convert.ToBoolean(dr["isActive"]),
                     CreatedBy = Convert.ToInt32(dr["createdBy"]),
-                    CreatedOn = Convert.ToDateTime(dr["createdOn"])
+                    CreatedOn = Convert.ToDateTime(dr["createdOn"]),
+                    CreatedDate = Convert.ToDateTime(dr["createdOn"]).ToString("MM/dd/yyyy")
 
                 }).ToList();
                 return userDetails;
@@ -110,7 +111,9 @@ namespace LMSBL.Repository
                     RoleName = Convert.ToInt32(dr["roleId"]) == 2 ? Roles.Admin.ToString() : Roles.Learner.ToString(),//Convert.ToString(dr["roleName"]),
                     IsActive = Convert.ToBoolean(dr["isActive"]),
                     CreatedBy = Convert.ToInt32(dr["createdBy"]),
-                    CreatedOn = Convert.ToDateTime(dr["createdOn"])
+                    CreatedOn = Convert.ToDateTime(dr["createdOn"]),
+                    CreatedDate = Convert.ToDateTime(dr["createdOn"]).ToString("MM/dd/yyyy")
+
 
                 }).ToList();
                 return userDetails;

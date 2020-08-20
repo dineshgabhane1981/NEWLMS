@@ -124,7 +124,7 @@
                                         <td>@user.EmailId</td>
                                         <td style="max-width:150px;">@user.ContactNo</td>
                                         <td>@user.RoleName</td>
-                                        <td>@user.CreatedOn</td>
+                                        <td>@user.CreatedDate</td>
                                         @if (user.IsActive == true)
                                         {
                                             <td style="text-align:center;"><img src="~/assets/images/shape_activeBig.png" title="Active" alt="Active"></td>
@@ -299,7 +299,7 @@
                             rowitem["Email ID"] = item.EmailId;
                             rowitem["Phone No"] = item.ContactNo;
                             rowitem["Role"] = item.RoleName;
-                            rowitem["Date Added"] = item.CreatedOn;
+                            rowitem["Date Added"] = item.CreatedDate;
                             if (item.IsActive == true) {
                                 rowitem["Status"] = "<input id='image' type='image' src='../assets/images/shape_activeBig.png'>";
 

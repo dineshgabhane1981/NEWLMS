@@ -47,6 +47,9 @@ namespace LMSBL.DBModels
         [Column(TypeName = "date")]
         public DateTime? CreatedOn { get; set; }
 
+        [NotMapped]
+        public string CreatedDate { get; set; }
+
         public int TenantId { get; set; }
 
         public int? RoleId { get; set; }
