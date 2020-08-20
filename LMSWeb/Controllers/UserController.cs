@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Security.Cryptography;
+using System.Web.Script.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -11,6 +12,10 @@ using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using LMSWeb.App_Start;
+using System.Net;
+//using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Linq;
+using System.Collections;
 
 namespace LMSWeb.Controllers
 {
@@ -54,15 +59,67 @@ namespace LMSWeb.Controllers
                 return View();
             }
         }
+        public ActionResult GetUsers()
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
 
+            var Users = ur.GetAllUsers(sessionUser.TenantId);
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+            return Json(userItems, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult CreateGroup(string jsonData)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = null;
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                objData = (object[])json_serializer.DeserializeObject(jsonData);
+            }
+            var result = ur.CreateGroupInDb(objData, sessionUser.TenantId);
+
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetGroup()
+        {
+           // List<TblUserGroup> lstgroupUsers = new List<TblUserGroup>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            DataSet ds = ur.GetGroupBytenantId(sessionUser.TenantId);
+            List<TblGroup> lstgroup = ds.Tables[0].AsEnumerable().Select(dr => new TblGroup
+            {
+                GroupId = Convert.ToInt32(dr["GroupId"]),
+                GroupName = Convert.ToString(dr["GroupName"]),
+                CreatedOn = Convert.ToDateTime(dr["CreatedOn"]).ToString("MM/dd/yyyy")
+
+            }).ToList();
+            
+            foreach (var item in lstgroup)
+            {
+                var lstgroupUsers = ur.GetGroupUsers(Convert.ToInt32(item.GroupId));
+                //Array userarr = lstgroupUsers.ToArray();               
+                item.userarr = lstgroupUsers;
+                item.NoOfUsers = lstgroupUsers.Count;
+            }
+
+            return Json(lstgroup, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult GetAllUsers()
         {
             try
             {
                 TblUser sessionUser = (TblUser)Session["UserSession"];
                 List<TblUser> lstAllActiveUsers = new List<TblUser>();
-                lstAllActiveUsers = ur.GetAllUsers(sessionUser.TenantId);
-
+                lstAllActiveUsers = ur.GetAllUsers(sessionUser.TenantId);                
                 return PartialView(lstAllActiveUsers);
             }
             catch (Exception ex)
@@ -70,6 +127,46 @@ namespace LMSWeb.Controllers
                 newException.AddException(ex);
                 return View();
             }
+        }
+        public ActionResult GetActiveInActiveUsers(int? id)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            List<TblUser> lstAllActiveUsers = new List<TblUser>();
+            lstAllActiveUsers = ur.GetAllactiveInactiveUsers(sessionUser.TenantId,id);
+
+            return Json(lstAllActiveUsers, JsonRequestBehavior.AllowGet);
+
+        }
+        public ActionResult Deletegroup(string groupId)
+        {
+           // TblGroup objgrp = new TblGroup();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            int result = ur.DeleteGroup(Convert.ToInt32(groupId), sessionUser.TenantId);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Editgroup(string groupId)
+        {
+           // List<TblUserGroup> lstgroupUsers = new List<TblUserGroup>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            DataSet ds = ur.GetGroupbyGroupIdandTenantId(Convert.ToInt32(groupId), sessionUser.TenantId);
+            List<TblGroup> lstCurriculum = ds.Tables[0].AsEnumerable().Select(dr => new TblGroup
+            {
+                GroupId = Convert.ToInt32(dr["GroupId"]),
+                GroupName = Convert.ToString(dr["GroupName"]),
+                CreatedOn = Convert.ToDateTime(dr["CreatedOn"]).ToString("MM/dd/yyyy")
+
+            }).ToList();
+
+            foreach (var item in lstCurriculum)
+            {
+               var lstgroupUsers = ur.GetGroupUsers(Convert.ToInt32(item.GroupId));
+               // Array userarr = lstgroupUsers.ToArray();
+                item.userarr = lstgroupUsers;
+                item.NoOfUsers = lstgroupUsers.Count;
+            }
+
+            return Json(lstCurriculum, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AddUser()

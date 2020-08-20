@@ -64,6 +64,7 @@
     <Compile Include="Common\Response.cs" />
     <Compile Include="DBModels\HomeModel.cs" />
     <Compile Include="DBModels\LMSContext.cs" />
+    <Compile Include="DBModels\OnlyUserId.cs" />
     <Compile Include="DBModels\QuizResponse.cs" />
     <Compile Include="DBModels\ReportModel.cs" />
     <Compile Include="DBModels\TblAssignmentAndTracking.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="DBModels\tblEmails.cs" />
     <Compile Include="DBModels\tblForum.cs" />
     <Compile Include="DBModels\tblForumReply.cs" />
+    <Compile Include="DBModels\TblGroup.cs" />
     <Compile Include="DBModels\TblLogin.cs" />
     <Compile Include="DBModels\TblNotificationTemplate.cs" />
     <Compile Include="DBModels\tblQuestion.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="DBModels\tblTemplateAssign.cs" />
     <Compile Include="DBModels\TblTenant.cs" />
     <Compile Include="DBModels\TblUser.cs" />
+    <Compile Include="DBModels\TblUserGroup.cs" />
     <Compile Include="DBModels\TblUserRole.cs" />
     <Compile Include="DBModels\Param.cs" />
     <Compile Include="DBModels\UserReportModel.cs" />

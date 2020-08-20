@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.SqlClient;
 using System.Linq;
 using LMSBL.Common;
@@ -85,6 +87,44 @@ namespace LMSBL.Repository
 
         }
 
+        public List<TblUser> GetAllactiveInactiveUsers(int tenantId,int? status)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@tenantId", SqlDbType.Int, tenantId);
+                db.AddParameter("@isActive", SqlDbType.Int, status);
+                DataSet ds = db.FillData("sp_GetActiveInactiveUser");
+                List<TblUser> userDetails = ds.Tables[0].AsEnumerable().Select(dr => new TblUser
+                {
+                    UserId = Convert.ToInt32(dr["userId"]),
+                    FirstName = Convert.ToString(dr["firstName"]),
+                    LastName = Convert.ToString(dr["lastName"]),
+                    EmailId = Convert.ToString(dr["emailId"]),
+                    Password = Convert.ToString(dr["password"]),
+                    //DOB = (DBNull.Value.Equals(dr["DOB"])) ? Convert.ToDateTime(dr["DOB"]):,
+                    ContactNo = Convert.ToString(dr["contactNo"]),
+                    TenantId = Convert.ToInt32(dr["tenantId"]),
+                    //TenantName = Convert.ToString(dr["tenantName"]),
+                    RoleId = Convert.ToInt32(dr["roleId"]),
+                    RoleName = Convert.ToInt32(dr["roleId"]) == 2 ? Roles.Admin.ToString() : Roles.Learner.ToString(),//Convert.ToString(dr["roleName"]),
+                    IsActive = Convert.ToBoolean(dr["isActive"]),
+                    CreatedBy = Convert.ToInt32(dr["createdBy"]),
+                    CreatedOn = Convert.ToDateTime(dr["createdOn"])
+
+                }).ToList();
+                return userDetails;
+            }
+            catch (Exception ex)
+            {
+
+                newException.AddException(ex);
+                return null;
+            }
+
+        }
+
+
         public int AddUser(TblUser obj)
         {
             int result = 0;
@@ -163,6 +203,29 @@ namespace LMSBL.Repository
                 newException.AddException(ex);
                 return 0;
             }
+        }
+
+        public int DeleteGroup(int groupId,int tenantId)
+        {
+            try 
+            {
+                db.parameters.Clear();
+                db = new DataRepository();
+                db.AddParameter("@groupId", SqlDbType.Int, groupId);
+                db.AddParameter("@TenantId", SqlDbType.Int, tenantId);
+                db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                int result =db.ExecuteQuery("sp_DeleteGroupById");
+                return result;
+            }
+            catch(Exception ex)
+            {
+                newException.AddException(ex);
+                return 0;
+
+            }
+
+
+
         }
 
         public TblUser IsValidUser(string Username, string Password, string DomainName)
@@ -349,5 +412,106 @@ namespace LMSBL.Repository
             return result;
         }
 
+        public int CreateGroupInDb(object[] objData, int tenantid)
+        {
+          
+            int GroupId = 0;
+            
+            if (objData != null)
+            {
+                foreach (Dictionary<string, object> item in objData)
+                {
+                    if (Convert.ToInt32(item["GroupId"]) < 10000)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@groupId", SqlDbType.Int, Convert.ToInt32(item["GroupId"]));
+                        db.AddParameter("@tenantId", SqlDbType.Int, Convert.ToInt32(tenantid));
+                        db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                        int status1 = db.ExecuteQuery("sp_deleteGroupById");
+                    }
+                    
+                        db.parameters.Clear();
+                        db.AddParameter("@tenantId", SqlDbType.Int, Convert.ToInt32(tenantid));
+                        db.AddParameter("@groupName", SqlDbType.Text, Convert.ToString(item["GroupName"]));
+                        db.AddParameter("@groupId", SqlDbType.Int, ParameterDirection.Output);
+                        var result = db.ExecuteQuery("sp_createGroup");
+                        GroupId = (Convert.ToInt32(db.parameters[2].Value));
+
+                        foreach (Dictionary<string, object> item1 in (object[])item["userid"])
+                        {
+                            db.parameters.Clear();
+                            db.AddParameter("@GroupId", SqlDbType.Int, GroupId);
+                            db.AddParameter("@UserId", SqlDbType.Int, Convert.ToInt32(item1["userid"]));
+                            db.AddParameter("@result", SqlDbType.Int, ParameterDirection.Output);
+                            var result1 = db.ExecuteQuery("sp_createUserGroup");
+
+                        }
+                    
+                }
+
+
+
+            }
+            return GroupId;
+        }
+        public DataSet GetGroupBytenantId(int TenantId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@tenantId", SqlDbType.Int, TenantId);
+                DataSet ds = db.FillData("sp_GetGroupByTenantId");
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public DataSet GetGroupbyGroupIdandTenantId(int groupId,int tenantId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@groupId", SqlDbType.Int, groupId);
+                db.AddParameter("@tenantid", SqlDbType.Int, tenantId);
+                DataSet ds = db.FillData("sp_GetGroupByGroupId");
+                return ds;
+            }
+            catch(Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+
+            }
+        }
+        public List<OnlyUserId> GetGroupUsers(int groupId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@GroupId", SqlDbType.Int, groupId);
+                DataSet ds = db.FillData("sp_GetUserGroupByGroupId");
+
+                List<OnlyUserId> lstgroupUsers = ds.Tables[0].AsEnumerable().Select(dr => new OnlyUserId
+                {
+                    userid = Convert.ToInt32(dr["userId"]),
+                   // GroupId = Convert.ToInt32(dr["GroupId"])
+                   
+                }).ToList();
+
+                return lstgroupUsers;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
     }
+
+
 }

@@ -3,7 +3,56 @@
     ViewBag.Title = "Users List";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
+    <style>
 
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 70%;
+            border-radius: 25px;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        th.hide_me, td.hide_me {
+            display: none;
+        }
+    </style>
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
         <div class="row">
@@ -13,8 +62,24 @@
             </div>
             <div class="col text-right">
                 <ul class="list-inline progress-list mt-2">
-                    <li class="list-inline-item"><img src="~/assets/images/shape_Active.png"> Active</li>
-                    <li class="list-inline-item"><img src="~/assets/images/shape_InactiveUser.png"> Inactive</li>
+                    <li class="list-inline-item">
+                        <a href="#" onclick="Filterdata(this.id=null);" id="all">
+                            All
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" onclick="Filterdata(this.id=1);" id="active"><img src="~/assets/images/shape_Active.png"> Active</a>
+                    </li>
+                    <li class="list-inline-item">
+                        
+                        <a href="#" onclick="Filterdata(this.id=0);" id="inactive"><img src="~/assets/images/shape_InactiveUser.png"> Inactive</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" onclick="OpenModelForAssign();" class="btn btn-secondary dropdown-toggle create-upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Create Group
+
+                        </a>
+                    </li>
                     <li class="list-inline-item">
                         <a href="@Url.Action("Upload", "User")">
                             <button class="btn btn-secondary dropdown-toggle create-upload-btn" type="button">
@@ -102,7 +167,62 @@
         </div>
     </div>
 </div>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        @*<span class="close">&times;</span>*@
+        <div style="margin-left:20px;">
+            <label class="col-2 p-0">
+                Group Name
+            </label>
+            
+            <input type="text" id="txtGrpName" class="input100" placeholder="Group Name" />
+        </div>
+
+        <div id="dvAxtivities" class="row" style="margin-left:20px;margin-bottom:20px;">
+            <label class="col-2 p-0">
+                Select User/s
+            </label>
+            <select id="lstUsers" name="lstUsers" size="5" style="width:300px;" multiple>
+            </select>
+        </div>
+        <div style="margin-left:20px;">
+            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+        </div>
+
+        <div>
+            <div class="row mt-3" id="dvAssignedUsers">
+                <div class="table-responsive">
+                    <table id="tblAssignedUsers" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Group Name</th>
+                                <th>Created Date</th>
+                                <th>No Of Users</th>
+                                <th>GroupId</th>
+                                <th>userid</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="row justify-content-end pr-4" style="margin-top:20px;">
+            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+        </div>
+    </div>
+</div>
 <script>
+    var activitytble = [];
+
+    var assignedUsers = [];
     $(document).ready(function () {
         $('#activityTable').DataTable({
             "aaSorting": [[ 4, "desc" ]],
@@ -118,16 +238,7 @@
                     aTargets: [-1,-2]
                 }
             ]
-            //language: {
-            //    paginate: {
-            //        next: '&#8594;', // or '→'
-            //        previous: '&#8592;' // or '←'
-            //    }
-            //}
-            //oLanguage: {
-            //    sProcessing: "<img src='~/assets/images/giphy.gif'>"
-            //},
-            //processing: true,
+
         });
 
         $('#activityTable_filter').hide();
@@ -146,8 +257,443 @@
             var table = $('#activityTable').DataTable();
             table.draw();
         });
+        DrawTable();
+        $('#btnAddUsersToList').on("click", function () {
+            AddUsersToList();
+        });
+        $('#btnAssignUsers').on("click", function () {
+            AssignUsersInDB();
+        });
+
     });
 
+
+    var modal = document.getElementById("myModal");
+    var btnClose = document.getElementById("btnPopupClose");
+    var list = "all";
+    function Filterdata(id) {
+        if (id == 0) {
+            list = "InActive";
+        }
+        else if (id == 1) {
+
+            list = "Active";
+        }
+        else {
+            list = "all";
+        }
+        console.log(activitytble);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetActiveInActiveUsers")',
+            data: '{id: "' + id + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    srNo = 0;
+                    console.log(activitytble);
+                        $.map(response, function (item) {
+                            srNo++;
+                            rowitem = {}
+                            rowitem["Name"] = item.FirstName + '' + item.LastName;
+                            rowitem["Email ID"] = item.EmailId;
+                            rowitem["Phone No"] = item.ContactNo;
+                            rowitem["Role"] = item.RoleName;
+                            rowitem["Date Added"] = item.CreatedOn;
+                            if (item.IsActive == true) {
+                                rowitem["Status"] = "<input id='image' type='image' src='../assets/images/shape_activeBig.png'>";
+
+                            }
+                            else {
+                                rowitem["Status"] = "<input id='image' type='image' src='../assets/images/shape_InactiveBig.png'>";
+
+                            }
+                            var urlLink = "@Url.Action("EditUser", "User")";
+                            urlLink = urlLink + "?id=" + item.UserId;
+
+                            if (item.IsActive == true) {
+                                rowitem["Action"] = "<input type='image' id='activeinactiveimg' class='login' src='../assets/images/shape_activate.png' onclick='ActivateDeactivate(" + item.UserId + ", " + false + ");'>";
+                            }
+                            else {
+                                rowitem["Action"] = "<input type='image' id='inactiveinactiveimg' class='login' src='../assets/images/shape_deactivate.png' onclick='ActivateDeactivate(" + item.UserId + ", " + true + ");'>";
+                            }
+                            //rowitem["Action"] += "<input type='image' onclick= " + urlLink + " class='login' src='../assets/images/shape_editUser.png'>";
+                            rowitem["Action"] += "<a href=" + urlLink + " class=\"login\" ><img src=\"/assets/images/launch.png\" /></a>";
+
+                            activitytble.push(rowitem);
+
+                        });
+                    DrawTable1();
+                    while (activitytble.length > 0) {
+                        activitytble.pop();
+                    } 
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+
+        });
+
+    }
+    function OpenModelForAssign() {
+
+        $.ajax({
+                type: "POST",
+            url: '@Url.Action("GetUsers")',
+                 contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    OnSuccess(response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+        });
+        $.ajax({
+                type: "POST",
+                 url: '@Url.Action("GetGroup")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                        srNo = 0;
+                        $.map(response, function (item) {
+                            srNo++;
+                            optionItem = {}
+                          // this.console.log(item.userarr);
+                            optionItem["index"] = srNo;
+                            optionItem["GroupName"] = item.GroupName;
+                            optionItem["CreatedOn"] = item.CreatedOn;
+                            optionItem["NoOfUsers"] = item.NoOfUsers;
+                            optionItem["GroupId"] = item.GroupId;
+                            optionItem["userid"] = item.userarr;
+                            optionItem["delete"] = "<input type='button' id='" + item.GroupId + "' onclick='DeleteGroup(" + item.GroupId + ")' value='Delete'>";
+                            optionItem["delete"] += "<input type='button' id='" + item.GroupId + "' onclick='EditGroup(" + item.GroupId + ")' value='Edit'>";
+
+                            assignedUsers.push(optionItem);
+                           // var gpid = item.GroupId;
+                          //  console.log(gpid);
+                        });
+                    DrawTable();
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
+
+
+
+       $("#myModal").show(1000);
+          //modal.style.display = "block";
+    }
+
+    btnClose.onclick = function () {
+
+        $("#myModal").hide(1000);
+        //modal.style.display = "none";
+    }
+    function OnSuccess(response) {
+        var data = response;
+
+        $('[id*=lstUsers]').empty();
+        var listBox = $('[id*=lstUsers]');
+        $.map(data, function (item) {
+            var option = document.createElement('option');
+            option.text = item.Text;
+            option.value = item.Value;
+            listBox[0].append(option);
+        });
+        $("#dvAxtivities").show();
+    }
+    var dumyId = 10000;
+    var editvalue = 0;
+    function AddUsersToList() {
+        var isSelected = false;
+        var status = true;
+        var status1 = true;
+        var srNo = assignedUsers.length;
+        // console.log(srNo)
+        var today = new Date();
+        var arrUsers = [];
+
+        $('#lstUsers option').each(function (index) {
+
+            if (($(this).is(':selected'))) {
+                var oldValue = this.value;
+                optionItem1 = {}
+                optionItem1["userid"] = this.value;
+                arrUsers.push(optionItem1);
+            }
+
+        });
+
+        isSelected = true;
+        optionItem = {}
+        srNo++;
+        dumyId++;
+        var txtbox = $('#txtGrpName').val();
+        if (txtbox == '') {
+            status = false;
+        }
+        $.each(assignedUsers, function (index, obj) {
+            if (obj.GroupName === txtbox) {
+                status1 = false;
+            }
+        })
+        if (status1) {
+            if (editvalue > 0) {
+
+                $.each(assignedUsers, function (index, obj) {
+
+                    if (editvalue == obj.GroupId) {
+                        //  console.log(assignedUsers.GroupName);
+                        console.log(txtbox);
+                        console.log(obj.GroupName);
+
+                        obj.GroupName = $('#txtGrpName').val();
+                        obj.CreatedOn = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                        obj.NoOfUsers = arrUsers.length;
+                        obj.GroupId = editvalue;
+                        obj.userid = arrUsers;
+                        obj.delete = "<input type='button' id='" + editvalue + "' onclick='DeleteGroup(" + editvalue + ")' value='Delete'>";
+                        obj.delete += "<input type='button' id='" + editvalue + "' onclick='EditGroup(" + editvalue + ")' value='Edit'>";
+
+                    }
+                })
+            }
+            else {
+                optionItem["index"] = srNo;
+                optionItem["GroupName"] = $('#txtGrpName').val();
+                optionItem["CreatedOn"] = (today.getMonth() + 1)  + '/' + today.getDate() + '/' + today.getFullYear();
+                optionItem["NoOfUsers"] = arrUsers.length;
+                optionItem["GroupId"] = dumyId;
+                optionItem["userid"] = arrUsers;
+                optionItem["delete"] = "<input type='button' id='" + dumyId + "' onclick='DeleteGroup(" + dumyId + ")' value='Delete'>";
+                optionItem["delete"] += "<input type='button' id='" + dumyId + "' onclick='EditGroup(" + dumyId + ")' value='Edit'>";
+                assignedUsers.push(optionItem);
+            }
+
+    }
+
+        if (!status1) {
+            swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                   text: 'Group Name Already Exist!'
+            })
+            $('#txtGrpName').val("");
+            $("#lstUsers")[0].selectedIndex = -1;
+        }
+
+     else if (!status) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'please Enter Group Name!'
+            })
+        }
+        else if (!isSelected) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select User!'
+            })
+        }
+        else {
+            DrawTable();
+            Swal.fire(
+                'Added!',
+                'User Added successfully!',
+                'success'
+            )
+            $('#txtGrpName').val("");
+
+            $("#lstUsers")[0].selectedIndex = -1;
+
+        }
+        editvalue = 0;
+
+
+    }
+    function AssignUsersInDB() {
+        var table = $('#tblAssignedUsers').DataTable();
+        var userList = table.rows().data().toArray();
+        var grpName = document.getElementById("txtGrpName").value;
+        console.log(userList)
+        console.log(grpName)
+
+         $.ajax({
+                type: "POST",
+                 url: '@Url.Action("CreateGroup")',
+             data: '{jsonData: ' + JSON.stringify(JSON.stringify(userList)) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                     swal.fire({
+                       icon: 'success',
+                        title: 'Assigned',
+                        text: 'Changes Saved Successfully!'
+                    }).then((value) => {
+                        assignedUsers = [];
+                        modal.style.display = "none";
+                    });
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                   })
+                }
+         });
+
+
+    }
+    function DeleteGroup(id)
+    {
+        console.log(id);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this User from List!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+           $.ajax({
+                type: "POST",
+                url: '@Url.Action("Deletegroup")',
+                data: '{groupId: ' + JSON.stringify(id) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+               success: function (response) {
+                  // console.log(1234);
+
+
+               },
+               failure: function (response) {
+                  // console.log(2222);
+               }
+
+
+           });
+        assignedUsers = assignedUsers.filter(function (item)
+        {
+            return item.GroupId != id;
+        })
+
+        $.each(assignedUsers, function (index, value) {
+            value.index = index + 1;
+        });
+             DrawTable();
+             Swal.fire(
+            'Deleted!',
+            'Group has been deleted.',
+            'success'
+        );
+
+
+    }
+    function EditGroup(id)
+    {
+        console.log(id);
+        console.log(assignedUsers);
+        $.each(assignedUsers, function (index, obj) {
+            $.each(obj, function (key, value) {
+               // console.log(key);
+                //console.log(value);
+
+                if (key == 'GroupId' && value == id) {
+
+                    var array = [];
+                    array.push(obj.userid);
+                    console.log(array);
+                    //console.log(value.GroupId);
+                    document.getElementById("txtGrpName").value = obj.GroupName;
+                    var select = $('#lstUsers')[0];
+                    for (var i = 0; i < select.length; i++) {
+                        var option = select.options[i];
+                        for (k = 0; k < array.length; k++) {
+                            for (j = 0; j < array[k].length; j++) {
+                                if (option.value == array[k][j].userid) {
+                                    //console.log(option.value);
+                                    //console.log(array[k][j].userId);
+                                    option.selected = true;
+
+                                }
+
+
+                            }
+                        }
+
+                    }
+
+
+                }
+
+            });
+           // console.log(value.userid);
+
+                    });
+
+        editvalue = id;
+        DrawTable();
+
+        @*$.ajax({
+                type: "POST",
+                url: '@Url.Action("Editgroup")',
+                data: '{groupId: ' + JSON.stringify(id) + '}',
+                contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (response) {
+                 srNo = 0;
+
+                 $.map(response, function (item) {
+
+
+                     document.getElementById("txtGrpName").value = item.GroupName;
+                     var select = $('#lstUsers')[0];
+
+                     for (var i = 0; i < select.length; i++) {
+                         var option = select.options[i];
+
+                         for (var j = 0; j < item.userarr.length; j++) {
+                              if (option.value == item.userarr[j].userId) {
+                                 option.selected = true;
+
+                             }
+
+                         }
+                     }
+
+                 });
+                 editvalue = id;
+                 DrawTable();
+             },
+             failure: function (response) {
+                 swal.fire({
+                     icon: 'error',
+                     title: 'Oops...',
+                     text: 'Something went Wrong!'
+                 })
+             }
+         });*@
+
+
+    }
     function ActivateDeactivate(UserId, Status) {
         if (confirm("Are you sure? Do you want to Activate/Deactivate User?") == true) {
             $.ajax({
@@ -162,7 +708,23 @@
                     else
                         alert("User Deactivated Successfully !!!");
 
-                    location.reload();
+                    if (Status) {
+                        if (list == "all") {
+                            Filterdata();
+                        }
+                        else {
+                            Filterdata(0);
+                        }
+                    }
+                    else {
+                        if (list == "all") {
+                            Filterdata();
+                        }
+                        else {
+                            Filterdata(1);
+                        }
+                    }
+                   // location.reload();
                     //console.log(response);
                     //$('#dvActivityData').html(response);
                 },
@@ -177,6 +739,59 @@
             return false;
         }
     }
+    function DrawTable() {
+        var table1 = $('#tblAssignedUsers').DataTable();
+        table1.destroy();
+
+        var table = $('#tblAssignedUsers').DataTable({
+            "data": assignedUsers,
+            "paging": false,
+            "columns": [
+                { data: "index" },
+                { data: "GroupName" },
+                { data: "CreatedOn" },
+                { data: "NoOfUsers" },
+                { data: "GroupId" },
+                { data: "userid" },
+                { data: "delete" }
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [4,5] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+
+        $('#tblAssignedUsers_filter').hide();
+    }
+    function DrawTable1() {
+        var table1 = $('#activityTable').DataTable();
+        table1.destroy();
+
+        var table = $('#activityTable').DataTable({
+            "data": activitytble,
+            "paging": true,
+            "columns": [
+                { data: "Name" },
+                { data: "Email ID" },
+                { data: "Phone No" },
+                { data: "Role" },
+                { data: "Date Added" },
+                { data: "Status" },
+                { data: "Action"}
+
+
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets":[] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+
+        $('#activityTable_filter').hide();
+    }
+
+
 
 
 </script>
