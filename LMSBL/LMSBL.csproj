@@ -62,6 +62,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Exceptions.cs" />
     <Compile Include="Common\Response.cs" />
+    <Compile Include="DBModels\EnquiryResult.cs" />
     <Compile Include="DBModels\HomeModel.cs" />
     <Compile Include="DBModels\LMSContext.cs" />
     <Compile Include="DBModels\OnlyUserId.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="DBModels\tblCurriculumActivity.cs" />
     <Compile Include="DBModels\tblCurriculumAssignment.cs" />
     <Compile Include="DBModels\tblEmails.cs" />
+    <Compile Include="DBModels\tblEnquiry.cs" />
     <Compile Include="DBModels\tblForum.cs" />
     <Compile Include="DBModels\tblForumReply.cs" />
     <Compile Include="DBModels\TblGroup.cs" />

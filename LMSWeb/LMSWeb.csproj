@@ -845,10 +845,14 @@
     <Content Include="Views\Curriculum\testing.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Forum\ForumList.cshtml" />
-    <Content Include="Views\Index.cshtml" />
     <Content Include="Views\EmailTemplate\UpdateEmailTemplate.cshtml" />
     <Content Include="Views\Forum\PostComment.cshtml" />
     <Content Include="Views\EmailTemplate\Index.cshtml" />
+    <Content Include="Views\Reports\CurriculumActivities.cshtml" />
+    <Content Include="Views\Forum\ForumReport.cshtml" />
+    <Content Include="Views\Quiz\TestYourKnowledge.cshtml" />
+    <Content Include="Views\Quiz\InitialAssessment.cshtml" />
+    <Content Include="Views\Quiz\Result.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

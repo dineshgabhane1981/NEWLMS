@@ -38,10 +38,11 @@
             <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
 
                 <div class="row justify-content-center h-100">
-                    <div class="col align-self-center add-user-section add-new-quiz">
-
-                        <div class="row pt-5 pl-4">
-                            <div class="col-sm-6">
+                    <div class="col align-self-center add-user-section" style="max-width:80%;">
+                        
+                        <div class="pull-right collapsibleNew active" style="cursor:pointer;"><span id="btnExpand">Collapse</span></div>
+                        <div class="row pt-5 pl-4" style="display:block;" id="dvShowHide">
+                            <div class="col-sm-6 pull-left">
                                 @Html.HiddenFor(model => model.hdnData, new { @id = "hdnData" })
                                 @Html.HiddenFor(model => model.QuizId)
 
@@ -50,32 +51,44 @@
 
 
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 pull-left" style="padding-left:100px;">
 
-                                Add Logo :  <input type="file" name="file" id="file" accept="image/*" style="width: 70%;" />
+                                Add Image  <br /> <input type="file" name="file" id="file" accept="image/*" style="width: 70%;" />
 
 
                             </div>
                             <div class="mb-2 mt-2 w-100" id="dvQuestions"></div>
                         </div>
                         @*<div class="row justify-content-end pr-4">
-                                <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Add Question</button>
-                                <button type="submit" name="submit" id="btnQuizSubmit" value="Save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-                                <button type="submit" name="submit" id="btnQuizSubmitExit" value="Exit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save & Exit</button>
-                                <button type="submit" onclick="location.href='@Url.Action("Index", "Quiz")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
-                            </div>*@
+            <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Add Question</button>
+            <button type="submit" name="submit" id="btnQuizSubmit" value="Save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="submit" name="submit" id="btnQuizSubmitExit" value="Exit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save & Exit</button>
+            <button type="submit" onclick="location.href='@Url.Action("Index", "Quiz")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+        </div>*@
                     </div>
                 </div>
             </div>
             <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
                 <div class="row  h-100">
                     <div class="col quiz-left-pane">
-                        <div id="questionList">
-                            
-                        </div>
-                        <br /><br /><br />
-
                         <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Add Question</button>
+                    
+                        <div id="questionList">
+                            <div class="table-responsive">
+                                <table id="tblAssignedUsers" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr. No.</th>
+                                            <th>Question Title</th>                                           
+                                            <th>User Id</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="col quiz-right-pane">
                         <div id="questionDetails"></div>
@@ -89,3 +102,26 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
 <script src="~/assets/Survey.js"></script>
+<script>
+      var coll = document.getElementsByClassName("collapsibleNew");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+        //content.style.display = "none";
+        $("#dvShowHide").hide(1000);
+        
+        $("#btnExpand").text("Expand");
+        
+    } else {
+        //content.style.display = "block";
+       $("#dvShowHide").show(1000);
+        $("#btnExpand").text("Collapse");
+    }
+  });
+}
+
+</script>

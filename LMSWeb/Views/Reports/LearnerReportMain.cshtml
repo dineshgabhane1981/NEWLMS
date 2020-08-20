@@ -75,6 +75,10 @@
                                                 score = Convert.ToString((Convert.ToInt32(activity.ActivityScore) * 100) / Convert.ToInt32(activity.ActivityQuestionCount)) + "%";
                                             }
                                         }
+                                        else if (activity.ActivityType == "Curriculum")
+                                        {
+                                            score = "-";
+                                        }
                                         else
                                         {
                                             score = activity.ActivityScore + "%";
@@ -107,6 +111,11 @@
                                         @if (activity.ActivityType == "Quiz" && !string.IsNullOrEmpty(activity.ActivityAttempts))
                                         {
                                             <td style="text-align:center;"><a href="@Url.Action("DetailReport", "Reports", new { activityId = activity.ActivityId })" class="login" title="View Detail"><img src="~/assets/images/eye.png" /></a></td>
+                                        }
+
+                                        else if (activity.ActivityType == "Curriculum")
+                                        {
+                                            <td style="text-align:center;"><a href="@Url.Action("DetailReport", "Reports", new { activityId = activity.ActivityId, cId="C" })" class="login" title="View Detail"><img src="~/assets/images/eye.png" /></a></td>
                                         }
                                         else
                                         {

@@ -233,6 +233,34 @@ namespace LMSBL.Repository
             }
         }
 
+        public List<tblForumReply> GetForumReplyReportLearner(int forumId, int userId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@ForumId", SqlDbType.Int, forumId);
+                db.AddParameter("@Userid", SqlDbType.Int, userId);
+                DataSet ds = db.FillData("sp_ForumGetLearnerReply");
+                List<tblForumReply> replyList = ds.Tables[0].AsEnumerable().Select(dr => new tblForumReply
+                {
+                    ForumId = Convert.ToInt32(dr["ForumId"]),
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    ForumReply = Convert.ToString(dr["ForumReply"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    ProfileImage = Convert.ToString(dr["profileImage"]),
+                    CreatedDate = Convert.ToDateTime(dr["CreatedDate"])
+
+
+                }).ToList();
+                return replyList;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
         public int AddForumReply(tblForumReply obj)
         {
             int status = 0;             

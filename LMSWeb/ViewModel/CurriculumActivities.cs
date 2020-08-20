@@ -15,6 +15,7 @@ namespace LMSWeb.ViewModel
         public string ActivityStatus { get; set; }
         public string CompletionDate { get; set; }
         public string Duration { get; set; }
+        public string Score { get; set; }
 
 
     }

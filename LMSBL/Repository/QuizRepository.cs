@@ -54,7 +54,7 @@ namespace LMSBL.Repository
                     QuizName = Convert.ToString(dr["QuizName"]),
                     QuizDescription = Convert.ToString(dr["QuizDescription"]),
                     Duration = dr["Duration"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Duration"]),
-                    TenantId= Convert.ToInt32(dr["TenantId"])
+                    TenantId = Convert.ToInt32(dr["TenantId"])
                 }).ToList();
 
                 List<TblQuestion> questionsDetails = ds.Tables[1].AsEnumerable().Select(dr => new TblQuestion
@@ -130,7 +130,7 @@ namespace LMSBL.Repository
                         }
                     }
                 }
-               // status =true;
+                // status =true;
             }
             catch (Exception ex)
             {
@@ -676,6 +676,71 @@ namespace LMSBL.Repository
             }
             return status;
 
+        }
+
+        public DataSet GetCountries()
+        {
+            db.parameters.Clear();
+            DataSet ds = db.FillData("sp_GetAllCountries");
+            return ds;
+        }
+
+        public int InsertEnquiryData(TblEnquiry obj)
+        {
+            int status = 0;
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@FullName", SqlDbType.NText, obj.FullName);
+                db.AddParameter("@EmailId", SqlDbType.NText, obj.EmailId);
+                db.AddParameter("@ContactNo", SqlDbType.NText, obj.ContactNo);
+                db.AddParameter("@CourseName", SqlDbType.NText, obj.CourseName);
+                db.AddParameter("@Country", SqlDbType.NText, obj.Country);
+                db.AddParameter("@isShared", SqlDbType.Bit, obj.isShared);
+                db.AddParameter("@UserId", SqlDbType.Int, ParameterDirection.Output);
+
+                status = db.ExecuteQuery("sp_EnquiryAdd");
+
+                if (Convert.ToInt32(db.parameters[6].Value) > 0)
+                {
+                    status = Convert.ToInt32(db.parameters[6].Value);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+
+
+            return status;
+        }
+
+        public EnquiryResult GetEnquiryResult(int UserId, int QuizId)
+        {
+            EnquiryResult objEnquiryResult = new EnquiryResult();
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@QuizId", SqlDbType.Int, QuizId);
+                db.AddParameter("@UserId", SqlDbType.Int, UserId);                
+
+                DataSet ds = db.FillData("sp_AssessmentResultGet");
+                if (ds.Tables.Count > 0)
+                {
+                    objEnquiryResult.UserId = Convert.ToInt32(ds.Tables[0].Rows[0][0]);
+                    objEnquiryResult.FullName= Convert.ToString(ds.Tables[0].Rows[0][1]);
+                    objEnquiryResult.Score = Convert.ToInt32(ds.Tables[0].Rows[0][2]);
+                    objEnquiryResult.NoOfQuestions = Convert.ToInt32(ds.Tables[0].Rows[0][3]);
+                }
+                return objEnquiryResult;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
         }
 
 

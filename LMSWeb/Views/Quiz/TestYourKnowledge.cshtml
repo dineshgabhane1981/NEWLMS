@@ -1,0 +1,98 @@
+﻿@model LMSBL.DBModels.TblEnquiry
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test Your Knowledge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @*<title>Rocket Technologies</title>*@    
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/CSS/style.css" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="~/assets/SweetAlert.js"></script>
+
+    <style>
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: black;
+          font-size:16px;
+          
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("SubmitEnquiry", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+        
+        @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Message"])))
+        {
+            <script>
+                swal.fire({
+                    icon: 'warning',
+                    title: 'Opps...',
+                    text: 'Seems that you already taken the Test!'
+                });
+            </script>
+
+        }
+        @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Issue"])))
+        {
+            <script>
+                swal.fire({
+                    icon: 'error',
+                    title: 'Issue Occured',
+                    text: 'Please contact your Administrator! or Email this screenshot to <b>sales@logicieltech.com</b>'
+                });
+            </script>
+
+        }
+
+
+
+        <div class="row justify-content-center h-100">
+            <div class="col align-self-center add-user-section" style="border-radius:25px;">
+                <div class="col">
+
+                    <h4 class="mt-3 ml-2 mb-3">Are you ready?</h4>
+                    <p>Fill out your details so you can come back again and receive tips on how to successfully prepare for your overseas IT study programmes.</p>
+
+                </div>
+                <div class="row pt-5 pl-4">
+                    @Html.TextBoxFor(model => model.FullName, new { @class = "input100", placeholder = "First Name" })
+                    @Html.TextBoxFor(model => model.EmailId, new { @class = "input100", placeholder = "Email Id" })
+                    @Html.TextBoxFor(model => model.ContactNo, new { @class = "input100", placeholder = "Contact No" })
+                    @Html.TextBoxFor(model => model.CourseName, new { @class = "input100", placeholder = "Course you plan to take" })
+                    @Html.DropDownListFor(x => Model.Country, new SelectList(ViewBag.CountryList, "Value", "Text"), "Preferred Country to Study", htmlAttributes: new { @class = "input100" })
+                </div>
+                <div class="row justify-content-end pr-4">
+                    <button type="submit" id="btnEnquirySubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Submit</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    <script src="~/assets/Validations.js"></script>
+</body>
+</html>

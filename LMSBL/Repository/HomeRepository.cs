@@ -80,6 +80,10 @@ namespace LMSBL.Repository
                                 {
                                     item.ActivityStatus = "Completed";
                                 }
+                                else if (completed > 0)
+                                {
+                                    item.ActivityStatus = "InProgress";
+                                }
                                 else
                                 {
                                     item.ActivityStatus = "Not Started";

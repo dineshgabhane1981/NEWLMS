@@ -37,9 +37,11 @@ namespace LMSWeb.Controllers
                     var emailBody = "";
                     emailBody += "<p></p>Name :- " + Convert.ToString(item["Name"]);
                     emailBody += "<p></p>Email Id :- " + Convert.ToString(item["Email"]);
+                    emailBody += "<p></p>Contact No :- " + Convert.ToString(item["Contact"]);
+                    emailBody += "<p></p>Service Enquired About :- " + Convert.ToString(item["Service"]);
                     emailBody += "<p></p>Message :- " + Convert.ToString(item["Message"]);
                     
-                    objEmail.EmailTo = "sales@rockettech.co.nz";
+                    objEmail.EmailTo = "sales@logicieltech.com";
                     objEmail.EmailSubject = emailSubject;
                     objEmail.EmailBody = emailBody;
                     var emailResult = userRepository.InsertEmail(objEmail);

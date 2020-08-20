@@ -70,18 +70,18 @@ namespace LMSWeb.Controllers
         public async Task<ActionResult> LaunchQuiz(int QuizId, string code)
         //public ActionResult LaunchQuiz(int QuizId, string code)
         {
-            
+
             //newException.AddDummyException("Quiz ID First - " + Convert.ToString(QuizId));
             bool isPlek = false;
-            //Task.WaitAll(Task.Delay(10000));
+            
             try
             {
                 TblUser sessionUser = (TblUser)Session["UserSession"];
                 if (string.IsNullOrEmpty(code))
                 {
-                    
+
                     QuizSession quizForSession = new QuizSession();
-                    quizForSession.QuizId = QuizId;
+                    quizForSession.QuizId = Convert.ToInt32(QuizId);
                     quizForSession.isUsed = false;
                     lstQuiz.Add(quizForSession);
                     Session["QuizId"] = lstQuiz;
@@ -95,7 +95,7 @@ namespace LMSWeb.Controllers
                 List<TblQuiz> lstAllQuiz = new List<TblQuiz>();
                 if (sessionUser == null)
                 {
-                   
+
                     TenantRepository tr = new TenantRepository();
                     List<TblTenant> tenantDetails = new List<TblTenant>();
                     string host = Request.Url.Host;
@@ -111,7 +111,7 @@ namespace LMSWeb.Controllers
                             }
                             else
                             {
-                                
+
                                 using (var client = new HttpClient())
                                 {
                                     client.DefaultRequestHeaders.Accept.Clear();
@@ -126,12 +126,12 @@ namespace LMSWeb.Controllers
                                     values.Add("redirect_uri", "https://quiz.rockettech.co.nz/");
 
                                     var content = new FormUrlEncodedContent(values);
-                                    
+
                                     var responseTask = await client.PostAsync(tokenApi, content);
                                     var result = await responseTask.Content.ReadAsStringAsync();
                                     var data = (JObject)JsonConvert.DeserializeObject(result);
                                     string token = data["access_token"].Value<string>();//Access Token Received                           
-                                    
+
                                     //Now get User Details
                                     string userApi = "https://pumplace.plek.co/oidc/me";
 
@@ -142,20 +142,20 @@ namespace LMSWeb.Controllers
                                     HttpResponseMessage response = await client.GetAsync(userApi);
                                     if (response.IsSuccessStatusCode)
                                     {
-                                        
+
                                         string jsondata = await response.Content.ReadAsStringAsync();
 
                                         var userData = (JObject)JsonConvert.DeserializeObject(jsondata);
                                         string email = userData["email"].Value<string>();
                                         string name = userData["username"].Value<string>();
-                                        
+
                                         var userId = ur.IsUserExist(email, Request.Url.Host);
-                                        
+
                                         if (userId == 0)
                                         {
                                             try
                                             {
-                                                
+
                                                 //Create user
                                                 TblUser newUser = new TblUser();
                                                 newUser.FirstName = name;
@@ -166,18 +166,18 @@ namespace LMSWeb.Controllers
                                                 CommonFunctions common = new CommonFunctions();
                                                 newUser.Password = common.GetEncodePassword("123456");
 
-                                               
+
                                                 var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
                                                 newUser.TenantId = tenantList[0].TenantId;
-                                                
+
                                                 var newUserId = ur.AddUser(newUser);
-                                                
+
 
                                                 if (newUserId > 0)
                                                 {
                                                     //Assign Quiz to Newly Created User
                                                     //newException.AddDummyException("111 - " + Convert.ToString(QuizId));
-                                                    var objQuiz = quizRepository.GetQuizByID(QuizId);
+                                                    var objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(QuizId));
                                                     if (objQuiz != null)
                                                     {
 
@@ -185,7 +185,7 @@ namespace LMSWeb.Controllers
                                                         {
                                                             if (objQuiz[0].TenantId == 6)
                                                             {
-                                                                var assign = quizRepository.AssignQuiz(QuizId, newUserId, null);
+                                                                var assign = quizRepository.AssignQuiz(Convert.ToInt32(QuizId), newUserId, null);
                                                             }
                                                         }
                                                     }
@@ -201,18 +201,18 @@ namespace LMSWeb.Controllers
                                         {
                                             //check Quiz assigned or not                                    
 
-                                            var isAssigned = quizRepository.CheckQuizAssignedUser(QuizId, userId);
+                                            var isAssigned = quizRepository.CheckQuizAssignedUser(Convert.ToInt32(QuizId), userId);
                                             if (!isAssigned)
                                             {
                                                 newException.AddDummyException("222 - " + QuizId);
-                                                var objQuiz = quizRepository.GetQuizByID(QuizId);
+                                                var objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(QuizId));
                                                 if (objQuiz != null)
                                                 {
                                                     if (objQuiz[0] != null)
                                                     {
                                                         if (objQuiz[0].TenantId == 6)
                                                         {
-                                                            var assign = quizRepository.AssignQuiz(QuizId, userId, null);
+                                                            var assign = quizRepository.AssignQuiz(Convert.ToInt32(QuizId), userId, null);
                                                         }
                                                     }
                                                 }
@@ -222,7 +222,7 @@ namespace LMSWeb.Controllers
 
                                         List<TblUser> tblUser = ur.GetUserById(userId);
                                         Session["UserSession"] = tblUser[0];
-                                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, userId);
+                                        lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), userId);
 
                                         JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                                         json_serializer.MaxJsonLength = int.MaxValue;
@@ -238,15 +238,15 @@ namespace LMSWeb.Controllers
                             //newException.AddDummyException("In - 111 ");
                             CommonFunctions common = new CommonFunctions();
                             var password = common.GetEncodePassword("123456");
-                            TblUser tblUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);                            
-                            lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, tblUser.UserId);
+                            TblUser tblUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
+                            lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), tblUser.UserId);
 
                             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                             json_serializer.MaxJsonLength = int.MaxValue;
                             lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
                             //newException.AddDummyException("In - 222 ");
                             isPlek = true;
-                        }
+                        }                        
                     }
 
                 }
@@ -258,20 +258,20 @@ namespace LMSWeb.Controllers
                         isPlek = true;
                         //check Quiz assigned or not
 
-                        var isAssigned = quizRepository.CheckQuizAssignedUser(QuizId, sessionUser.UserId);
+                        var isAssigned = quizRepository.CheckQuizAssignedUser(Convert.ToInt32(QuizId), sessionUser.UserId);
                         //newException.AddDummyException(Convert.ToString(isAssigned));
                         if (!isAssigned)
                         {
                             //newException.AddDummyException("333 - " + QuizId);
-                            var objQuiz = quizRepository.GetQuizByID(QuizId);
+                            var objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(QuizId));
                             if (objQuiz != null)
                             {
                                 if (objQuiz[0] != null)
                                 {
                                     if (objQuiz[0].TenantId == 6)
                                     {
-                                        var assign = quizRepository.AssignQuiz(QuizId, sessionUser.UserId, null);
-                                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, sessionUser.UserId);
+                                        var assign = quizRepository.AssignQuiz(Convert.ToInt32(QuizId), sessionUser.UserId, null);
+                                        lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), sessionUser.UserId);
                                         JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                                         json_serializer.MaxJsonLength = int.MaxValue;
                                         lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
@@ -281,7 +281,7 @@ namespace LMSWeb.Controllers
                         }
                         else
                         {
-                            lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, sessionUser.UserId);
+                            lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), sessionUser.UserId);
                             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                             json_serializer.MaxJsonLength = int.MaxValue;
                             lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
@@ -293,7 +293,7 @@ namespace LMSWeb.Controllers
                         CommonFunctions common = new CommonFunctions();
                         var password = common.GetEncodePassword("123456");
                         TblUser tblUser = ur.IsValidUser("jeaninhetpanhuisilms@gmail.com", password, Request.Url.Host);
-                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, tblUser.UserId);
+                        lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), tblUser.UserId);
 
                         JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                         json_serializer.MaxJsonLength = int.MaxValue;
@@ -303,7 +303,7 @@ namespace LMSWeb.Controllers
                     }
                     else
                     {
-                        lstAllQuiz = quizRepository.GetQuizForLaunch(QuizId, sessionUser.UserId);
+                        lstAllQuiz = quizRepository.GetQuizForLaunch(Convert.ToInt32(QuizId), sessionUser.UserId);
                         JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                         json_serializer.MaxJsonLength = int.MaxValue;
                         lstAllQuiz[0].hdnLaunchData = json_serializer.Serialize(lstAllQuiz[0]);
@@ -538,7 +538,7 @@ namespace LMSWeb.Controllers
                     isPlek = true;
                 }
                 if (sessionUser.TenantId == 6)
-                {                    
+                {
                     isPlek = true;
                 }
                 List<TblQuiz> lstAllQuiz = new List<TblQuiz>();
@@ -704,18 +704,18 @@ namespace LMSWeb.Controllers
         }
 
         public ActionResult GetCurriculumActivities(string cId)
-        {           
+        {
             TblUser sessionUser = (TblUser)Session["UserSession"];
             List<CurriculumActivities> lstCurriculumActivities = new List<CurriculumActivities>();
             DataSet Data = cc.GetCurriculumActivitiesById(Convert.ToInt32(cId), sessionUser.UserId);
 
-            if(Data!=null)
+            if (Data != null)
             {
-                if(Data.Tables.Count>0)
+                if (Data.Tables.Count > 0)
                 {
-                    if(Data.Tables[0].Rows.Count>0)
+                    if (Data.Tables[0].Rows.Count > 0)
                     {
-                        foreach(var item in Data.Tables[0].Rows)
+                        foreach (var item in Data.Tables[0].Rows)
                         {
                             lstCurriculumActivities = Data.Tables[0].AsEnumerable().Select(dr => new CurriculumActivities
                             {
@@ -725,12 +725,12 @@ namespace LMSWeb.Controllers
                                 DueDate = Convert.ToString(dr["DueDate"]),
                                 ActivityStatus = Convert.ToString(dr["ActivityStatus"]),
                                 CompletionDate = Convert.ToString(dr["CompletionDate"]),
-                                Duration= Convert.ToString(dr["Duration"])
+                                Duration = Convert.ToString(dr["Duration"])
                             }).ToList();
                         }
                     }
                 }
-            }           
+            }
             return Json(lstCurriculumActivities, JsonRequestBehavior.AllowGet);
         }
 
