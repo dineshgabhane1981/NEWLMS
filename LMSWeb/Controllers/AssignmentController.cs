@@ -696,8 +696,13 @@ namespace LMSWeb.Controllers
                 }
             }
 
+            List<tblCourse> CourseDetails = new List<tblCourse>();
+            CoursesRepository courseRepo = new CoursesRepository();
+            CourseDetails = courseRepo.GetCourseById(CourseId);
             var url = courseBaseURL + "?AID=" + CourseId + "&LID=" + sessionUser.UserId;
-            return Redirect(url);
+            CourseDetails[0].ContentModuleURL = url;
+            return View(CourseDetails[0]);
+            //return Redirect(url);
             //return Content("<script>window.open('" + url + "','_blank')</script>");
 
 

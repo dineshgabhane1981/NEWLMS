@@ -3,7 +3,21 @@
     ViewBag.Title = "Author Content";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
+<style>
+    th.hide_me, td.hide_me {
+        display: none;
+    }
+    table.dataTable td {
+        word-break: break-word;
+    }
+</style>
+<!—Jquery Datatable js script -->
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css" />
 
 @using (Html.BeginForm("AddQuiz", "Quiz", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -11,7 +25,7 @@
 
     <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
         <div class="row justify-content-center h-100">
-            <div class="col align-self-center add-user-section add-new-quiz">
+            <div class="col align-self-center add-user-section add-new-quiz" style="max-width:80%; border-radius:25px; box-shadow:5px 5px 5px 5px lightgray;">
                 <ul class="steps">
                     <li class="step step-active">
                         <div class="step-content">
@@ -19,31 +33,30 @@
                             <span class="step-text">Create</span>
                         </div>
                     </li>
-                    <li class="step">
+                    <li id="stepPreview" class="step">
                         <div class="step-content">
                             <span class="step-circle">2</span>
                             <span class="step-text">Preview</span>
                         </div>
                     </li>
-                    <li class="step">
+                    <li id="stepPublish" class="step">
                         <div class="step-content">
                             <span class="step-circle">3</span>
-                            <span class="step-text">Assign</span>
+                            <span class="step-text">Publish</span>
                         </div>
                     </li>
 
                 </ul>
 
             </div>
-            <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+            <div id="dvQuizDetails" class="container-fluid mt-4 mb-4 pl-4 pr-4">
 
                 <div class="row justify-content-center h-100">
-                    <div class="col align-self-center add-user-section" style="max-width:80%;">
-                        
-                        <div class="pull-right collapsibleNew active" style="cursor:pointer;"><span id="btnExpand">Collapse</span></div>
-                        <div class="row pt-5 pl-4" style="display:block;" id="dvShowHide">
+                    <div class="col align-self-center add-user-section" style="max-width:80%;border-radius:25px;box-shadow:5px 5px 5px 5px lightgray;">
+                        <div class="row pt-5 pl-4">
                             <div class="col-sm-6 pull-left">
                                 @Html.HiddenFor(model => model.hdnData, new { @id = "hdnData" })
+                                @Html.HiddenFor(model => model.hdnEditData, new { @id = "hdnEditData" })
                                 @Html.HiddenFor(model => model.QuizId)
 
                                 @Html.TextBoxFor(model => model.QuizName, new { @class = "input200 d-block", placeholder = "Survey Name" })
@@ -53,34 +66,32 @@
                             </div>
                             <div class="col-sm-6 pull-left" style="padding-left:100px;">
 
-                                Add Image  <br /> <input type="file" name="file" id="file" accept="image/*" style="width: 70%;" />
-
+                                Add Image  <br /> <input type="file" name="file" id="file" accept="image/*" style="width: 70%;" /><br /><br />
+                                @Html.TextBoxFor(model => model.Duration, new { @class = "input100 d-block", placeholder = "Survey Duration" })
 
                             </div>
-                            <div class="mb-2 mt-2 w-100" id="dvQuestions"></div>
                         </div>
-                        @*<div class="row justify-content-end pr-4">
-            <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Add Question</button>
-            <button type="submit" name="submit" id="btnQuizSubmit" value="Save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-            <button type="submit" name="submit" id="btnQuizSubmitExit" value="Exit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save & Exit</button>
-            <button type="submit" onclick="location.href='@Url.Action("Index", "Quiz")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
-        </div>*@
                     </div>
+
+                </div>
+                <div class="row justify-content-end pr-4">
+                    <button type="button" id="btnQuizNext" class="btn btn-primary next-btn">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
-            <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+
+            <div id="dvQuizQuestions" class="container-fluid mt-4 mb-4 pl-4 pr-4">
                 <div class="row  h-100">
                     <div class="col quiz-left-pane">
                         <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Add Question</button>
-                    
+
                         <div id="questionList">
                             <div class="table-responsive">
-                                <table id="tblAssignedUsers" class="display" style="width:100%">
+                                <table id="tblQuestions" class="display" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>Sr. No.</th>
-                                            <th>Question Title</th>                                           
-                                            <th>User Id</th>
+                                            <th>Sr.No.</th>
+                                            <th>Title</th>
+                                            <th>Question Id</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -95,7 +106,59 @@
                         <button type="button" style="display:none;" id="btnSaveQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Save Question</button>
                     </div>
                 </div>
+                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                    <button type="button" id="btnPrevQuiz" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
+                    <button type="button" id="btnPreview" class="btn btn-primary next-btn">Preview <i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
+
+            <div id="dvPreviewQuiz" class="container-fluid mt-4 mb-4 pl-4 pr-4">
+                <div class="row justify-content-center h-100">
+                    <div class="col align-self-center add-user-section" style="max-width:80%; border-radius:25px; box-shadow:7px 7px 7px 7px lightgrey;">
+                        <div id="dvQuestions"></div>
+                        <div class="col mt-3">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <ul class="list-inline que-pagination" id="paginator-list">
+                                    </ul>
+                                </div>
+                                <div class="col-sm-4 text-right">
+
+                                    <button type="button" id="btnPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                    <button type="button" id="btnNext" class="btn btn-primary next-btn">Next <i class="fas fa-chevron-right"></i></button>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                    <button type="button" id="btnPreviewPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
+                    <button type="button" id="btnSavePreview" class="btn btn-primary next-btn">Proceed to Publish <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div id="dvPublishQuiz" class="container-fluid mt-4 mb-4 pl-4 pr-4">
+                <div class="row justify-content-center h-100">
+                    <div class="col align-self-center add-user-section" style="max-width:80%; border-radius:25px; box-shadow:7px 7px 7px 7px lightgrey;">
+                        Publish Quiz
+
+
+
+                    </div>
+                </div>
+
+                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                    <button type="button" id="btnPublishPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
+                    <button type="submit" name="submit" id="btnSave" value="Exit" class="btn btn-primary next-btn">Save Quiz <i class="fas fa-chevron-right"></i></button>&nbsp;&nbsp;
+                    <button type="submit" name="submit" id="btnPublishScorm" value="Save" class="btn btn-primary next-btn">Publish SCORM <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
         </div>
     </div>
 }
@@ -103,25 +166,65 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
 <script src="~/assets/Survey.js"></script>
 <script>
-      var coll = document.getElementsByClassName("collapsibleNew");
-var i;
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-        //content.style.display = "none";
-        $("#dvShowHide").hide(1000);
-        
-        $("#btnExpand").text("Expand");
-        
-    } else {
-        //content.style.display = "block";
-       $("#dvShowHide").show(1000);
-        $("#btnExpand").text("Collapse");
-    }
-  });
-}
+    $(document).ready(function () {
+        $("#dvQuizDetails").show();
+        $("#dvQuizQuestions").hide();
+        $("#dvPreviewQuiz").hide();
+        $("#dvPublishQuiz").hide();
+        $("#btnPrevQuiz").hide();
+
+
+        $("#btnQuizNext").on("click", function () {
+            if ($("#QuizName").val() != "") {
+                $("#dvQuizDetails").hide(1000);
+                $("#dvQuizQuestions").show(1000);
+                $("#dvPreviewQuiz").hide();
+                $("#dvPublishQuiz").hide();
+                $("#btnPrevQuiz").show();
+                DrawTable();
+            }
+            else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter Survey Name!'
+                })
+                return false;
+            }
+        });
+        $("#btnPrevQuiz").on("click", function () {
+            $("#dvQuizDetails").show(1000);
+            $("#dvQuizQuestions").hide(1000);
+            $("#dvPreviewQuiz").hide();
+            $("#dvPublishQuiz").hide();
+            $("#btnQuizNext").show();
+        });
+
+        $("#btnPreviewPrev").on("click", function () {
+            $("#dvQuizDetails").hide(1000);
+            $("#dvQuizQuestions").show(1000);
+            $("#dvPreviewQuiz").hide(1000);
+            $("#dvPublishQuiz").hide();
+            $("#stepPreview").removeClass("step-active");
+
+        });
+        $("#btnSavePreview").on("click", function () {
+            $("#dvQuizDetails").hide(1000);
+            $("#dvQuizQuestions").hide(1000);
+            $("#dvPreviewQuiz").hide(1000);
+            $("#dvPublishQuiz").show(1000);
+            $("#stepPublish").addClass("step-active");
+        });
+
+        $("#btnPublishPrev").on("click", function () {
+            $("#dvQuizDetails").hide(1000);
+            $("#dvQuizQuestions").hide(1000);
+            $("#dvPreviewQuiz").show(1000);
+            $("#dvPublishQuiz").hide(1000);
+            $("#stepPublish").removeClass("step-active");
+        });
+
+    });
 
 </script>

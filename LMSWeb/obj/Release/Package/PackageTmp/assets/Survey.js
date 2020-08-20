@@ -2,6 +2,7 @@
 var optionCount = 2;
 var questionObj = [];
 var base64StringArray = [];
+var statisQueId = 0;
 
 $(document).ready(function () {
 
@@ -120,9 +121,10 @@ function AddQuestion() {
 }
 
 function editQuestion(queId) {
+    statisQueId = queId;
     $("#questionDetails").empty();
     var item = questionObj.find(x => x.QuestionId == queId);
-    console.log(item);
+    //console.log(item);
 
     var queHTML = "<div class=\"que-containerNew container-fluid mt-4 mb-4 pl-4 pr-4 pt-4 pb-4\" id=queContainer" + item.QuestionId + ">";
 
@@ -234,7 +236,7 @@ function editQuestion(queId) {
     queHTML += "</div>";
     queHTML += "</div>";
     $('#questionDetails').append(queHTML);
-    console.log(queHTML);
+    //console.log(queHTML);
     $("#btnSaveQuestion").show();
 
     $('#queType' + item.QuestionId).val(item.QuestionTypeId);
@@ -284,7 +286,7 @@ function editQuestion(queId) {
     }
 
 
-    console.log(item);
+    //console.log(item);
 }
 
 function addOption(queCount) {
@@ -522,7 +524,14 @@ function SaveQuestion() {
                 }
             });
         }
-        questionObj.push(item);
+        if (statisQueId == 0) {           
+            questionObj.push(item);            
+        }
+        else {
+            index = questionObj.findIndex(x => x.QuestionId == statisQueId);
+            questionObj[index] = item;
+            statisQueId = 0;
+        }
     });
     //$("#hdnData").val(JSON.stringify(questionObj));
     //console.log(questionObj);
@@ -530,7 +539,7 @@ function SaveQuestion() {
     return returnStatus;
 }
 
-function AddQuestionInList() {
+function AddQuestionInList1() {
     var questionToAdd = questionObj[questionObj.length - 1];
     var queHTML = "<div  style=\"cursor:pointer; border:1px solid red; \"  id=" + questionToAdd.QuestionId + ">";
 
@@ -544,4 +553,11 @@ function AddQuestionInList() {
     queHTML += "</div>";
 
     $("#questionList").append(queHTML);
+    
+}
+function AddQuestionInList() {
+
+}
+function DrawTable() {
+
 }

@@ -220,10 +220,34 @@ namespace LMSWeb.Controllers
 
         //New Section of Quiz Authoring
 
-        public ActionResult AuthorContent()
+        public ActionResult AuthorContent(string id)
         {
-            TblQuiz objQuiz = new TblQuiz();
-            return View(objQuiz);
+            
+            try
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    List<TblQuiz> objQuiz = new List<TblQuiz>();
+                    objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(id));
+                    JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                    json_serializer.MaxJsonLength = int.MaxValue;
+
+                    objQuiz[0].hdnEditData = json_serializer.Serialize(objQuiz[0]);
+                    return View(objQuiz[0]);
+                }
+                else
+                {
+                    TblQuiz objQuiz = new TblQuiz();
+                    return View(objQuiz);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);                
+            }
+            return View();
+            //return View(objQuiz[0]);
         }
 
 

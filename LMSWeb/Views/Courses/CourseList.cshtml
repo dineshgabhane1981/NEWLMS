@@ -57,7 +57,7 @@
                                     <tr>
                                         <td class="add-column-padding">@index</td>
                                         <td>@course.ContentModuleName</td>
-                                        <td style="max-width:200px;">@course.ContentModuleDescription</td>
+                                        <td style="max-width:200px;">@Html.Raw(course.ContentModuleDescription)</td>
                                         <td>@course.ContentModuleType</td>
                                         <td>@course.createdOn</td>
                                         @if (course.Duration > 0)

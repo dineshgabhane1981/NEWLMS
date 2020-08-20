@@ -853,6 +853,7 @@
     <Content Include="Views\Quiz\TestYourKnowledge.cshtml" />
     <Content Include="Views\Quiz\InitialAssessment.cshtml" />
     <Content Include="Views\Quiz\Result.cshtml" />
+    <Content Include="Views\Assignment\LaunchCourse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

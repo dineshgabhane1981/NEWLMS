@@ -1198,13 +1198,13 @@ function ViewQuiz(QuizViewData) {
 
 function NextPrevQuestion() {
     $.each(quizQueIds, function (indexQue, valueQue) {
-        if (indexQue == currentIndex) {
+        if (indexQue == currentIndex) {           
             $('#dvQue' + valueQue.QuestionId).show();
             const id = valueQue.QuestionId;            
             const p = $('[data-queid=dvQue' + id + ']');
             $(p).addClass('active-page');            
         }
-        else {
+        else {            
             $('#dvQue' + valueQue.QuestionId).hide();
             const id = valueQue.QuestionId;           
             const p = $('[data-queid=dvQue' + id + ']');

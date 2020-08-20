@@ -50,7 +50,7 @@ namespace LMSWeb.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public ActionResult AddCourse(tblCourse objCourse, HttpPostedFileBase file)
         {
             try
@@ -75,7 +75,7 @@ namespace LMSWeb.Controllers
 
                     if (rows != 0)
                     {
-                        TempData["Message"] = "Course Saved Successfully";
+                        TempData["CourseMessage"] = "Course Saved Successfully";
                         return View("AddNewCourse", objCourse);
                         //return RedirectToAction("Index");
                     }

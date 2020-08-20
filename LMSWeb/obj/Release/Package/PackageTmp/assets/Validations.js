@@ -41,6 +41,13 @@ $(document).ready(function () {
         var status = CreateForumValidation();
         return status;
     });
+
+    $('#btnEnquirySubmit').on("click", function () {
+        var status = EnquiryValidation();
+        return status;
+    });
+
+    
 });
 
 function UserValidation() {
@@ -99,8 +106,8 @@ function TenantValidation() {
     return true;
 }
 
-function CourseValidation() {
-    var returnStatus = false;
+function CourseValidation() {    
+    var returnStatus = true;
     if ($("#ContentModuleName").val() == "") {
         alert("Please enter Course Name");
         $("#ContentModuleName").focus();
@@ -154,14 +161,10 @@ function CourseValidation() {
             }
         }
     }
-    if (returnStatus) {
-        
-
-        $("#divLoading").show();
-         
+    if (returnStatus) {        
         return true;
     }
-    else {
+    else {        
         return false;
     }
 }
@@ -185,4 +188,77 @@ function UserUploadValidation() {
 
 function CreateForumValidation() {
 
+}
+
+function EnquiryValidation() {
+     
+    if ($("#FullName").val() == "") {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })       
+        $("#FirstName").focus();
+        return false;
+    }
+    if ($("#EmailId").val() == "") {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#EmailId").focus();
+        return false;
+    }
+    if (!isEmail($("#EmailId").val())) {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#EmailId").focus();
+        return false;
+    }
+    if ($("#ContactNo").val() == "") {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#ContactNo").focus();
+        return false;
+    }
+    if (isNaN($("#ContactNo").val())) {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#ContactNo").focus();
+        return false;
+    }
+    
+    if ($("#CourseName").val() == "") {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#CourseName").focus();
+        return false;
+    }
+    
+    if ($("#Country").val() == "") {
+        swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Seems like something is not right. Try again:)'
+        })
+        $("#Country").focus();
+        return false;
+    }
+}
+function isEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
 }

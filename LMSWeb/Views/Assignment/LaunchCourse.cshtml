@@ -1,0 +1,17 @@
+﻿@model LMSBL.DBModels.tblCourse
+@{
+    ViewBag.Title = "LaunchCourse";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+    <div class="row">
+        @Html.Raw(Model.ContentModuleDescription)
+
+    </div>
+
+    <div class="row">
+       <a href="@Model.ContentModuleURL" target="_blank">Click here to Launch Course</a>
+
+    </div>
+</div>

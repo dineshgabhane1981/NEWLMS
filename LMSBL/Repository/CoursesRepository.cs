@@ -186,7 +186,7 @@ namespace LMSBL.Repository
                 db.parameters.Clear();
                 db.AddParameter("@ContentModuleId", SqlDbType.Int, obj.ContentModuleId);
                 db.AddParameter("@ContentModuleName", SqlDbType.Text, obj.ContentModuleName);
-                db.AddParameter("@ContentModuleDescription", SqlDbType.Text, obj.ContentModuleDescription);
+                db.AddParameter("@ContentModuleDescription", SqlDbType.NText, obj.ContentModuleDescription);
                 db.AddParameter("@ContentModuleType", SqlDbType.Text, obj.ContentModuleType);
                 db.AddParameter("@ContentModuleURL", SqlDbType.Text, returnPath);
                 db.AddParameter("@MasteryScore", SqlDbType.Int, obj.MasteryScore);

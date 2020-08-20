@@ -4,7 +4,7 @@ body {
 
 html, body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f3f8fb;
+    background-color: #008B8B;
     margin: 0;
     padding: 0;
 }
@@ -1046,9 +1046,9 @@ ol.progress[data-steps="9"] li {
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 25rem !important;
-    min-width: 25rem !important;
-    max-width: 25rem !important;
+    width: 20rem !important;
+    min-width: 20rem !important;
+    max-width: 20rem !important;
     padding-top: .5rem;
     padding-right: 1rem;
 }
@@ -1058,7 +1058,7 @@ ol.progress[data-steps="9"] li {
     position: absolute;
     top: 50%;
     left: -2px;
-    width: calc(25rem + 1rem - 1.5rem) !important;
+    width: calc(20rem + 1rem - 1.5rem) !important;
     height: 2px;
     transform: translate(-100%,-50%);
     color: #adb5bd;
@@ -1070,17 +1070,18 @@ ol.progress[data-steps="9"] li {
     width: 25%;
     min-width: 25%;
     max-width: 25%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
-    border:2px solid black;
-    min-height:500px;
+    border-radius: 25px;
+    box-shadow: 5px 5px 5px 5px lightgray;
+    min-height: 500px;
 }
 
 .quiz-right-pane {
-    margin-left:10px;
+    margin-left: 10px;
     background: #fff;
     padding: 20px;
     width: 71%;
     min-width: 71%;
     max-width: 71%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 25px;
+    box-shadow: 5px 5px 5px 5px lightgray;
 }
