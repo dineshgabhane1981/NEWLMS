@@ -175,8 +175,8 @@ namespace LMSWeb.Controllers
             {
                 TblUser objEditData = new TblUser
                 {
-                    UserRoles = rr.GetAllRoles(),
-                    Tenants = tr.GetAllTenants()
+                    UserRoles = rr.GetAllRoles()
+                    //Tenants = tr.GetAllTenants()
                 };
                 objEditData.IsMyProfile = false;
                 return View("AddNewUser", objEditData);
@@ -196,6 +196,7 @@ namespace LMSWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     TblUser sessionUser = (TblUser)Session["UserSession"];
+                    objUser.UserRoles = rr.GetAllRoles();
                     objUser.TenantId = sessionUser.TenantId;
                     objUser.CreatedBy = sessionUser.UserId;
 
@@ -244,8 +245,17 @@ namespace LMSWeb.Controllers
                             TempData["Message"] = "User Information Saved Successfully";
                             return RedirectToAction("MyProfile", "Account");
                         }
-                        
-
+                        //In case of Edit User
+                        if (rows == 0)
+                        {
+                            TempData["IssueMessage"] = "Not Saved Successfully";
+                            return View("AddNewUser", objUser);
+                        }
+                        else
+                        {
+                            TempData["UserMessage"] = "Saved Successfully";
+                            return View("AddNewUser", objUser);
+                        }
                     }
                     if (objUser.UserId == 0 && rows != 0)
                     {
@@ -270,17 +280,18 @@ namespace LMSWeb.Controllers
 
                         result = ur.InsertEmail(objEmail);
 
-                        TempData["Message"] = "Saved Successfully";
+                        TempData["UserMessage"] = "Saved Successfully";
                         if (objUser.IsMyProfile)
                             return RedirectToAction("Index", "Home");
                         else
-                            return RedirectToAction("Index");
+                            //return RedirectToAction("Index");
+                            return View("AddNewUser", objUser);
 
                     }
                     else
                     {
-                        //TempData["Message"] = "Not Saved Successfully";
-                        return RedirectToAction("Index");
+                        //TempData["IssueMessage"] = "Not Saved Successfully";
+                        return View("AddNewUser", objUser);
                     }
                 }
                 return RedirectToAction("Index");
@@ -294,6 +305,7 @@ namespace LMSWeb.Controllers
                 }
                 else
                 {
+                    TempData["IssueMessage"] = "Not Saved Successfully";
                     return View("AddNewUser",objUser);
                 }
 
@@ -309,7 +321,7 @@ namespace LMSWeb.Controllers
                 TblUser objEditData = new TblUser();
                 objEditData = userDetails[0];
                 objEditData.UserRoles = rr.GetAllRoles();
-                objEditData.Tenants = tr.GetAllTenants();
+                //objEditData.Tenants = tr.GetAllTenants();
                 objEditData.IsMyProfile = false;
                 return View("AddNewUser", objEditData);
             }

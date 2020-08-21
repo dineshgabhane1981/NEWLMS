@@ -6,7 +6,7 @@
 
 
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container" style="border-radius:25px; box-shadow:5px 5px 5px 5px lightgray;">
         <div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
@@ -14,16 +14,12 @@
             </div>
             <div class="col text-right">
                 <li class="list-inline-item">
-                    <a href="@Url.Action("AddQuiz", "Quiz")">
+                    <a href="@Url.Action("AuthorContent", "Quiz")">
                         <button class="btn btn-secondary dropdown-toggle create-learning-btn" type="button">
                             <i class="fas fa-plus-circle"></i> Add Quiz
                         </button>
                     </a>
-                </li>
-                @*<ul class="list-inline progress-list mt-2">
-            <li class="list-inline-item"><img src="~/assets/images/shape_Active.png"> Active</li>
-            <li class="list-inline-item"><img src="~/assets/images/shape_InactiveUser.png"> Inactive</li>
-        </ul>*@
+                </li>               
             </div>
         </div>
         <div class="row mt-3" id="dvActivityData">
@@ -33,7 +29,7 @@
                         <tr>
                             <th scope="col" >Sr No.</th>
                             <th scope="col">Quiz Name</th>
-                            <th scope="col">Quiz Description</th>
+                            @*<th scope="col">Quiz Description</th>*@
                             <th scope="col" >No of Questions</th>
                             <th scope="col" >Duration (Mins)</th>
                             <th scope="col" style="text-align:center;" class="action-column">Actions</th>
@@ -52,7 +48,7 @@
                                     <tr>
                                         <td class="add-column-padding">@index</td>
                                         <td style="max-width:200px;">@quiz.QuizName</td>
-                                        <td style="max-width:200px;">@quiz.QuizDescription</td>
+                                        @*<td style="max-width:200px;">@quiz.QuizDescription</td>*@
                                         <td class="add-column-padding">@quiz.NoOfQuestion</td>
                                         @if (quiz.Duration > 0)
                                         {
@@ -66,7 +62,7 @@
 
                                     <td style="text-align:center;">
 
-                                        <a href="@Url.Action("EditQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
+                                        <a href="@Url.Action("AuthorContent", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
                                         <a href="@Url.Action("AssignQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="Assign"><i class="fas fa-user-plus orange-color mr-1"></i></a>
                                         <a href="@Url.Action("ViewQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="View"><img src="~/assets/images/eye.png"  /></a>
                                     </td>

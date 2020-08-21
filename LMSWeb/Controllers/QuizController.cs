@@ -120,40 +120,41 @@ namespace LMSWeb.Controllers
                         if (rows > 0)
                         {
 
-                            TempData["Message"] = "Quiz Saved Successfully";
+                            TempData["QuizMessage"] = "Quiz Saved Successfully";
                             if (submit == "Exit")
-                                return RedirectToAction("Index");
-                            if (submit == "Save")
-                            {
-                                return RedirectToAction("EditQuiz", new { id = rows });
-                            }
+                                return View("AuthorContent", objQuiz);
+                            //return RedirectToAction("Index");
+                            //if (submit == "Save")
+                            //{
+                            //    return RedirectToAction("EditQuiz", new { id = rows });
+                            //}
                         }
                         else if (rows == 0)
                         {
-                            TempData["Message"] = "There is some problem while saving Quiz";
-                            return View("AddNewQuiz", objQuiz);
+                            TempData["ErrorMessage"] = "There is some problem while saving Quiz";
+                            return View("AuthorContent", objQuiz);
                         }
                         else if (rows == -2)
                         {
-                            TempData["Message"] = "Quiz Not Saved";
-                            return View("AddNewQuiz", objQuiz);
+                            TempData["ErrorMessage"] = "Quiz Not Saved";
+                            return View("AuthorContent", objQuiz);
                         }
                         else
                         {
 
-                            return View("AddNewQuiz", objQuiz);
+                            return View("AuthorContent", objQuiz);
                         }
                     }
                 }
 
-                return View("AddNewQuiz", objQuiz);
+                return View("AuthorContent", objQuiz);
 
             }
             catch (Exception ex)
             {
                 //newException.AddDummyException("11111");
                 newException.AddException(ex);
-                return View("AddNewQuiz");
+                return View("AuthorContent");
             }
         }
         public ActionResult EditQuiz(int id)

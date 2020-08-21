@@ -110,7 +110,7 @@ namespace LMSBL.Repository
                 }).ToList();
                 return tanentDetails;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

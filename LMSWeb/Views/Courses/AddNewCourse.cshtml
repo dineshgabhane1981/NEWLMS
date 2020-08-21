@@ -16,32 +16,31 @@
         @if (!string.IsNullOrEmpty(Convert.ToString(TempData["CourseMessage"])))
         {
             <script>
-                swal.fire("Course Saved Successfully")
-                    .then((value) => {
-                        window.location.href = "Index";
-                    });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved',
+                    text: 'Course Saved Successfully!'
+                }).then((value) => {
+                    window.location.href = "Index";
+                });
+
             </script>
 
         }
+        <div class="row" style="margin-bottom:25px;margin-left:275px;">
+            <div class="col">               
+                    <h4 style="color:white;">Add Course</h4>
+            </div>
+        </div>
         <div class="row justify-content-center h-100">
-            <div class="col align-self-center add-user-section ">
-                <div class="col">
-                    @if (Model.ContentModuleId == 0)
-                    {
-                        <h4 class="mt-3 ml-2 mb-3">New Course</h4>
-                    }
-                    else
-                    {
-                        <h4 class="mt-3 ml-2 mb-3">Edit Course</h4>
-                    }
-                </div>
+            <div class="col align-self-center add-user-section" style="border-radius:25px;box-shadow:5px 5px 5px 5px lightgray;">
                 <div class="row pl-4">
                     <div class="col-sm-6">
 
                         @Html.HiddenFor(model => model.ContentModuleId)
                         @Html.HiddenFor(model => model.ContentModuleURL)
                         @Html.TextBoxFor(model => model.ContentModuleName, new { @class = "input100", placeholder = "Course Name" })
-                        
+
                         @Html.TextBoxFor(model => model.MasteryScore, "{0:#.#}", new { @class = "input100", placeholder = "Course Mastery Score" })
                         @Html.TextBoxFor(model => model.Duration, "{0:#.#}", new { @class = "input100", placeholder = "Course Duration (Mins)" })
 
@@ -55,7 +54,7 @@
                             Upload Course
                         </div>
 
-                        <input type="file" name="file" id="file" style="width: 100%;" />                       
+                        <input type="file" name="file" id="file" style="width: 100%;" />
                         <br />
                         <div id="lnkCourseFile">
                             @if (Model != null)
@@ -66,7 +65,7 @@
                                     <a href="@baseURL?AID=@Model.ContentModuleId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank">Test Course</a>
                                 }
                             }
-                        </div>                       
+                        </div>
                     </div>
                 </div>
 

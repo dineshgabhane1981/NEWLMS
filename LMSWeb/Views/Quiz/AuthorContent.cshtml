@@ -7,6 +7,7 @@
     th.hide_me, td.hide_me {
         display: none;
     }
+
     table.dataTable td {
         word-break: break-word;
     }
@@ -24,6 +25,31 @@
     @Html.AntiForgeryToken()
 
     <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+
+        @if (!string.IsNullOrEmpty(Convert.ToString(TempData["QuizMessage"])))
+        {
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added',
+                    text: 'Quiz added Successfully!'
+                }).then((value) => {
+                    window.location.href = "Index";
+                });
+            </script>
+
+        }
+        else if (!string.IsNullOrEmpty(Convert.ToString(TempData["ErrorMessage"])))
+        {
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Problem while saving Quiz! Contact your Administrator!'
+                })
+            </script>
+
+        }
         <div class="row justify-content-center h-100">
             <div class="col align-self-center add-user-section add-new-quiz" style="max-width:80%; border-radius:25px; box-shadow:5px 5px 5px 5px lightgray;">
                 <ul class="steps">
@@ -154,8 +180,9 @@
 
                 <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
                     <button type="button" id="btnPublishPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
-                    <button type="submit" name="submit" id="btnSave" value="Exit" class="btn btn-primary next-btn">Save Quiz <i class="fas fa-chevron-right"></i></button>&nbsp;&nbsp;
-                    <button type="submit" name="submit" id="btnPublishScorm" value="Save" class="btn btn-primary next-btn">Publish SCORM <i class="fas fa-chevron-right"></i></button>
+                    
+                    <button type="submit" name="submit" id="btnSave" value="Exit" class="btn btn-primary next-btn"> <img src="~/assets/images/check-img.png" width="20px" /> Save Quiz </button>&nbsp;&nbsp;
+                    <button type="button" id="btnPublishScorm" value="Save" class="btn btn-primary next-btn"><img src="~/assets/images/check-img.png" width="20px" /> Publish SCORM </button>
                 </div>
             </div>
 
