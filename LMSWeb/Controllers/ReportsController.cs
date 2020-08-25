@@ -72,7 +72,8 @@ namespace LMSWeb.Controllers
                                         ActivityStatus = Convert.ToString(dr["ActivityStatus"]),
                                         CompletionDate = Convert.ToString(dr["CompletionDate"]),
                                         Duration = Convert.ToString(dr["Duration"]),
-                                        Score = Convert.ToString(dr["Score"])
+                                        Score = Convert.ToString(dr["Score"]),
+                                        CurriculumName = Convert.ToString(dr["CurriculumTitle"])
                                     }).ToList();
                                 }
                             }
@@ -365,7 +366,8 @@ namespace LMSWeb.Controllers
                     }
                     table.Columns.Remove("TotalQuestion");
                 }
-
+                table.Columns.Remove("ActivityDescription");
+                
                 string fileName = ReportName + ".xlsx";
                 using (XLWorkbook wb = new XLWorkbook())
                 {
@@ -510,7 +512,7 @@ namespace LMSWeb.Controllers
                 }
                 table.Columns.Remove("TotalQuestion");
             }
-
+            table.Columns.Remove("ActivityDescription");
             // creating document object  
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.LETTER);

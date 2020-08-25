@@ -4,7 +4,7 @@ body {
 
 html, body {
     font-family: 'Roboto', sans-serif;
-    background-color: #008B8B;
+    background-color: #523A28;
     margin: 0;
     padding: 0;
 }
@@ -144,6 +144,21 @@ html, body {
         display: inline-block;
         margin-right: 24px;
         margin-left: 37%;
+    }
+
+.course-badge {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    
+    align-items: center;
+    
+    background-color: #fff;
+}
+
+    .course-badge h1 {
+        font-size: 60px;
+        display: inline-block;
+        
     }
 
 .status {
@@ -1070,8 +1085,6 @@ ol.progress[data-steps="9"] li {
     width: 25%;
     min-width: 25%;
     max-width: 25%;
-    border-radius: 25px;
-    box-shadow: 5px 5px 5px 5px lightgray;
     min-height: 500px;
 }
 
@@ -1082,6 +1095,12 @@ ol.progress[data-steps="9"] li {
     width: 71%;
     min-width: 71%;
     max-width: 71%;
-    border-radius: 25px;
-    box-shadow: 5px 5px 5px 5px lightgray;
+
 }
+.list-box {
+    border-radius: 15px;
+    box-shadow: 3px 3px 3px 3px lightgray;
+}
+
+
+
