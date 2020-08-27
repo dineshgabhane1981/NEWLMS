@@ -55,7 +55,7 @@
     }
 </style>
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
@@ -63,7 +63,7 @@
             </div>
             <div class="col text-right">
                 <li class="list-inline-item">
-                    <a href="@Url.Action("AddQuiz", "Quiz")">
+                    <a href="@Url.Action("AuthorContent", "Quiz")">
                         <button class="btn btn-secondary dropdown-toggle create-learning-btn" type="button">
                             <i class="fas fa-plus-circle"></i> Add Quiz
                         </button>
@@ -115,7 +115,7 @@
 
                                         <td style="text-align:center;">
 
-                                            <a href="@Url.Action("EditQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
+                                            <a href="@Url.Action("AuthorContent", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
                                             <a href="#" onclick="OpenModelForAssign(@quiz.QuizId)" class="login" title="Assign"><i class="fas fa-user-plus orange-color mr-1"></i></a>
                                             <a href="@Url.Action("ViewQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="View"><img src="~/assets/images/eye.png" /></a>
                                         </td>
