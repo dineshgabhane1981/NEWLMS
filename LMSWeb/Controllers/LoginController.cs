@@ -20,11 +20,8 @@ namespace LMSWeb.Controllers
         // GET: Login
         public ActionResult Index(string code)
         {
-            //newException.AddDummyException("Login HIT");
             TblUser user = new TblUser();
-
-            List<TblTenant> tenantDetails = new List<TblTenant>();
-            
+            List<TblTenant> tenantDetails = new List<TblTenant>();            
             try
             {
                 string host = string.Empty;
@@ -35,13 +32,10 @@ namespace LMSWeb.Controllers
                 {
                     if (tenantList[0].TenantId == 6)
                     {
-                        
-                        //newException.AddDummyException("Code - " + code);
                         if (!string.IsNullOrEmpty(code))
                         {
                             if (!string.IsNullOrEmpty(Convert.ToString(Session["CourseId"])))
-                            {                               
-                                
+                            {
                                 return RedirectToAction("LaunchCourse", "Assignment", new { @CourseId = Convert.ToInt32(Session["CourseId"]), @code = code });
                             }
                             else
@@ -53,19 +47,15 @@ namespace LMSWeb.Controllers
                                     newException.AddDummyException("Quiz Id is Null");
                                 }
                                 var sessions = (List<QuizSession>)Session["QuizId"];
-
                                 foreach (var item in sessions)
-                                {
-                                    
+                                {                                    
                                     if (item.isUsed == false)
                                     {
                                         quizId = item.QuizId;
                                         item.isUsed = true;
                                         break;
                                     }
-
-                                }                               
-                                
+                                }
                                 return RedirectToAction("LaunchQuiz", "Assignment", new { @QuizId = quizId, @code = code });
                             }
                         }
@@ -89,8 +79,6 @@ namespace LMSWeb.Controllers
                 {
                     return View("NoClientAvailable");
                 }
-
-                //return View("Login", user);
             }
             catch (Exception ex)
             {

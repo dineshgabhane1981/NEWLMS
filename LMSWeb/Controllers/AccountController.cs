@@ -40,7 +40,7 @@ namespace LMSWeb.Controllers
             TblUser objEditData = new TblUser();
             objEditData = userDetails[0];
             objEditData.UserRoles = rr.GetAllRoles();
-            objEditData.Tenants = tr.GetAllTenants();
+            //objEditData.Tenants = tr.GetAllTenants();
             objEditData.IsMyProfile = true;
             return View("Profile",objEditData);
         }

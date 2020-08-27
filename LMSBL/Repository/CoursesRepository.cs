@@ -140,7 +140,7 @@ namespace LMSBL.Repository
                     path = f1.Extension;
                 }
                 db.AddParameter("@ContentModuleName", SqlDbType.Text, obj.ContentModuleName);
-                db.AddParameter("@ContentModuleDescription", SqlDbType.Text, obj.ContentModuleDescription);
+                db.AddParameter("@ContentModuleDescription", SqlDbType.NText, obj.ContentModuleDescription);
                 db.AddParameter("@ContentModuleType", SqlDbType.Text, obj.ContentModuleType);
                 db.AddParameter("@ContentModuleURL", SqlDbType.Text, path);
                 db.AddParameter("@MasteryScore", SqlDbType.Int, obj.MasteryScore);

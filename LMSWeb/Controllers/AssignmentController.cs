@@ -589,7 +589,8 @@ namespace LMSWeb.Controllers
 
         public async Task<ActionResult> LaunchCourse(int CourseId, string code)
         {
-
+            TenantRepository tr = new TenantRepository();
+            var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
             TblUser sessionUser = (TblUser)Session["UserSession"];
             var courseBaseURL = System.Configuration.ConfigurationManager.AppSettings["CourseBaseURL"];
             if (sessionUser == null)
@@ -658,8 +659,7 @@ namespace LMSWeb.Controllers
                                     CommonFunctions common = new CommonFunctions();
                                     newUser.Password = common.GetEncodePassword("123456");
 
-                                    TenantRepository tr = new TenantRepository();
-                                    var tenantList = tr.VerifyTenantDomain(Request.Url.Host);
+                                    
                                     newUser.TenantId = tenantList[0].TenantId;
 
                                     var newUserId = ur.AddUser(newUser);
@@ -701,7 +701,15 @@ namespace LMSWeb.Controllers
             CourseDetails = courseRepo.GetCourseById(CourseId);
             var url = courseBaseURL + "?AID=" + CourseId + "&LID=" + sessionUser.UserId;
             CourseDetails[0].ContentModuleURL = url;
-            return View(CourseDetails[0]);
+            if(tenantList[0].TenantId==6)
+            {
+                return Content("<script>window.open('" + url + "','_blank')</script>");
+            }
+            else
+            {
+                return View(CourseDetails[0]);
+            }
+            
             //return Redirect(url);
             //return Content("<script>window.open('" + url + "','_blank')</script>");
 
@@ -739,5 +747,45 @@ namespace LMSWeb.Controllers
             return Json(lstCurriculumActivities, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult LaunchCurriculum(string cId)
+        {
+            TblUser sessionUser = new TblUser();
+            sessionUser = (TblUser)Session["UserSession"];
+            List<CurriculumActivities> lstCurriculumActivities = new List<CurriculumActivities>();
+            if (!string.IsNullOrEmpty(cId))
+            {
+                
+                DataSet Data = cc.GetCurriculumActivitiesById(Convert.ToInt32(cId), sessionUser.UserId);
+
+                if (Data != null)
+                {
+                    if (Data.Tables.Count > 0)
+                    {
+                        if (Data.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (var item in Data.Tables[0].Rows)
+                            {
+                                lstCurriculumActivities = Data.Tables[0].AsEnumerable().Select(dr => new CurriculumActivities
+                                {
+                                    ActivityId = Convert.ToInt32(dr["ActivityId"]),
+                                    ActivityText = Convert.ToString(dr["ActivityText"]),
+                                    ActivityType = Convert.ToString(dr["ActivityType"]),
+                                    DueDate = Convert.ToString(dr["DueDate"]),
+                                    ActivityStatus = Convert.ToString(dr["ActivityStatus"]),
+                                    CompletionDate = Convert.ToString(dr["CompletionDate"]),
+                                    Duration = Convert.ToString(dr["Duration"]),
+                                    Score = Convert.ToString(dr["Score"]),
+                                    CurriculumName = Convert.ToString(dr["CurriculumTitle"]),
+                                    CourseSubType = Convert.ToString(dr["CourseSubType"]),
+                                    CourseModuleURL = Convert.ToString(dr["CourseModuleURL"])                                    
+                                }).ToList();
+                            }
+                        }
+                    }
+                }
+                //return View("CurriculumActivities", lstCurriculumActivities);
+            }
+            return View(lstCurriculumActivities);
+        }
     }
 }

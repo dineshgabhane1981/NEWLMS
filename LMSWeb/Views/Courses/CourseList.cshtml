@@ -61,7 +61,7 @@
     </style>
 
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">
             <div class="col-lg-6 col-md-12 search-container test">
                 <i class="fas fa-search"></i>
@@ -86,7 +86,7 @@
                         <tr>
                             <th scope="col">Sr No.</th>
                             <th scope="col">Course Name</th>
-                            <th scope="col">Course Description</th>
+                            @*<th scope="col">Course Description</th>*@
                             <th scope="col">Course Type</th>
                             <th scope="col">Date Added</th>
                             <th scope="col">Duration (Mins)</th>
@@ -106,7 +106,7 @@
                                     <tr>
                                         <td class="add-column-padding">@index</td>
                                         <td>@course.ContentModuleName</td>
-                                        <td style="max-width:200px;">@Html.Raw(course.ContentModuleDescription)</td>
+                                        @*<td style="max-width:200px;">@Html.Raw(course.ContentModuleDescription)</td>*@
                                         <td>@course.ContentModuleType</td>
                                         <td>@course.createdOn</td>
                                         @if (course.Duration > 0)
@@ -207,7 +207,7 @@
     var assignedUsers = [];
     $(document).ready(function () {
         $('#activityTable').DataTable({
-            "aaSorting": [[0, "desc"]],
+            //"aaSorting": [[0, "desc"]],
             "paging": true,
             "ordering": true,
             "info": true,

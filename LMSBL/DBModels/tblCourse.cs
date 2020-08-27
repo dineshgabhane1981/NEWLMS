@@ -16,8 +16,7 @@ namespace LMSBL.DBModels
         [StringLength(100)]
         public string ContentModuleName { get; set; }
 
-        [DisplayName("Course Description")]
-        [StringLength(1000)]
+        [DisplayName("Course Description")]        
         public string ContentModuleDescription { get; set; }
 
         [StringLength(400)]

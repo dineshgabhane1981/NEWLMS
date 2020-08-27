@@ -179,7 +179,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssignmentController.cs" />
-    <Compile Include="Controllers\callbackController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CurriculumController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
@@ -763,7 +762,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -854,16 +852,12 @@
     <Content Include="Views\Quiz\InitialAssessment.cshtml" />
     <Content Include="Views\Quiz\Result.cshtml" />
     <Content Include="Views\Assignment\LaunchCourse.cshtml" />
+    <Content Include="Views\Assignment\LaunchCurriculum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\Logo\" />
     <Folder Include="MediaContent\" />
-    <Folder Include="Models\" />
-    <Folder Include="uploads\" />
-    <Folder Include="Views\callback\" />
-    <Folder Include="Views\Enquiry\" />
-    <Folder Include="Views\NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

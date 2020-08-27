@@ -7,38 +7,38 @@
     <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
         <div class="row mb-1">
             <div class="col">
-                <h4>Progress</h4>
+                <h4 style="color:white;">Progress</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('1');">
                 @*<a class="login"  href="@Url.Action("UserReport", "Reports", new { isActive = 1})">*@
-                <div class="prog-badge total-users">
+                <div class="prog-badge total-users" style="box-shadow:3px 3px 3px 3px lightgray;">
                     <h1>@Model.allCounts.TotalUserCount</h1>
                     <span class="status">Total Users</span>
                 </div>
                 @*</a>*@
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('2');">
-                <div class="prog-badge active-users">
+                <div class="prog-badge active-users" style="box-shadow:3px 3px 3px 3px lightgray;">
                     <h1>@Model.allCounts.ActiveUserCount</h1>
                     <span class="status">Active Users</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('3');">
-                <div class="prog-badge learnings">
+                <div class="prog-badge learnings" style="box-shadow:3px 3px 3px 3px lightgray;">
                     <h1>@Convert.ToInt32(Model.allCounts.TotalQuizCount + Model.allCounts.TotalCourseCount)</h1>
                     <span class="status">Learnings</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('4');">
-                <div class="prog-badge high-score-users">
+                <div class="prog-badge high-score-users" style="box-shadow:3px 3px 3px 3px lightgray;">
                     <h1>@Convert.ToInt32(Model.allCounts.TotalHighScoreQuizUserCount + Model.allCounts.TotalHighScoreCourseUserCount)</h1>
                     <span class="status">High Score Users</span>
                 </div>
             </div>
         </div>
-        <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+        <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
             <div class="row">
                 <div class="col search-container">
                     <i class="fas fa-search"></i>

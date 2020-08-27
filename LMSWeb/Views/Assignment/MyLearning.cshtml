@@ -12,10 +12,10 @@
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     <div class="row mb-1">
         <div class="col">
-            <h4>Assigned Activities</h4>
+            <h4 style="color:white;">Assigned Activities</h4>
         </div>
     </div>
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="pt-3 pl-3 pr-3 course-list-container list-box" >
         <div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
@@ -123,7 +123,7 @@
                                                 @if (activity.ActivitySubType == "Scorm1.2")
                                                 {
                                                     //<a href="@baseURL?AID=@activity.ActivityId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
-                                                    <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
+                                                    <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course"><img src="~/assets/images/launch.png" /></a>
                                                 }
                                                 @if (activity.ActivitySubType == "Other")
                                                 {
@@ -333,7 +333,7 @@
                     urlLink = urlLink + "?CourseId=" + item.ActivityId;
 
                     htmlStr += "<td style=\"text-align:center;\">";
-                    htmlStr += "<a href=" + urlLink + " class=\"login\" title=\"Launch Course\" target=\"_blank\"><img src=\"/assets/images/launch.png\" /></a></td>";
+                    htmlStr += "<a href=" + urlLink + " class=\"login\" title=\"Launch Course\"><img src=\"/assets/images/launch.png\" /></a></td>";
 
                 }
                 else {

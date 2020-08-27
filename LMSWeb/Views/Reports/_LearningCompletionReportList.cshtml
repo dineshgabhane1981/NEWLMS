@@ -1,7 +1,7 @@
 ﻿@model List<LMSBL.DBModels.LearningCompletionReportModel>
 
 
-<div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+<div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
     <div class="row">
         <div class="col search-container">
             <i class="fas fa-search"></i>
@@ -38,12 +38,12 @@
                     <tr>
                         <th scope="col" >Sr. No.</th>
                         <th scope="col">Learning</th>
-                        <th scope="col" >Type</th>
-                        <th scope="col">Description</th>
+                        <th scope="col" style="text-align:center;">Type</th>
+                        @*<th scope="col">Description</th>*@
                         <th scope="col">Learning Assigned Date</th>
-                        <th scope="col" >Assigned Users</th>
+                        <th scope="col" style="text-align:center;">Assigned Users</th>
                         <th scope="col" style="text-align:center;">Status</th>
-                        <th scope="col">Action</th>
+                        <th scope="col" style="text-align:center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +61,7 @@
                                     <td style="text-align:center;">@count</td>
                                     <td style="width:250px;">@user.ActivityName</td>
                                     <td style="text-align:center;">@user.ActivityType</td>
-                                    <td style="width:250px;">@user.ActivityDescription</td>
+                                    @*<td style="width:250px;">@user.ActivityDescription</td>*@
                                     @if (!string.IsNullOrEmpty(user.ActivityLearningAssigned))
                                     {
                                         <td>@user.ActivityLearningAssigned</td>
