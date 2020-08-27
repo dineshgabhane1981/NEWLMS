@@ -1,4 +1,5 @@
-﻿var count = 9999999;
+﻿var VideoAudioLink = "http://localhost:7777/QuizMedia/";
+var count = 9999999;
 var optionCount = 2;
 var questionObj = [];
 var base64StringArray = [];
