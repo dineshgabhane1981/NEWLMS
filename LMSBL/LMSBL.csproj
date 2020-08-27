@@ -78,12 +78,14 @@
     <Compile Include="DBModels\tblForum.cs" />
     <Compile Include="DBModels\tblForumReply.cs" />
     <Compile Include="DBModels\TblGroup.cs" />
+    <Compile Include="DBModels\tblLearnerActivityAssignment.cs" />
     <Compile Include="DBModels\TblLogin.cs" />
     <Compile Include="DBModels\TblNotificationTemplate.cs" />
     <Compile Include="DBModels\tblQuestion.cs" />
     <Compile Include="DBModels\tblQuestionOption.cs" />
     <Compile Include="DBModels\tblQuestionType.cs" />
     <Compile Include="DBModels\tblQuiz.cs" />
+    <Compile Include="DBModels\tblQuizAssignment.cs" />
     <Compile Include="DBModels\tblQuizScore.cs" />
     <Compile Include="DBModels\tblRatings.cs" />
     <Compile Include="DBModels\TblResetPassword.cs" />
