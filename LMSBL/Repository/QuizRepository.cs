@@ -110,6 +110,60 @@ namespace LMSBL.Repository
             }
         }
 
+        public List<tblQuizAssignment> GetQuizAssingedUsers(int QuizId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@quizId", SqlDbType.Int, QuizId);
+                DataSet ds = db.FillData("sp_GetQuizAssignedUsers");
+
+                List<tblQuizAssignment> lstquizUsers = ds.Tables[0].AsEnumerable().Select(dr => new tblQuizAssignment
+                {
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    DueDate = Convert.ToDateTime(dr["DueDate"]).ToString("MM/dd/yyyy")
+                }).ToList();
+
+                return lstquizUsers;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public int AssignQuizToDB(object[] objData, int qId)
+        {
+            int quizId = 0;
+            if (objData != null)
+            {
+                db.parameters.Clear();
+                db.AddParameter("@QuizId", SqlDbType.Int, qId);
+               // db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                var isDelete = db.ExecuteQuery("sp_DeleteAssignedUsers");
+                    isDelete = 1;
+                
+                if (isDelete == 1)
+                {
+                    foreach (Dictionary<string, object> item in objData)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@QuizId", SqlDbType.Int, Convert.ToInt32(qId));
+                        db.AddParameter("@UserId", SqlDbType.Int, Convert.ToInt32(item["UserId"]));
+                        db.AddParameter("@DueDate", SqlDbType.DateTime, Convert.ToDateTime(item["DueDate"]));
+                       // db.AddParameter("@result", SqlDbType.Int, ParameterDirection.Output);
+                        var result = db.ExecuteQuery("sp_QuizAssign");
+
+                        quizId = 1;
+                    }
+                }
+            }
+
+            return quizId;
+        }
+
         public bool CheckQuizAssignedUser(int QuizId, int UserId)
         {
             bool status = false;
@@ -370,6 +424,7 @@ namespace LMSBL.Repository
             }
             return status;
         }
+
         public int AssignQuiz(int QuizId, int UserId, DateTime? DueDate)
         {
             int status = 0;

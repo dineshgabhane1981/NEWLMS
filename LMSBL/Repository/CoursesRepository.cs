@@ -220,7 +220,29 @@ namespace LMSBL.Repository
                 throw ex;
             }
         }
+        public List<tblLearnerActivityAssignment> GetCourseAssignedUser(int CourseId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@ContentModuleId", SqlDbType.Int, CourseId);
+                DataSet ds = db.FillData("sp_GetCourseAssignedUsers");
 
+                List<tblLearnerActivityAssignment> lstCourseUsers = ds.Tables[0].AsEnumerable().Select(dr => new tblLearnerActivityAssignment
+                {
+                    LearnerId = Convert.ToInt32(dr["LearnerId"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    DueDate = Convert.ToString(dr["DueDate"]),
+                }).ToList();
+
+                return lstCourseUsers;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
         public DataSet GetAssignedCourseUsers(int CourseId)
         {
             try
@@ -272,7 +294,36 @@ namespace LMSBL.Repository
             }
             return status;
         }
+        public int AssignCourseTouser(object[] objData, int ContentModuleId)
+        {
+            int courseId = 0;
+            int status = 0;
 
+            if (objData != null)
+            {
+                db.parameters.Clear();
+                db.AddParameter("@ContentModuleId", SqlDbType.Text, Convert.ToString(ContentModuleId));
+                status = db.ExecuteQuery("sp_DeleteAssignedUsersForCourse");
+                status = 1;
+                
+                if (status == 1)
+                {
+                    foreach (Dictionary<string, object> item in objData)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@UserId", SqlDbType.Text, Convert.ToInt32(item["LearnerId"]));
+                        db.AddParameter("@ActivityId", SqlDbType.Text, ContentModuleId);
+                        db.AddParameter("@DueDate", SqlDbType.DateTime, Convert.ToString(item["DueDate"]));                       
+                        
+                        var result = db.ExecuteQuery("sp_CourseAssign");
+                            courseId = 1;
+                        
+                    }
+                }
+            }
+
+            return courseId;
+        }
         public bool CheckCourseAssignedUser(int CourseId, int UserId)
         {
             bool status = false;

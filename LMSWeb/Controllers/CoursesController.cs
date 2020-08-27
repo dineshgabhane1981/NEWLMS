@@ -7,6 +7,8 @@ using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using LMSWeb.ViewModel;
+using System.Web.Script.Serialization;
+using System.Net;
 
 
 namespace LMSWeb.Controllers
@@ -149,7 +151,68 @@ namespace LMSWeb.Controllers
                 return View();
             }
         }
+        public ActionResult Getuser(int id)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
 
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            DataSet ds = cc.GetAssignedCourseUsers(id);
+          //  bool isDueDate = false;
+            if (ds != null)
+            {
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (var item in userItems)
+                        {
+                            DataRow[] foundUsers = ds.Tables[0].Select("LearnerId = " + item.Value + "");
+                            if (foundUsers.Length != 0)
+                            {
+                                item.Selected = true;
+                               // isDueDate = true;
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(userItems, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetAssignedCourseUsers(int id)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+            List<tblLearnerActivityAssignment> lstAssignedUsers = new List<tblLearnerActivityAssignment>();
+            lstAssignedUsers = cc.GetCourseAssignedUser(id);
+
+            return Json(lstAssignedUsers, JsonRequestBehavior.AllowGet);
+
+
+        }
         public ActionResult AssignCourse(int id)
         {
             List<SelectListItem> userItems = new List<SelectListItem>();
@@ -183,6 +246,7 @@ namespace LMSWeb.Controllers
                             {
                                 item.Selected = true;
                                 isDueDate = true;
+
                             }
                         }
                     }
@@ -195,13 +259,30 @@ namespace LMSWeb.Controllers
                     if (ds.Tables[0] != null)
                     {
                         if (!string.IsNullOrEmpty(Convert.ToString(ds.Tables[0].Rows[0][1])))
-                            courseAssignVieewModel.DueDate = Convert.ToDateTime(ds.Tables[0].Rows[0][1]);
+                        { }
+                        courseAssignVieewModel.DueDate = Convert.ToDateTime(ds.Tables[0].Rows[0][1]);
                     }
                 }
             objCourse = cc.GetCourseById(id);
-            
+
             courseAssignVieewModel.course = objCourse[0];
             return View(courseAssignVieewModel);
+
+        }
+        public ActionResult AssignCourseToUser(string jsonData, int id)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = null;
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                objData = (object[])json_serializer.DeserializeObject(jsonData);
+            }
+            var result = cc.AssignCourseTouser(objData, id);
+
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AssignCourseToUsers(CourseAssignViewModel courseAssignViewModel)

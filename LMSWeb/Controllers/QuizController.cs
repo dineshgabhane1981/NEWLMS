@@ -7,6 +7,8 @@ using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using System.Data;
+using System.Web.Script.Serialization;
+using System.Net;
 
 namespace LMSWeb.Controllers
 {
@@ -50,7 +52,78 @@ namespace LMSWeb.Controllers
                 return View("AddNewQuiz");
             }
         }
+        public ActionResult Getuser(int qId)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
 
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            DataSet ds = quizRepository.GetAssignedQuizUsers(qId);
+            if (ds != null)
+            {
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (var item in userItems)
+                        {
+                            DataRow[] foundUsers = ds.Tables[0].Select("UserId = " + item.Value + "");
+                            if (foundUsers.Length != 0)
+                            {
+                                item.Selected = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(userItems, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetAssignedUsers(int qId)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            List<tblQuizAssignment> lstquizAssignedUsers = new List<tblQuizAssignment>();
+            lstquizAssignedUsers = quizRepository.GetQuizAssingedUsers(qId);
+
+            return Json(lstquizAssignedUsers, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AssignQuiztouser(string jsonData, int qId)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = null;
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                objData = (object[])json_serializer.DeserializeObject(jsonData);
+            }
+            var result = quizRepository.AssignQuizToDB(objData, qId);
+
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult AssignQuiz(int id)
         {
             List<SelectListItem> userItems = new List<SelectListItem>();

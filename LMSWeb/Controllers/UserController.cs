@@ -42,7 +42,6 @@ namespace LMSWeb.Controllers
                 return View();
             }
         }
-
         public ActionResult GetUserDetails()
         {
             try
@@ -144,7 +143,6 @@ namespace LMSWeb.Controllers
             int result = ur.DeleteGroup(Convert.ToInt32(groupId), sessionUser.TenantId);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult Editgroup(string groupId)
         {
            // List<TblUserGroup> lstgroupUsers = new List<TblUserGroup>();
@@ -168,7 +166,6 @@ namespace LMSWeb.Controllers
 
             return Json(lstCurriculum, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult AddUser()
         {
             try
@@ -187,7 +184,6 @@ namespace LMSWeb.Controllers
                 return View("AddNewUser");
             }
         }
-
         [HttpPost]
         public ActionResult AddUser(TblUser objUser, HttpPostedFileBase file)
         {
@@ -299,7 +295,6 @@ namespace LMSWeb.Controllers
 
             }
         }
-
         public ActionResult EditUser(int id)
         {
             try
@@ -319,7 +314,6 @@ namespace LMSWeb.Controllers
                 return View("AddNewUser");
             }
         }
-
         [HttpPost]
         public ActionResult EditUser(TblUser objUser)
         {
@@ -345,7 +339,6 @@ namespace LMSWeb.Controllers
                 return View();
             }
         }
-
         [HttpPost, ActionName("DeleteUser")]
         public ActionResult DeleteConfirmUser(int id)
         {
@@ -385,13 +378,11 @@ namespace LMSWeb.Controllers
             }
             return RedirectToAction("Index");
         }
-
         public ActionResult Upload()
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
             return View("UploadUsers", sessionUser);
         }
-
         public ActionResult UploadUsers(TblUser objUser, HttpPostedFileBase file)
         {
             try
