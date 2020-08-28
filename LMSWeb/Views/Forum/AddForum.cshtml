@@ -47,7 +47,7 @@
 
                         @Html.HiddenFor(model => model.ForumId)
 
-                        @Html.TextBoxFor(model => model.Title, new { @class = "input100", placeholder = "Forum Title" })
+                        @Html.TextBoxFor(model => model.Title, new { @class = "input100", placeholder = "Forum Title" ,id ="txtforumtitle"})
                         @Html.TextBoxFor(model => model.Description, new { @class = "input100", placeholder = "Forum Description" })
 
 
@@ -83,6 +83,20 @@
             $("#dvIsBrodcast").hide();
         }
     })
-
+    //$(document).ready(function () {
+    //    $(document).click(function () {
+    //        alert("Please Enter in textarea Here");
+    //        document.getElementById("txtforumtitle").focus();
+    //        return false;
+    //    })
+        $("#btnForumSubmit").click(function () {
+            var a = document.getElementById("txtforumtitle").value;
+            if (a == "") {
+                alert("Please Enter Forum Name");
+                document.getElementById("txtforumtitle").focus();
+                return false;
+            }
+        });
+    });
 
 </script>

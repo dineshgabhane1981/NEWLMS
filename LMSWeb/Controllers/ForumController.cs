@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Net.Configuration;
 using System.Net.Mail;
 using System.Web.Mvc;
+using System.Data;
 using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
@@ -24,6 +25,7 @@ namespace LMSWeb.Controllers
     public class ForumController : Controller
     {
         // GET: Forum
+        UserRepository userRepository = new UserRepository();
         ForumRepository fr = new ForumRepository();
         Exceptions newException = new Exceptions();
         public ActionResult Index()
@@ -142,6 +144,79 @@ namespace LMSWeb.Controllers
             var status = fr.AddForumReply(objForumReply);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Getuser(int fId)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            DataSet ds = fr.GetAssignedForumUsers(fId);
+            if (ds != null)
+            {
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (var item in userItems)
+                        {
+                            DataRow[] foundUsers = ds.Tables[0].Select("UserId = " + item.Value + "");
+                            if (foundUsers.Length != 0)
+                            {
+                                item.Selected = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(userItems, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetAssignedUsers(int fId)
+        {
+            List<SelectListItem> userItems = new List<SelectListItem>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+            foreach (var user in Users)
+            {
+                userItems.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                    Value = Convert.ToString(user.UserId)
+                });
+            }
+
+            List<tblForumAssign> lstforumAssignedUsers = new List<tblForumAssign>();
+            lstforumAssignedUsers = fr.GetForumAssingedDetailedUserslist(fId);
+
+            return Json(lstforumAssignedUsers, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AssignForumTouser(string jsonData, int fId)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            object[] objData = null;
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                objData = (object[])json_serializer.DeserializeObject(jsonData);
+            }
+            var result = fr.AssignForumToDB(objData, fId);
+
+            return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -287,5 +287,76 @@ namespace LMSBL.Repository
             return status;
         }
 
+        public DataSet GetAssignedForumUsers(int forumId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@forumId", SqlDbType.Int, forumId);
+                DataSet ds = db.FillData("sp_GetForumAssignedUsers");
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public List<tblForumAssign> GetForumAssingedDetailedUserslist(int forumId)
+        {
+            try
+            {
+                db.parameters.Clear();
+                db.AddParameter("@forumId", SqlDbType.Int, forumId);
+                DataSet ds = db.FillData("sp_GetForumAssignedUserslist");
+
+                List<tblForumAssign> lstforumUsers = ds.Tables[0].AsEnumerable().Select(dr => new tblForumAssign
+                {
+                    UserId = Convert.ToInt32(dr["UserId"]),
+                    UserName = Convert.ToString(dr["UserName"]),
+                    DueDate = Convert.ToDateTime(dr["DueDate"]).ToString("MM/dd/yyyy")
+                }).ToList();
+
+                return lstforumUsers;
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+                throw ex;
+            }
+        }
+
+        public int AssignForumToDB(object[] objData, int fId)
+        {
+            int forumId = 0;
+            if (objData != null)
+            {
+                db.parameters.Clear();
+                db.AddParameter("@forumId", SqlDbType.Int, fId);
+                // db.AddParameter("@status", SqlDbType.Int, ParameterDirection.Output);
+                var isDelete = db.ExecuteQuery("sp_DeleteForumAssignedUsers");
+                isDelete = 1;
+
+                if (isDelete == 1)
+                {
+                    foreach (Dictionary<string, object> item in objData)
+                    {
+                        db.parameters.Clear();
+                        db.AddParameter("@forumId", SqlDbType.Int, Convert.ToInt32(fId));
+                        db.AddParameter("@UserId", SqlDbType.Int, Convert.ToInt32(item["UserId"]));
+                        db.AddParameter("@DueDate", SqlDbType.DateTime, Convert.ToDateTime(item["DueDate"]));
+                        // db.AddParameter("@result", SqlDbType.Int, ParameterDirection.Output);
+                        var result = db.ExecuteQuery("sp_ForumAssign");
+
+                        forumId = 1;
+                    }
+                }
+            }
+
+            return forumId;
+        }
+
+
     }
 }
