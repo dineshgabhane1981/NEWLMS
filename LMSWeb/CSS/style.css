@@ -1082,9 +1082,9 @@ ol.progress[data-steps="9"] li {
 .quiz-left-pane {
     background: #fff;
     padding: 20px;
-    width: 25%;
-    min-width: 25%;
-    max-width: 25%;
+    width: 30%;
+    min-width: 30%;
+    max-width: 30%;
     min-height: 500px;
 }
 
@@ -1092,9 +1092,9 @@ ol.progress[data-steps="9"] li {
     margin-left: 10px;
     background: #fff;
     padding: 20px;
-    width: 71%;
-    min-width: 71%;
-    max-width: 71%;
+    width: 65%;
+    min-width: 65%;
+    max-width: 65%;
 
 }
 .list-box {

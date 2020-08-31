@@ -581,7 +581,7 @@ function DrawTable() {
         srNo++;
         optionItem = {}
         optionItem["index"] = srNo;
-        optionItem["QuestionTitle"] = item.QuestionText;
+        optionItem["QuestionTitle"] = item.QuestionText.substring(0,20) + "...";
         //optionItem["DueDate"] = item.DueDate;
         optionItem["QuestionId"] = item.QuestionId;
         optionItem["delete"] = "<div style=\"float:right; cursor:pointer;\"  onclick=\"deleteQuestion(" + item.QuestionId + ")\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i> &nbsp;&nbsp;</div>";

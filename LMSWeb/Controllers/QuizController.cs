@@ -332,11 +332,9 @@ namespace LMSWeb.Controllers
                 baseOutputStream.Position = 0;
                 return new FileStreamResult(baseOutputStream, "application/x-zip-compressed")
                 {
-                    FileDownloadName = "Archive.zip"
+                    FileDownloadName = objQuiz.QuizName + ".zip"
                 };
-
-                //ZipFile.CreateFromDirectory(startPath, zipPath);
-                //ZipFile.CreateFromDirectory(FolderPathToZip + "\\" + objQuiz.QuizName, FolderPathToZip + "\\" + objQuiz.QuizName + ".zip");
+               
             }
             catch (Exception ex)
             {

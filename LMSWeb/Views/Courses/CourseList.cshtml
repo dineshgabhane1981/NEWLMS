@@ -126,7 +126,7 @@
                                         @if (course.ContentModuleType == "Scorm1.2")
                                         {
                                             //<a href="@baseURL?AID=@course.ContentModuleId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
-                                            <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = course.ContentModuleId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
+                                            <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = course.ContentModuleId })" class="login" title="Launch Course"><img src="~/assets/images/launch.png" /></a>
                                         }
                                         else
                                         {

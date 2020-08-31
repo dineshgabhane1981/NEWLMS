@@ -37,7 +37,7 @@
                     window.location.href = "Index";
                 });
             </script>
-
+            TempData["QuizMessage"] = "";
         }
         else if (!string.IsNullOrEmpty(Convert.ToString(TempData["ErrorMessage"])))
         {
@@ -48,7 +48,7 @@
                     text: 'Problem while saving Quiz! Contact your Administrator!'
                 })
             </script>
-
+            TempData["ErrorMessage"] = "";
         }
         <div class="row justify-content-center h-100">
             <div class="col align-self-center add-user-section add-new-quiz list-box" style="max-width:80%;">
@@ -100,16 +100,17 @@
                     </div>
 
                 </div>
-                <div class="row justify-content-end pr-4">
+                <div class="row justify-content-end" style="padding-right:140px;">
                     <button type="button" id="btnQuizNext" class="btn btn-primary next-btn">Next <i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
 
-            <div id="dvQuizQuestions" class="container-fluid mt-4 mb-4 pl-4 pr-4">
-                <div class="row  h-100">
+            <div id="dvQuizQuestions" class="container-fluid mt-4 mb-4 pl-5 pr-4">
+                <div class="row h-100" style="padding-bottom:20px;">
                     <div class="col quiz-left-pane list-box">
-                        <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Add Question</button>
-
+                        <div class="justify-content-center" style="display:flex;">
+                            <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Add Question</button>
+                        </div>
                         <div id="questionList">
                             <div class="table-responsive">
                                 <table id="tblQuestions" class="display" style="width:100%">
@@ -118,7 +119,7 @@
                                             <th>Sr.No.</th>
                                             <th>Title</th>
                                             <th>Question Id</th>
-                                            <th>Action</th>
+                                            <th style="text-align:right;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,7 +133,7 @@
                         <button type="button" style="display:none;" id="btnSaveQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Save Question</button>
                     </div>
                 </div>
-                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                <div class="row justify-content-end" style="padding-right:50px;">
                     <button type="button" id="btnPrevQuiz" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
                     <button type="button" id="btnPreview" class="btn btn-primary next-btn">Preview <i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -162,7 +163,7 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                <div class="row justify-content-end" style="padding-right:140px;">
                     <button type="button" id="btnPreviewPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
                     <button type="button" id="btnSavePreview" class="btn btn-primary next-btn">Proceed to Publish <i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -178,7 +179,7 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-end pr-4" style="margin-bottom:10px;margin-right:20px;margin-top:5px;">
+                <div class="row justify-content-end" style="padding-right:140px;">
                     <button type="button" id="btnPublishPrev" class="btn btn-primary prev-btn"><i class="fas fa-chevron-left"></i> Previous</button>&nbsp;&nbsp;
                     
                     <button type="submit" name="submit" id="btnSave" value="Exit" class="btn btn-primary next-btn"> <img src="~/assets/images/check-img.png" width="20px" /> Save Quiz </button>&nbsp;&nbsp;
