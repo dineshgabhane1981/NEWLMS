@@ -6,116 +6,164 @@
     var baseURL = System.Configuration.ConfigurationManager.AppSettings["CourseBaseURL"];
     var CourseOtherBaseURL = System.Configuration.ConfigurationManager.AppSettings["CourseOtherBaseURL"];
 }
-<div class="table-responsive">
-    <table class="table" id="activityTable">
-        <thead>
-            <tr>
-                <th scope="col">Learning</th>
-                <th scope="col">Type</th>
-                @*<th scope="col">Description</th>*@
-                <th scope="col" class="mobile-hide">Duration (Mins)</th>
-                <th scope="col" class="mobile-hide">Start Date</th>
-                <th scope="col" class="mobile-hide">Attempted Date</th>
-                <th scope="col" class="mobile-hide" style="text-align:center;">Status</th>
-                <th scope="col" style="text-align:center;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null)
-            {
-                if (Model.Count > 0)
-                {
-                    var rowCount = 0;
-                    foreach (var activity in Model)
-                    {
+    <style>
+        #container {
+            position: relative;
+        }
 
-                        if (rowCount < 5)
+        #img2 {
+            position: absolute;
+            left: 20px;
+            top: 0px;
+            fill: #fff;
+        }
+
+        #text1 {
+            position: absolute;
+            left: 275px;
+            top: 100px;
+            font-size: 30px;
+            color: #fff;
+        }
+
+        #text2 {
+            position: absolute;
+            left: 320px;
+            top: 100px;
+            font-size: 30px;
+            color: #fff;
+        }
+
+        #text3 {
+            position: absolute;
+            left: 200px;
+            top: 100px;
+            font-size: 30px;
+            color: #fff;
+        }
+    </style>
+    <div class="container-fluid mb-4 pl-4 pr-4">
+
+
+        @if (Model != null)
+        {
+            var index = 0;
+            var durationInSeconds = 0;
+            var duration = "0";
+            <div class="row">
+                @foreach (var activity in Model)
+                {
+                    index++;
+                    if (!string.IsNullOrEmpty(activity.ActivityDuration) && activity.ActivityDuration != "0")
+                    {
+                        if (Convert.ToInt32(activity.ActivityDuration) >= 60)
                         {
-                            <tr>
-                                <td>@activity.ActivityName</td>
-                                <td>@activity.ActivityType</td>
-                                @*<td style="max-width:150px;">@activity.ActivityDescription</td>*@
-                                @if (activity.ActivityDuration == "0" || activity.ActivityDuration == "")
+                            duration = activity.ActivityDuration + ":00 Min";
+                        }
+                        else
+                        {
+                            durationInSeconds = Convert.ToInt32(activity.ActivityDuration) * 60;
+                            TimeSpan t = TimeSpan.FromSeconds(durationInSeconds);
+                            duration = string.Format("{0:D2}:{1:D2}", (int)t.Minutes, t.Seconds);
+                            duration = duration + " Min";
+                        }
+                    }
+                    else
+                    {
+                        duration = "-";
+                    }
+
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="course-badge mt-4" style="border:1px solid gray;box-shadow:3px 3px 3px 3px lightgray;">
+                            <div id="container" style="width:100%; height:150px; background-color:darkorange;">
+                                @*<img src="~/assets/images/tileback.svg" id="img1" />*@
+                                @if (activity.ActivityType == "Course")
                                 {
-                                    <td class="mobile-hide add-column-padding">-</td>
-                                }
-                                else
-                                {
-                                    var durationInSeconds = 0;
-                                    var duration = "0";
-                                    if (Convert.ToInt32(activity.ActivityDuration) >= 60)
-                                    {
-                                        duration = activity.ActivityDuration + ":00";
-                                    }
-                                    else
-                                    {
-                                        durationInSeconds = Convert.ToInt32(activity.ActivityDuration) * 60;
-                                        TimeSpan t = TimeSpan.FromSeconds(durationInSeconds);
-                                        duration = string.Format("{0:D2}:{1:D2}", (int)t.Minutes, t.Seconds);
-                                    }
-                                    <td class="mobile-hide add-column-padding">@duration</td>
-                                }
-                                <td class="mobile-hide">@activity.ActivityStartDate</td>
-                                @if (activity.ActivityCompletionDate == "")
-                                {
-                                    <td class="mobile-hide add-column-padding">-</td>
-                                }
-                                else
-                                {
-                                    <td class="mobile-hide">@activity.ActivityCompletionDate</td>
-                                }
-                                @if (activity.ActivityStatus == "Completed")
-                                {
-                                    <td class="mobile-hide" style="text-align:center;"><i class="far fa-check-circle green-color"></i></td>
-                                }
-                                @if (activity.ActivityStatus == "InProgress")
-                                {
-                                    <td class="mobile-hide" style="text-align:center;"><i class="far fa-hourglass orange-color"></i></td>
-                                }
-                                @if (activity.ActivityStatus == "Not Started")
-                                {
-                                    <td class="mobile-hide" style="text-align:center;"><i class="far fa-clock"></i></td>
+                                    <img src="~/assets/images/course.svg" width="150px" id="img2" /> <div id="text1">COURSE</div>
                                 }
                                 @if (activity.ActivityType == "Quiz")
                                 {
-                                    <td style="text-align:center;"><a href="@Url.Action("LaunchQuiz", "Assignment", new { QuizId = activity.ActivityId })" class="login" title="Launch Quiz"><img src="~/assets/images/launch.png" /></a></td>
+                                    <img src="~/assets/images/quiz.svg" width="150px" id="img2" /><div id="text2">QUIZ</div>
                                 }
-                                @if (activity.ActivityType == "Course")
+                                @if (activity.ActivityType == "Curriculum")
                                 {
-                                    if (activity.ActivitySubType == "Scorm1.2")
+                                    <img src="~/assets/images/curriculum.svg" width="150px" id="img2" /><div id="text3">CURRICULUM</div>
+                                }
+
+                            </div>
+
+                            <div class="add-column-padding" style="width:100%;margin-top:10px;"><b>Name </b> - @activity.ActivityName</div>
+                            @if (activity.ActivityType != "Forum")
+                            {
+                                <div class="mobile-hide add-column-padding"><b>Duration</b> - @duration</div>
+                            }
+                            else
+                            {
+                                <div class="mobile-hide add-column-padding" style="color:transparent;"><b>Duration</b> - @duration</div>
+                            }
+                            <div style="display:inline-block;width:100%;">
+                                @if (activity.ActivityType != "Forum")
+                                {
+                                    <div class="mobile-hide add-column-padding" style="width:50%; float:left;">
+                                        <b>Status</b> -
+                                        @if (activity.ActivityStatus == "Completed")
+                                        {
+                                            <span style="color:green; font-weight:bold;">@activity.ActivityStatus</span>
+                                        }
+                                        @if (activity.ActivityStatus == "Not Started")
+                                        {
+                                            <span style="color:red; font-weight:bold;">@activity.ActivityStatus</span>
+                                        }
+                                        @if (activity.ActivityStatus == "InProgress")
+                                        {
+                                            <span style="color:orange; font-weight:bold;">@activity.ActivityStatus</span>
+                                        }
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mobile-hide add-column-padding" style="width:50%; float:left;color:transparent;">
+                                        <b>Status</b> -<span style="color:orange; font-weight:bold;">@activity.ActivityStatus</span>
+                                    </div>
+                                }
+
+                                <div style="width:50%; float:right;padding-left:150px;">
+                                    @if (activity.ActivityType == "Course")
                                     {
-                                        //<td style="text-align:center;"><a href="@baseURL?AID=@activity.ActivityId&LID=@objUser.UserId" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a></td>
-                                        <td style="text-align:center;">
-                                            <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a>
-                                        </td>
+                                        if (activity.ActivitySubType == "Scorm1.2")
+                                        {
+                                            <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                        }
+                                        if (activity.ActivitySubType == "Other")
+                                        {
+                                            <a href="@CourseOtherBaseURL\ContentModules\@activity.ActivityId@activity.ActivityURL" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                        }
                                     }
-                                    if (activity.ActivitySubType == "Other")
+                                    @if (activity.ActivityType == "Quiz")
                                     {
-                                        <td style="text-align:center;"><a href="@CourseOtherBaseURL\ContentModules\@activity.ActivityId@activity.ActivityURL" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" /></a></td>
+                                        <a href="@Url.Action("LaunchQuiz", "Assignment", new { QuizId = activity.ActivityId })" class="login" title="Launch Quiz"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                    }
+                                    @if (activity.ActivityType == "Curriculum")
+                                    {
+                                        <a href="@Url.Action("LaunchCurriculum", "Assignment", new { cId = activity.ActivityId })" class="login" title="Launch Curriculum"><img src="~/assets/images/launch.png" width="35px;" /></a>
                                     }
 
-                                }
-                            </tr>
-                        }
-                        rowCount++;
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    if(index>5)
+                    {
+                        break;
                     }
                 }
-                else
-                {
-                    <tr>
-                        <td colspan="8" align="center">No Activity Available</td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8">No Activity Available</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </div>
+        }
+
+    </div>
 <script>
     $(document).ready(function () {
         $('#activityTable').DataTable({
