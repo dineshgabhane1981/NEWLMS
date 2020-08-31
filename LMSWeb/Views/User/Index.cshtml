@@ -215,7 +215,7 @@
             </div>
         </div>
         <div class="row justify-content-end pr-4" style="margin-top:20px;">
-            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Assigned</button>
             <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
         </div>
     </div>
@@ -400,8 +400,26 @@
     }
 
     btnClose.onclick = function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "The Data may lost if you not saved. please save data before closing!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ok!'
+        }).then((result) => {
+            if (result.value) {
 
-        $("#myModal").hide(1000);
+
+
+            }
+            else {
+                assignedUsers = [];
+                DrawTable();
+                $("#myModal").hide(1000);
+            }
+        })
         //modal.style.display = "none";
     }
     function OnSuccess(response) {
@@ -452,7 +470,7 @@
                 status1 = false;
             }
         })
-        if (status1) {
+        if (status1 && status) {
             if (editvalue > 0) {
 
                 $.each(assignedUsers, function (index, obj) {

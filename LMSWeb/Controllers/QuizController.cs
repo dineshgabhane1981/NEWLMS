@@ -7,7 +7,7 @@ using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using System.Data;
-using System.Web.Script.Serialization;
+
 using System.Net;
 
 namespace LMSWeb.Controllers
