@@ -7,8 +7,11 @@ using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using System.Data;
-
 using System.Net;
+using System.IO;
+using System.Xml;
+using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace LMSWeb.Controllers
 {
@@ -195,7 +198,13 @@ namespace LMSWeb.Controllers
 
                             TempData["QuizMessage"] = "Quiz Saved Successfully";
                             if (submit == "Exit")
+                            {
                                 return View("AuthorContent", objQuiz);
+                            }
+                            if (submit == "Save")
+                            {
+                                return CreateScormCourse(objQuiz);
+                            }
                             //return RedirectToAction("Index");
                             //if (submit == "Save")
                             //{
@@ -229,6 +238,275 @@ namespace LMSWeb.Controllers
                 newException.AddException(ex);
                 return View("AuthorContent");
             }
+        }
+
+        public FileResult CreateScormCourse(TblQuiz objQuiz)
+        {
+
+            string coursePath = string.Empty;
+            try
+            {
+                string SourcePath = System.Configuration.ConfigurationManager.AppSettings["ScormSourcePath"];
+                string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                DestinationPath = DestinationPath + "\\" + objQuiz.QuizName;
+                //Delete existing package
+                if (Directory.Exists(DestinationPath))
+                {
+                    Directory.Delete(DestinationPath, true);
+                }
+                //create new folders for package
+                foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                }
+
+                //Copy all the files & Replaces any files with the same name
+                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    System.IO.File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                }
+                //replace SCORM files to root folder
+                SourcePath = DestinationPath + "\\compliance\\SCORM12";
+
+                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    System.IO.File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                }
+                //Delete compliance folder as it is not necessary for the package
+                SourcePath = DestinationPath + "\\compliance";
+                if (Directory.Exists(SourcePath))
+                {
+                    Directory.Delete(SourcePath, true);
+                }
+                //Do changes in imsmanifest.xml
+
+                XmlDocument xmlDoc = new XmlDocument();
+                string filePath = DestinationPath + "\\imsmanifest.xml";
+                xmlDoc.Load(filePath);
+                XmlNodeList xmlNodeList = xmlDoc.DocumentElement.ChildNodes;
+
+                foreach (XmlNode xNode in xmlNodeList)
+                {
+                    if (xNode.Name == "organizations")
+                    {
+                        XmlNodeList innerNode = xNode.ChildNodes;
+                        foreach (XmlNode xNode1 in innerNode)
+                        {
+                            if (xNode1.Name == "organization")
+                            {
+                                xNode1["title"].InnerText = objQuiz.QuizName;
+                                XmlNodeList innerNodeNew = xNode1.ChildNodes;
+                                foreach (XmlNode xNode2 in innerNodeNew)
+                                {
+                                    if (xNode2.Name == "item")
+                                    {
+                                        xNode2["title"].InnerText = objQuiz.QuizName;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                xmlDoc.Save(filePath);
+
+                //create JSON file
+
+                CreateQuizJSON(objQuiz);
+                string FolderPathToZip = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                //ZIP the folder and return path
+                string startPath = FolderPathToZip + "\\" + objQuiz.QuizName;
+                string zipPath = FolderPathToZip + "\\course.zip";
+
+                var baseOutputStream = new MemoryStream();
+                ZipOutputStream zipOutput = new ZipOutputStream(baseOutputStream);
+                zipOutput.IsStreamOwner = false;
+
+                zipOutput.SetLevel(3);
+                byte[] buffer = new byte[4096];
+                SharpZipLibHelper.ZipFolder(startPath, zipOutput);
+
+                zipOutput.Finish();
+                zipOutput.Close();
+
+                /* Set position to 0 so that cient start reading of the stream from the begining */
+                baseOutputStream.Position = 0;
+                return new FileStreamResult(baseOutputStream, "application/x-zip-compressed")
+                {
+                    FileDownloadName = "Archive.zip"
+                };
+
+                //ZipFile.CreateFromDirectory(startPath, zipPath);
+                //ZipFile.CreateFromDirectory(FolderPathToZip + "\\" + objQuiz.QuizName, FolderPathToZip + "\\" + objQuiz.QuizName + ".zip");
+            }
+            catch (Exception ex)
+            {
+                //newException.AddDummyException("11111");
+                newException.AddException(ex);
+
+            }
+            return null;
+        }
+        public void CreateQuizJSON(TblQuiz objQuiz)
+        {
+            try
+            {
+                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                json_serializer.MaxJsonLength = int.MaxValue;
+                object[] objTblQue = (object[])json_serializer.DeserializeObject(objQuiz.hdnData);
+
+                SCORMJSON jsonData = new SCORMJSON();
+                ConfigData config = new ConfigData();
+                config.scormType = 1.2;
+                jsonData.config = config;
+
+                QuizData quiz = new QuizData();
+                quiz.title = "Quiz";
+                quiz.nameLabel = "Name";
+                quiz.name = objQuiz.QuizName;
+                quiz.descLabel = "Description";
+                quiz.description = objQuiz.QuizDescription;
+                quiz.timeLabel = "Time remaining: ";
+                quiz.duration = objQuiz.Duration;
+                quiz.passingScore = 80;//This need to be change
+                quiz.minScore = 0;
+                quiz.maxScore = 100;
+                quiz.multipleAttempts = false;
+                quiz.timeoutMessage = "Exam time ended.";
+                jsonData.quiz = quiz;
+
+                ReviewQuizData reviewQuiz = new ReviewQuizData();
+                reviewQuiz.title = "Review Quiz";
+                reviewQuiz.nameLabel = "Name:";
+                reviewQuiz.name = objQuiz.QuizName;
+                reviewQuiz.descLabel = "Description:";
+                reviewQuiz.description = objQuiz.QuizDescription;
+                reviewQuiz.scoreLabel = "Score:";
+                jsonData.reviewQuiz = reviewQuiz;
+
+                List<QuestionsData> lstQuestions = new List<QuestionsData>();
+
+                foreach (Dictionary<string, object> item in objQuiz.questionObject)
+                {
+                    QuestionsData que = new QuestionsData();
+                    que.questionText = Convert.ToString(item["QuestionText"]);
+                    if (Convert.ToInt32(item["QuestionTypeId"]) == 1)
+                    {
+                        que.type = "mcq";
+                        que.instructionText = "Options";
+                        que.randomOptions = Convert.ToBoolean(item["isRandomOption"]);
+                        List<OptionsData> lstOptions = new List<OptionsData>();
+                        var optionsCount = (object[])item["Options"];
+                        int[] arrAnswers = new int[optionsCount.Length];
+                        int counter = 0;
+
+
+                        foreach (Dictionary<string, object> itemNew1 in (object[])item["Options"])
+                        {
+                            OptionsData ops = new OptionsData();
+                            ops.text = Convert.ToString(itemNew1["OptionText"]);
+                            ops.feedback = Convert.ToString(itemNew1["OptionFeedback"]);
+                            arrAnswers[counter] = Convert.ToInt32(itemNew1["CorrectOption"]);
+                            lstOptions.Add(ops);
+                            counter++;
+                        }
+                        que.answer = arrAnswers;
+                        que.points = 1;
+                        que.options = lstOptions;
+                    }
+                    if (Convert.ToInt32(item["QuestionTypeId"]) == 2)
+                    {
+                        que.type = "mrq";
+                        que.instructionText = "Options";
+                        que.randomOptions = Convert.ToBoolean(item["isRandomOption"]);
+                        List<OptionsData> lstOptions = new List<OptionsData>();
+                        var optionsCount = (object[])item["Options"];
+                        int[] arrAnswers = new int[optionsCount.Length];
+                        int counter = 0;
+                        foreach (Dictionary<string, object> itemNew1 in (object[])item["Options"])
+                        {
+
+                            OptionsData ops = new OptionsData();
+                            ops.text = Convert.ToString(itemNew1["OptionText"]);
+                            arrAnswers[counter] = Convert.ToInt32(itemNew1["CorrectOption"]);
+                            lstOptions.Add(ops);
+                            counter++;
+                        }
+                        que.answer = arrAnswers;
+                        que.points = 1;
+                        que.options = lstOptions;
+                        CorrectFeedbackData correctFeedback = new CorrectFeedbackData();
+                        correctFeedback.text = Convert.ToString(item["CorrectFeedback"]);
+                        que.correctFeedback = correctFeedback;
+
+                        IncorrectFeedbackData inCorrectFeedback = new IncorrectFeedbackData();
+                        inCorrectFeedback.text = Convert.ToString(item["InCorrectFeedback"]);
+                        que.incorrectFeedback = inCorrectFeedback;
+
+                    }
+                    if (Convert.ToInt32(item["QuestionTypeId"]) == 3)
+                    {
+                        que.type = "para";
+                        que.placeholderText = "Write your answer here";
+                        que.answer = null;
+                        que.points = 1;
+                        CorrectFeedbackData correctFeedback = new CorrectFeedbackData();
+                        correctFeedback.text = Convert.ToString(item["CorrectFeedback"]);
+                        que.correctFeedback = correctFeedback;
+
+                        IncorrectFeedbackData inCorrectFeedback = new IncorrectFeedbackData();
+                        inCorrectFeedback.text = Convert.ToString(item["InCorrectFeedback"]);
+                        que.incorrectFeedback = inCorrectFeedback;
+
+                    }
+                    if (Convert.ToInt32(item["QuestionTypeId"]) == 4)
+                    {
+                        que.type = "video";
+                        string base64String = Convert.ToString(item["mediaFile"]);
+
+                        byte[] newBytes = Convert.FromBase64String(base64String);
+                        MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
+                        ms.Write(newBytes, 0, newBytes.Length);
+                        string fileName = Convert.ToString(item["qTypeId"]);
+                        string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                        DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                        FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
+                        ms.WriteTo(file);
+                        file.Close();
+                        ms.Close();
+                        que.path = "data//media//" + fileName;
+                    }
+                    if (Convert.ToInt32(item["QuestionTypeId"]) == 5)
+                    {
+                        que.type = "audio";
+                        string base64String = Convert.ToString(item["mediaFile"]);
+
+                        byte[] newBytes = Convert.FromBase64String(base64String);
+                        MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
+                        ms.Write(newBytes, 0, newBytes.Length);
+                        string fileName = Convert.ToString(item["qTypeId"]);
+                        string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                        DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                        FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
+                        ms.WriteTo(file);
+                        file.Close();
+                        ms.Close();
+                        que.path = "data//media//" + fileName;
+                    }
+
+                    lstQuestions.Add(que);
+                }
+                jsonData.questions = lstQuestions;
+                string jsonFilePath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                jsonFilePath = jsonFilePath + "\\" + objQuiz.QuizName + "\\data\\json\\";
+                var json = new JavaScriptSerializer().Serialize(jsonData);
+                System.IO.File.WriteAllText(jsonFilePath + "quizdata.json", json);
+
+            }
+            catch (Exception ex)
+            {
+                newException.AddException(ex);
+            }
+
         }
         public ActionResult EditQuiz(int id)
         {
