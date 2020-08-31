@@ -4,7 +4,7 @@ body {
 
 html, body {
     font-family: 'Roboto', sans-serif;
-    background-color: #523A28;
+    background-color: whitesmoke;
     margin: 0;
     padding: 0;
 }
@@ -1102,5 +1102,9 @@ ol.progress[data-steps="9"] li {
     box-shadow: 3px 3px 3px 3px lightgray;
 }
 
+.title-color{
+    color:black;
+    
+}
 
 
