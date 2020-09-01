@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="user-quiz-top-section learning-completion mb-2 mt-3 p-2 list-box">
+            <div class="user-quiz-top-section learning-completion mb-2 mt-3 p-2" style="border-radius: 15px;">
                 <div class="col-12">
                     <span class="grey-color"></span>
                     <div style="height:50px;padding-top:15px;">
@@ -38,25 +38,25 @@
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('Not Started');">
-                <div class="prog-badge not-started" style="box-shadow:3px 3px 3px 3px lightgray;">
+                <div class="prog-badge not-started" >
                     <h1>@Model.NotStartedCount</h1>
                     <span class="status">Not Started</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('InProgress');">
-                <div class="prog-badge in-progress" style="box-shadow:3px 3px 3px 3px lightgray;">
+                <div class="prog-badge in-progress" >
                     <h1>@Model.InProgressCount</h1>
                     <span class="status">In Progress</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('Completed');">
-                <div class="prog-badge completed" style="box-shadow:3px 3px 3px 3px lightgray;">
+                <div class="prog-badge completed" >
                     <h1>@Model.CompletedCount</h1>
                     <span class="status">Completed</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('Total');">
-                <div class="prog-badge total" style="box-shadow:3px 3px 3px 3px lightgray;">
+                <div class="prog-badge total" >
                     <h1>@Model.TotalCount</h1>
                     <span class="status">Total</span>
                 </div>

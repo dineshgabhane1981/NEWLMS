@@ -4,7 +4,9 @@ body {
 
 html, body {
     font-family: 'Roboto', sans-serif;
-    background-color: whitesmoke;
+    /*background-color: white;*/
+    background-image: url('../assets/BodyImages/appbg.jpeg');
+    background-repeat: inherit repeat;
     margin: 0;
     padding: 0;
 }

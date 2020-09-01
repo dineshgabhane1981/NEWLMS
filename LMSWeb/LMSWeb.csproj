@@ -207,6 +207,8 @@
     <Compile Include="ViewModel\SCORMJSON.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\BodyImages\5.jpeg" />
+    <Content Include="assets\BodyImages\appbg.jpeg" />
     <Content Include="assets\images\ajax-loader.gif" />
     <Content Include="assets\images\assign.png" />
     <Content Include="assets\images\assigned-to-users.png" />
