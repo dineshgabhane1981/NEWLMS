@@ -1,16 +1,13 @@
 ﻿@model LMSBL.DBModels.tblTemplateAssign
 @{
-    ViewBag.Title = "UpdateEmailTemplate";
+    ViewBag.Title = "Update Email Template";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
-<h2>Update EmailTemplate</h2>
 @using (Html.BeginForm("UpdateTemplate", "EmailTemplate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-
-
-
+    
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Message"])))
     {
@@ -22,35 +19,26 @@
         </script>
 
     }
-
+    <div class="row" style="margin-bottom:25px;margin-left:275px;">
+        <div class="col">
+            <h4 class="title-color">Update Email Template</h4>
+        </div>
+    </div>
     <div class="row justify-content-center h-100">
-        <div class="col align-self-center add-user-section add-new-quiz">
-
-
+        <div class="col align-self-center add-user-section list-box">
             <div class="row pt-5 pl-4">
-                <div class="col-sm-6">
+                @Html.HiddenFor(Model => Model.TemplateId)
 
-                    @Html.HiddenFor(Model => Model.TemplateId)
-                    @Html.LabelFor(Model => Model.EmailSubject, new { @class = "col-3 p-0" })
-                    @Html.TextBoxFor(Model => Model.EmailSubject, new { @class = "input200 d-block", placeholder = "Email Subject" })
-                    @Html.LabelFor(Model => Model.EmailBody)
-                    @Html.TextAreaFor(Model => Model.EmailBody, new { id = "editarea" })
-                </div>
-                <div class="col-sm-6">
-                    <div></div>
-                    <!--<button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Add Question</button>-->
+                @Html.TextBoxFor(Model => Model.EmailSubject, new { @class = "input200 d-block", placeholder = "Email Subject" })
 
-                </div>
-                <div class="mb-2 mt-2 w-100" id="dvQuestions"></div>
+                @Html.TextAreaFor(Model => Model.EmailBody, new { @class = "input100", id = "editarea" })
 
-                <div class="row justify-content-end pr-4">
-                    <button type="submit" name="submit" id="btnUpdate" value="save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Update</button>
-                    @* <button type="button" onclick="location.href='@Url.Action("UpdateTemplate", "EmailTemplate")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>*@
 
-                </div>
-                @*<button type="submit" name="submit" id="btnQuizSubmit" value="Save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-                    <button type="submit" name="submit" id="btnQuizSubmitExit" value="Exit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save & Exit</button>
-                    <button type="submit" onclick="location.href='@Url.Action("Index", "Quiz")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>*@
+
+            </div>
+            <div class="row justify-content-end pr-4 mt-2">
+                <button type="submit" name="submit" id="btnUpdate" value="save" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Update</button>
+
             </div>
         </div>
     </div>
