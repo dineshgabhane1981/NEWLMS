@@ -11,6 +11,7 @@ using LMSWeb.App_Start;
 using LMSWeb.ViewModel;
 using System.Linq;
 using System.Web.Script.Serialization;
+using System.Web.Security;
 
 namespace LMSWeb
 {
@@ -22,9 +23,31 @@ namespace LMSWeb
             var routeValues = filterContext.RequestContext.RouteData.Values["controller"].ToString();
             if (sessionUser==null && !routeValues.Equals("Login"))
             {
-                filterContext.RouteData.Values.Add("LogoutMessage", "Session Expired");
-                //ControllerBase.TempData["Message"] = "Password changed Successfully";
-                filterContext.Result = new RedirectResult("~/Login/Index");
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
+                {
+
+                    //filterContext.HttpContext.Response.StatusCode = 401;
+                    //filterContext.Result = new JsonResult
+                    //{
+                    //    Data = new
+                    //    {
+                    //        Error = "NotAuthorized",
+                    //        LogOnUrl = FormsAuthentication.LoginUrl
+                    //    },
+                    //    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+                    //};
+                    //filterContext.HttpContext.Response.End();
+
+                }
+                else
+                {
+                    // filterContext.RouteData.Values.Add("LogoutMessage", "Session Expired");
+                    filterContext.Result = new RedirectResult("~/Login/Index");
+
+                }
+
+
+
             }
             base.OnActionExecuting(filterContext);
         }
