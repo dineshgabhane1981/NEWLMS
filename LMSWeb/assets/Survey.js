@@ -20,7 +20,12 @@ $(document).ready(function () {
     $('#btnSaveQuestion').on("click", function () {
         var returnStatus = SaveQuestion();
         if (returnStatus) {
-            swal.fire("Question Added Successfully !!!");
+            //swal.fire("Question Added Successfully !!!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved',
+                text: 'Question Added Successfully !!!'
+            })
             $("#btnSaveQuestion").hide();
             $("#questionDetails").empty();
             DrawTable();
@@ -28,16 +33,27 @@ $(document).ready(function () {
     });
 
     $("#btnPreview").on("click", function () {
-        $("#dvQuizDetails").hide(1000);
-        $("#dvQuizQuestions").hide(1000);
-        $("#dvPreviewQuiz").show(1000);
-        $("#dvPublishQuiz").hide();
-        $("#stepPreview").addClass("step-active");
-        //View Quiz for Admin
-        var QuizViewData = JSON.parse($("#hdnData").val());
-        console.log(QuizViewData);
-        //$("#hdnViewData").val("");
-        ViewQuiz(QuizViewData);
+        if ($("#hdnData").val() != "" && $("#hdnData").val() != "[]") {
+            console.log($("#hdnData").val());
+            $("#dvQuizDetails").hide(1000);
+            $("#dvQuizQuestions").hide(1000);
+            $("#dvPreviewQuiz").show(1000);
+            $("#dvPublishQuiz").hide();
+            $("#stepPreview").addClass("step-active");
+            //View Quiz for Admin
+            var QuizViewData = JSON.parse($("#hdnData").val());
+            console.log(QuizViewData);
+            //$("#hdnViewData").val("");
+            ViewQuiz(QuizViewData);
+        }
+        else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please add Questions!'
+            })
+            return false;
+        }
         
 
     });
@@ -440,6 +456,30 @@ function ChangeType(id) {
     });
 
 }
+function handleFileSelect(evt) {
+    var id = evt.currentTarget.id;
+    var qId = id.substring(4, id.length);
+    var f = evt.target.files[0]; // FileList object    
+    var reader = new FileReader();
+    // Closure to capture the file information.    
+    reader.onload = (function (theFile) {
+        return function (e) {
+            var binaryData = e.target.result;
+            //Converting Binary Data to base 64    
+
+            var base64String = window.btoa(binaryData);
+            item = {}
+            item["QId"] = qId;
+            item["mediaFile"] = base64String;
+            item["qTypeId"] = $("#file" + qId)[0].files[0].name;
+            base64StringArray.push(item);
+
+            alert('File converted to base64 successfuly!');
+        };
+    })(f);
+    // Read in the image file as a data URL.    
+    reader.readAsBinaryString(f);
+}  
 
 function SaveQuestion() {
     var returnStatus = true;
@@ -481,7 +521,7 @@ function SaveQuestion() {
         item["qTypeId"] = "";
         item["QuestionPoints"] = $("#que" + id + "points").val();
 
-        Swal.fire($("#que" + id + "points").val());
+        //Swal.fire($("#que" + id + "points").val());
 
         if ($("#queType" + id + " option:selected").val() == 2) {
            
@@ -559,8 +599,10 @@ function SaveQuestion() {
             });
         }
         var sorted = SortedData();
-        if (statisQueId == 0) {           
-            questionObj.push(item);            
+        if (statisQueId == 0) { 
+            
+            questionObj.push(item);          
+            console.log(questionObj);
         }
         else {
             index = questionObj.findIndex(x => x.QuestionId == statisQueId);
@@ -581,7 +623,7 @@ function DrawTable() {
         srNo++;
         optionItem = {}
         optionItem["index"] = srNo;
-        optionItem["QuestionTitle"] = item.QuestionText.substring(0,20) + "...";
+        optionItem["QuestionTitle"] = item.QuestionText.substring(0,20);
         //optionItem["DueDate"] = item.DueDate;
         optionItem["QuestionId"] = item.QuestionId;
         optionItem["delete"] = "<div style=\"float:right; cursor:pointer;\"  onclick=\"deleteQuestion(" + item.QuestionId + ")\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i> &nbsp;&nbsp;</div>";

@@ -108,10 +108,10 @@
             <div id="dvQuizQuestions" class="container-fluid mt-4 mb-4 pl-5 pr-4">
                 <div class="row h-100" style="padding-bottom:20px;">
                     <div class="col quiz-left-pane list-box">
-                        <div class="justify-content-center" style="display:flex;">
+                        <div class="justify-content-center" style="display:flex;padding-bottom:10px;">
                             <button type="button" id="btnAddQuestion" class="btn btn-primary profle-submit-btn mr-2"><img src="~/assets/images/check-img.png" /> Add Question</button>
                         </div>
-                        <div id="questionList">
+                        <div id="questionList" style="border:1px solid gray; border-radius:10px;">
                             <div class="table-responsive">
                                 <table id="tblQuestions" class="display" style="width:100%">
                                     <thead>
@@ -230,6 +230,7 @@
         });
 
         $("#btnPreviewPrev").on("click", function () {
+
             $("#dvQuizDetails").hide(1000);
             $("#dvQuizQuestions").show(1000);
             $("#dvPreviewQuiz").hide(1000);
