@@ -341,13 +341,13 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
 
-
+                 assignedUsers = [];
+                DrawTable();
+                $("#myModal").hide(1000);
 
             }
             else {
-                assignedUsers = [];
-                DrawTable();
-                $("#myModal").hide(1000);
+               
             }
         })
          //modal.style.display = "none";
