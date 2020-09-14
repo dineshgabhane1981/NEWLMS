@@ -1,0 +1,7 @@
+.template-para textarea{
+    width: 80%;
+    min-height: 100px;
+}
+.template-para .question-counter{
+    margin: 0 0 20px 0;
+  }

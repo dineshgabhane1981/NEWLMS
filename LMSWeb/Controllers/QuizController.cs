@@ -202,8 +202,8 @@ namespace LMSWeb.Controllers
                                 return View("AuthorContent", objQuiz);
                             }
                             if (submit == "Save")
-                            {
-                                return CreateScormCourse(objQuiz);
+                            {                                
+                                return CreateScormCourse(objQuiz, rows);
                             }
                             //return RedirectToAction("Index");
                             //if (submit == "Save")
@@ -240,7 +240,7 @@ namespace LMSWeb.Controllers
             }
         }
 
-        public FileResult CreateScormCourse(TblQuiz objQuiz)
+        public FileResult CreateScormCourse(TblQuiz objQuiz, int rows)
         {
 
             string coursePath = string.Empty;
@@ -311,7 +311,7 @@ namespace LMSWeb.Controllers
 
                 //create JSON file
 
-                CreateQuizJSON(objQuiz);
+                CreateQuizJSON(objQuiz, rows);
                 string FolderPathToZip = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
                 //ZIP the folder and return path
                 string startPath = FolderPathToZip + "\\" + objQuiz.QuizName;
@@ -344,15 +344,28 @@ namespace LMSWeb.Controllers
             }
             return null;
         }
-        public void CreateQuizJSON(TblQuiz objQuiz)
+        public void CreateQuizJSON(TblQuiz objQuiz, int rows)
         {
             try
             {
                 JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                 json_serializer.MaxJsonLength = int.MaxValue;
                 object[] objTblQue = (object[])json_serializer.DeserializeObject(objQuiz.hdnData);
+                var QuizData = quizRepository.GetQuizByID(rows);
+                var ques = QuizData[0].TblQuestions;
+                List<int> queIds = new List<int>();
+                foreach (var que in ques)
+                {
+                    queIds.Add(que.QuestionId);
+                }
+                int index = 0;
+                foreach (Dictionary<string, object> item in objQuiz.questionObject)
+                {
+                    item["QuestionId"] = Convert.ToString(queIds[index]);
+                    index++;
+                }
 
-                SCORMJSON jsonData = new SCORMJSON();
+                    SCORMJSON jsonData = new SCORMJSON();
                 ConfigData config = new ConfigData();
                 config.scormType = 1.2;
                 jsonData.config = config;
@@ -364,7 +377,7 @@ namespace LMSWeb.Controllers
                 quiz.descLabel = "Description";
                 quiz.description = objQuiz.QuizDescription;
                 quiz.timeLabel = "Time remaining: ";
-                quiz.duration = objQuiz.Duration;
+                quiz.duration = objQuiz.Duration==0?null: objQuiz.Duration;
                 quiz.passingScore = 80;//This need to be change
                 quiz.minScore = 0;
                 quiz.maxScore = 100;
@@ -459,36 +472,69 @@ namespace LMSWeb.Controllers
                     if (Convert.ToInt32(item["QuestionTypeId"]) == 4)
                     {
                         que.type = "video";
-                        string base64String = Convert.ToString(item["mediaFile"]);
+                        string base64String = string.Empty;
+                        if (!string.IsNullOrEmpty(Convert.ToString(item["mediaFile"])))
+                        {
+                            base64String = Convert.ToString(item["mediaFile"]);
+                            byte[] newBytes = Convert.FromBase64String(base64String);
+                            MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
+                            ms.Write(newBytes, 0, newBytes.Length);
+                            string fileName = Convert.ToString(item["qTypeId"]);
+                            string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                            DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                            FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
+                            ms.WriteTo(file);
+                            file.Close();
+                            ms.Close();
+                            que.path = "data//media//" + fileName;
+                        }
+                        else
+                        {
+                            string fileName = Convert.ToString(item["qTypeId"]);
+                            var extn = fileName.Split('.');
+                            int count = extn.Length;
+                            fileName = Convert.ToString(item["QuestionId"]) + "." + extn[count - 1];
+                            string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                            DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                            string path = System.Configuration.ConfigurationManager.AppSettings["QuizMediaPath"];
+                            System.IO.File.Move(path + "\\" + fileName, DestinationPath + "\\" + fileName);
+                            que.path = "data//media//" + fileName;
+                        }
 
-                        byte[] newBytes = Convert.FromBase64String(base64String);
-                        MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
-                        ms.Write(newBytes, 0, newBytes.Length);
-                        string fileName = Convert.ToString(item["qTypeId"]);
-                        string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
-                        DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
-                        FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
-                        ms.WriteTo(file);
-                        file.Close();
-                        ms.Close();
-                        que.path = "data//media//" + fileName;
+                        
                     }
                     if (Convert.ToInt32(item["QuestionTypeId"]) == 5)
                     {
                         que.type = "audio";
-                        string base64String = Convert.ToString(item["mediaFile"]);
+                        string base64String = string.Empty;
+                        if (!string.IsNullOrEmpty(Convert.ToString(item["mediaFile"])))
+                        {
+                            base64String = Convert.ToString(item["mediaFile"]);
+                            byte[] newBytes = Convert.FromBase64String(base64String);
+                            MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
+                            ms.Write(newBytes, 0, newBytes.Length);
+                            string fileName = Convert.ToString(item["qTypeId"]);
+                            string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                            DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                            FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
+                            ms.WriteTo(file);
+                            file.Close();
+                            ms.Close();
+                            que.path = "data//media//" + fileName;
+                        }
+                        else
+                        {
+                            string fileName = Convert.ToString(item["qTypeId"]);
+                            var extn = fileName.Split('.');
+                            int count = extn.Length;
+                            fileName = Convert.ToString(item["QuestionId"]) + "." + extn[count-1];
 
-                        byte[] newBytes = Convert.FromBase64String(base64String);
-                        MemoryStream ms = new MemoryStream(newBytes, 0, newBytes.Length);
-                        ms.Write(newBytes, 0, newBytes.Length);
-                        string fileName = Convert.ToString(item["qTypeId"]);
-                        string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
-                        DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
-                        FileStream file = new FileStream(DestinationPath + "\\" + fileName, FileMode.Create, FileAccess.Write);
-                        ms.WriteTo(file);
-                        file.Close();
-                        ms.Close();
-                        que.path = "data//media//" + fileName;
+                            string DestinationPath = System.Configuration.ConfigurationManager.AppSettings["ScormDestinationPath"];
+                            DestinationPath = DestinationPath + "\\" + objQuiz.QuizName + "\\data\\media";
+                            string path = System.Configuration.ConfigurationManager.AppSettings["QuizMediaPath"];
+                            System.IO.File.Move(path + "\\" + fileName, DestinationPath + "\\" + fileName);
+                            que.path = "data//media//" + fileName;
+                        }
                     }
 
                     lstQuestions.Add(que);
@@ -578,7 +624,7 @@ namespace LMSWeb.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     List<TblQuiz> objQuiz = new List<TblQuiz>();
-                    objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(id));
+                    objQuiz = quizRepository.GetQuizByID(Convert.ToInt32(id));                   
                     JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                     json_serializer.MaxJsonLength = int.MaxValue;
 

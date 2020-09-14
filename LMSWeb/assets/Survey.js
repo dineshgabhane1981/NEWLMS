@@ -655,11 +655,13 @@ function DrawTable() {
 
 function SetEditData(editJSON) {    
     questionObj = editJSON.TblQuestions;
+    console.log(questionObj);
     $.each(questionObj, function (index, value) {
         optionObj = {}
         //optionObj["Options"] = value.TblQuestionOptions;
         value["Options"] = value.TblQuestionOptions;
         value["qTypeId"] = value.MediaType;
+        value["mediaFile"] = "";
     });
     
     console.log(questionObj);

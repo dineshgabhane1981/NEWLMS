@@ -1,0 +1,66 @@
+.template-mrq .option{
+  color:gray;
+}
+.template-mrq .checkbox-button  {
+  display: table;
+  position: relative;
+  margin: 12px 0;
+  width: 100%;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.template-mrq .checkbox-button.review{
+  cursor:default
+}
+.template-mrq .checkbox-button>span{
+  display: table-cell;
+  vertical-align: top;
+}
+.template-mrq .option-container{
+  display: block;
+}
+.template-mrq .checkbox-button .icon-container{
+  width: 20px;
+  height: 20px;
+}
+.template-mrq .checkbox-button .option-text{
+  padding-left: 8px;
+}
+.template-mrq .option-text{
+  width: 100%;
+  display: block;
+}
+
+.template-mrq .checkbox-button .icon-checkbox-button:before {
+  content: "\ea53";
+}
+.template-mrq .checkbox-button.hover .icon-checkbox-button:before,
+.template-mrq .checkbox-button.selected .icon-checkbox-button:before {
+  content: "\ea52";
+  color:#f74c06;
+}
+.template-mrq .checkbox-button.correct{
+  color: black;
+}
+.template-mrq .checkbox-button .icon-tick{
+  color:green;
+  font-size: 20px;
+}
+.template-mrq .checkbox-button .icon-cross{
+  color:red;
+  font-size: 20px;
+}
+.template-mrq .points{
+    margin: 12px 0;
+    color:gray;
+}
+.template-mrq .feedback{
+    margin: 12px 0;
+    color:gray;
+}
+.template-mrq .question-counter{
+  margin: 0 0 20px 0;
+}

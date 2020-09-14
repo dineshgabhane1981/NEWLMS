@@ -32,6 +32,11 @@ namespace LMSBL.Repository
                             data = ms.ToArray();
                         }
                         FileName = CourseName + "." + zip.FileName.Split('.')[1];
+                        if (!File.Exists(FileName))
+                        {
+                            File.Delete(FileName);
+                        }
+                           
                         System.IO.File.WriteAllBytes(Path.Combine(path, FileName), data);
                         if (courseType == "Scorm1.2")
                         {

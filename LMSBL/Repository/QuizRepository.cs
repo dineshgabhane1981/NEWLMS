@@ -316,7 +316,7 @@ namespace LMSBL.Repository
                                 if (File.Exists(path + "\\" + fileName))
                                 {
                                     File.Copy(path + "\\" + fileName, path + "\\" + newFile, true);
-                                    File.Delete(path + "\\" + fileName);
+                                    //File.Delete(path + "\\" + fileName);
                                 }
 
 
