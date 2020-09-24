@@ -13,28 +13,46 @@ using System.Net;
 
 namespace LMSWeb.Controllers
 {
+    [HandleError]
     public class CoursesController : Controller
     {
+        //protected override void OnException(ExceptionContext filterContext)
+        //{
+        //    Exception exception = filterContext.Exception;
+        //    //Logging the Exception
+        //    filterContext.ExceptionHandled = true;
+
+
+        //    var Result = this.View("Error", new HandleErrorInfo(exception,
+        //    filterContext.RouteData.Values["controller"].ToString(),
+        //    filterContext.RouteData.Values["action"].ToString()));
+
+        //    filterContext.Result = Result;
+
+        //}
         UserRepository userRepository = new UserRepository();
         CoursesRepository cc = new CoursesRepository();
         TenantRepository tr = new TenantRepository();
         Exceptions newException = new Exceptions();
+        EmailTemplateRepository etr = new EmailTemplateRepository();
         // GET: Courses
         public ActionResult Index()
         {
-            try
-            {
+            //try
+            //{
                 List<tblCourse> listInActiveCourses = new List<tblCourse>();
                 TblUser sessionUser = (TblUser)Session["UserSession"];
                 listInActiveCourses = cc.GetAllCourses(sessionUser.TenantId);
 
                 return View("CourseList", listInActiveCourses);
-            }
-            catch (Exception ex)
-            {
-                newException.AddException(ex);
-                return View("CourseList");
-            }
+            ////}
+            ////catch (Exception ex)
+            ////{
+            ////    newException.AddException(ex);
+            //    return View("CourseList");
+            //}
+            
+
         }
 
         public ActionResult AddCourse()
@@ -47,8 +65,10 @@ namespace LMSWeb.Controllers
             }
             catch (Exception ex)
             {
+
                 newException.AddException(ex);
                 return View("AddNewCourse");
+
             }
         }
 
@@ -155,124 +175,138 @@ namespace LMSWeb.Controllers
         {
             List<SelectListItem> userItems = new List<SelectListItem>();
             TblUser sessionUser = (TblUser)Session["UserSession"];
-
-            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
-
-            foreach (var user in Users)
+            if (sessionUser == null)
             {
-                userItems.Add(new SelectListItem
-                {
-                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
-                    Value = Convert.ToString(user.UserId)
-                });
+                RedirectToAction("Index", "Login");
             }
-
-            DataSet ds = cc.GetAssignedCourseUsers(id);
-          //  bool isDueDate = false;
-            if (ds != null)
+            else
             {
-                if (ds.Tables.Count > 0)
-                {
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        foreach (var item in userItems)
-                        {
-                            DataRow[] foundUsers = ds.Tables[0].Select("LearnerId = " + item.Value + "");
-                            if (foundUsers.Length != 0)
-                            {
-                                item.Selected = true;
-                               // isDueDate = true;
+                var Users = userRepository.GetAllUsers(sessionUser.TenantId);
 
+                foreach (var user in Users)
+                {
+                    userItems.Add(new SelectListItem
+                    {
+                        Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                        Value = Convert.ToString(user.UserId)
+                    });
+                }
+
+                DataSet ds = cc.GetAssignedCourseUsers(id);
+                //  bool isDueDate = false;
+                if (ds != null)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (var item in userItems)
+                            {
+                                DataRow[] foundUsers = ds.Tables[0].Select("LearnerId = " + item.Value + "");
+                                if (foundUsers.Length != 0)
+                                {
+                                    item.Selected = true;
+                                    // isDueDate = true;
+
+                                }
                             }
                         }
                     }
                 }
-            }
 
+               
+            }
             return Json(userItems, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetAssignedCourseUsers(int id)
         {
             List<SelectListItem> userItems = new List<SelectListItem>();
             TblUser sessionUser = (TblUser)Session["UserSession"];
-
-            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
-
-            foreach (var user in Users)
-            {
-                userItems.Add(new SelectListItem
-                {
-                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
-                    Value = Convert.ToString(user.UserId)
-                });
-            }
             List<tblLearnerActivityAssignment> lstAssignedUsers = new List<tblLearnerActivityAssignment>();
-            lstAssignedUsers = cc.GetCourseAssignedUser(id);
+            if (sessionUser == null)
+            {
+                RedirectToAction("Index", "Login");
+            }
+            else
+            {
+                var Users = userRepository.GetAllUsers(sessionUser.TenantId);
 
+                foreach (var user in Users)
+                {
+                    userItems.Add(new SelectListItem
+                    {
+                        Text = Convert.ToString(user.FirstName + " " + user.LastName),
+                        Value = Convert.ToString(user.UserId)
+                    });
+                }
+                
+                lstAssignedUsers = cc.GetCourseAssignedUser(id);
+                               
+
+            }
             return Json(lstAssignedUsers, JsonRequestBehavior.AllowGet);
-
-
         }
-        public ActionResult AssignCourse(int id)
-        {
-            List<SelectListItem> userItems = new List<SelectListItem>();
-            List<tblCourse> objCourse = new List<tblCourse>();
-            CourseAssignViewModel courseAssignVieewModel = new CourseAssignViewModel();
-            TblUser sessionUser = (TblUser)Session["UserSession"];
+        //public ActionResult AssignCourse(int id)
+        //{
+        //    List<SelectListItem> userItems = new List<SelectListItem>();
+        //    List<tblCourse> objCourse = new List<tblCourse>();
+        //    CourseAssignViewModel courseAssignVieewModel = new CourseAssignViewModel();
+        //    TblUser sessionUser = (TblUser)Session["UserSession"];
 
-            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+        //    var Users = userRepository.GetAllUsers(sessionUser.TenantId);
 
-            foreach (var user in Users)
-            {
-                userItems.Add(new SelectListItem
-                {
-                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
-                    Value = Convert.ToString(user.UserId)
-                });
-            }
+        //    foreach (var user in Users)
+        //    {
+        //        userItems.Add(new SelectListItem
+        //        {
+        //            Text = Convert.ToString(user.FirstName + " " + user.LastName),
+        //            Value = Convert.ToString(user.UserId)
+        //        });
+        //    }
 
-            DataSet ds = cc.GetAssignedCourseUsers(id);
-            bool isDueDate = false;
-            if (ds != null)
-            {
-                if (ds.Tables.Count > 0)
-                {
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        foreach (var item in userItems)
-                        {
-                            DataRow[] foundUsers = ds.Tables[0].Select("LearnerId = " + item.Value + "");
-                            if (foundUsers.Length != 0)
-                            {
-                                item.Selected = true;
-                                isDueDate = true;
+        //    DataSet ds = cc.GetAssignedCourseUsers(id);
+        //    bool isDueDate = false;
+        //    if (ds != null)
+        //    {
+        //        if (ds.Tables.Count > 0)
+        //        {
+        //            if (ds.Tables[0].Rows.Count > 0)
+        //            {
+        //                foreach (var item in userItems)
+        //                {
+        //                    DataRow[] foundUsers = ds.Tables[0].Select("LearnerId = " + item.Value + "");
+        //                    if (foundUsers.Length != 0)
+        //                    {
+        //                        item.Selected = true;
+        //                        isDueDate = true;
 
-                            }
-                        }
-                    }
-                }
-            }
-            courseAssignVieewModel.usetList = userItems;
-            if (isDueDate)
-                if (ds != null)
-                {
-                    if (ds.Tables[0] != null)
-                    {
-                        if (!string.IsNullOrEmpty(Convert.ToString(ds.Tables[0].Rows[0][1])))
-                        { }
-                        courseAssignVieewModel.DueDate = Convert.ToDateTime(ds.Tables[0].Rows[0][1]);
-                    }
-                }
-            objCourse = cc.GetCourseById(id);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    courseAssignVieewModel.usetList = userItems;
+        //    if (isDueDate)
+        //        if (ds != null)
+        //        {
+        //            if (ds.Tables[0] != null)
+        //            {
+        //                if (!string.IsNullOrEmpty(Convert.ToString(ds.Tables[0].Rows[0][1])))
+        //                { }
+        //                courseAssignVieewModel.DueDate = Convert.ToDateTime(ds.Tables[0].Rows[0][1]);
+        //            }
+        //        }
+        //    objCourse = cc.GetCourseById(id);
 
-            courseAssignVieewModel.course = objCourse[0];
-            return View(courseAssignVieewModel);
+        //    courseAssignVieewModel.course = objCourse[0];
+           
+        //    return View(courseAssignVieewModel);
 
-        }
+        //}
         public ActionResult AssignCourseToUser(string jsonData, int id)
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
-
+            List<tblCourse> objCourse = new List<tblCourse>();
             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
             json_serializer.MaxJsonLength = int.MaxValue;
             object[] objData = null;
@@ -281,29 +315,67 @@ namespace LMSWeb.Controllers
                 objData = (object[])json_serializer.DeserializeObject(jsonData);
             }
             var result = cc.AssignCourseTouser(objData, id);
+            if(result == 1)
+            {
+               // TblUser sessionUser = (TblUser)Session["UserSession"];
+                var lstTemplate = etr.GetEmailTemplateAssigns(sessionUser.TenantId);
+                objCourse = cc.GetCourseById(id);
+                foreach (Dictionary<string, object> item in objData)
+                {
+                    var emailBody = lstTemplate[3].EmailBody;
+                    var objUser = userRepository.GetUserById(Convert.ToInt32(item["LearnerId"]));
+                    emailBody = emailBody.Replace("{UserName}", objUser[0].FirstName +" " + objUser[0].LastName);
+                    emailBody = emailBody.Replace("{CourseName}", objCourse[0].ContentModuleName);
+                    emailBody = emailBody.Replace("{DueDate}", Convert.ToString(item["DueDate"]));
+                    emailBody = emailBody.Replace("{Admin}", objUser[0].TenantName);
+                    var emailSubject = lstTemplate[3].EmailSubject + "-" + objCourse[0].ContentModuleName;
+                    tblEmails objEmail = new tblEmails();
+                   
+                    objEmail.EmailTo = objUser[0].EmailId;
+                    objEmail.EmailSubject = emailSubject;
+                    objEmail.EmailBody = emailBody;
+                    objEmail.Activityid = id;
+                    objEmail.Activitytype = "Course";
+                    objEmail.Duedate = Convert.ToDateTime(item["DueDate"]);
+                    bool status = cc.CheckInsertEmail(objEmail);
+                    if(status)
+                    {
+
+                    }
+                    else
+                    {
+                        var emailResult = userRepository.InsertEmail(objEmail);
+                    }
+                   
+                }
+            }
+
 
             return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AssignCourseToUsers(CourseAssignViewModel courseAssignViewModel)
-        {
-            var index = cc.DeleteAssignedUserForCourse(courseAssignViewModel.course.ContentModuleId);           
+        //public ActionResult AssignCourseToUsers(CourseAssignViewModel courseAssignViewModel)
+        //{
+        //    var index = cc.DeleteAssignedUserForCourse(courseAssignViewModel.course.ContentModuleId);
+        //    TblUser sessionUser = (TblUser)Session["UserSession"];
+        //    var lstTemplate = etr.GetEmailTemplateAssigns(sessionUser.TenantId);
+        //    foreach (var userId in courseAssignViewModel.userIds)
+        //    {
+        //        var result = cc.AssignCourse(courseAssignViewModel.course.ContentModuleId, userId, courseAssignViewModel.DueDate);
 
-            foreach (var userId in courseAssignViewModel.userIds)
-            {
-                var result = cc.AssignCourse(courseAssignViewModel.course.ContentModuleId, userId, courseAssignViewModel.DueDate);
+        //        // var emailBody = courseAssignViewModel.course.ContentModuleName + " - assigned to you. Please go through it. <br /> Your Due Date is - " + courseAssignViewModel.DueDate;
+        //        // var emailSubject = "Course Assigned - " + courseAssignViewModel.course.ContentModuleName;
+        //        var emailBody = lstTemplate[0].EmailBody;
+        //        var emailSubject = lstTemplate[0].EmailSubject + courseAssignViewModel.course.ContentModuleName;
+        //        tblEmails objEmail = new tblEmails();
+        //        var objUser = userRepository.GetUserById(userId);
+        //        objEmail.EmailTo = objUser[0].EmailId;
+        //        objEmail.EmailSubject = emailSubject;
+        //        objEmail.EmailBody = emailBody;
+        //        var emailResult = userRepository.InsertEmail(objEmail);
+        //    }          
 
-                var emailBody = courseAssignViewModel.course.ContentModuleName + " - assigned to you. Please go through it. <br /> Your Due Date is - " + courseAssignViewModel.DueDate;
-                var emailSubject = "Course Assigned - " + courseAssignViewModel.course.ContentModuleName;
-                tblEmails objEmail = new tblEmails();
-                var objUser = userRepository.GetUserById(userId);
-                objEmail.EmailTo = objUser[0].EmailId;
-                objEmail.EmailSubject = emailSubject;
-                objEmail.EmailBody = emailBody;
-                var emailResult = userRepository.InsertEmail(objEmail);
-            }          
-
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
     }
 }

@@ -70,5 +70,7 @@ namespace LMSBL.DBModels
 
         public string TenantURL { get; set; }
         public string TenantLogo { get; set; }
+        
+        public bool RememberMe { get; set; }
     }
 }

@@ -324,6 +324,34 @@ namespace LMSBL.Repository
 
             return courseId;
         }
+
+        public bool CheckInsertEmail(tblEmails objemail)
+        {
+            bool status = false;
+           // DataSet ds = new DataSet();
+                        db.parameters.Clear();
+                        db.AddParameter("@emailTo", SqlDbType.Text, Convert.ToString(objemail.EmailTo));
+                        db.AddParameter("@activityId", SqlDbType.Int, Convert.ToInt32(objemail.Activityid));
+                        db.AddParameter("@activityType", SqlDbType.Text, Convert.ToString(objemail.Activitytype));
+                        db.AddParameter("@dueDate", SqlDbType.DateTime, Convert.ToDateTime(objemail.Duedate));
+
+                    DataSet  ds = db.FillData("sp_InsertEmailBycheck");
+                    if (ds != null)
+                    {
+                        if (ds.Tables.Count > 0)
+                        {
+                            if (ds.Tables[0].Rows.Count > 0)
+                            {
+                                status = true;
+                            }
+                        }
+                    }
+                
+
+                
+
+            return status; 
+        }
         public bool CheckCourseAssignedUser(int CourseId, int UserId)
         {
             bool status = false;

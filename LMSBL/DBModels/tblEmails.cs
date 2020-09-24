@@ -19,8 +19,15 @@ namespace LMSBL.DBModels
         public DateTime DateCreated { get; set; }
 
         public bool isSent { get; set; }
+
         public DateTime DateSent { get; set; }
 
         public string SentStatus { get; set; }
+
+        public int Activityid { get; set; }
+
+        public string Activitytype { get; set; }
+
+        public DateTime Duedate { get; set; }
     }
 }

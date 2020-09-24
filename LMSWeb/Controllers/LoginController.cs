@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Configuration;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using LMSWeb.App_Start;
 using LMSWeb.ViewModel;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace LMSWeb.Controllers
 {
@@ -19,8 +22,10 @@ namespace LMSWeb.Controllers
         Exceptions newException = new Exceptions();
         // GET: Login
         public ActionResult Index(string code)
-        {
+       {
+            
             TblUser user = new TblUser();
+            
             List<TblTenant> tenantDetails = new List<TblTenant>();            
             try
             {
@@ -68,6 +73,12 @@ namespace LMSWeb.Controllers
                         }
                         user.TenantLogo = tenantList[0].Logo;
                         Session["Logo"] = tenantList[0].Logo;
+                        TblUser userobj = checkcookie();
+                        if (userobj != null)
+                        {
+                            user.EmailId = userobj.EmailId;
+                            user.Password = userobj.Password;
+                        }
                         return View("Login", user);
                     }
                     else
@@ -89,41 +100,64 @@ namespace LMSWeb.Controllers
 
         public ActionResult UserAuthentication(TblUser loginUser)
         {
+            
             Response response = new Response();
             try
             {
-                CommonFunctions common = new CommonFunctions();
-                loginUser.Password = common.GetEncodePassword(loginUser.Password);                
-                TblUser tblUser = ur.IsValidUser(loginUser.EmailId, loginUser.Password, Request.Url.Host);
+                                
+                    CommonFunctions common = new CommonFunctions();
+                string decodepassword = loginUser.Password;
+                    loginUser.Password = common.GetEncodePassword(loginUser.Password);
 
-                if (tblUser.UserId > 0)
-                {
-                    response.StatusCode = 1;
-                    //set User object to session
-                    Session["UserSession"] = tblUser; //use in layout.cshtml to hide show menus.
-                    if (tblUser.IsNew)
+                    TblUser tblUser = ur.IsValidUser(loginUser.EmailId, loginUser.Password, Request.Url.Host);
+                
+                    if (tblUser.UserId > 0)
                     {
-                        return RedirectToAction("ChangePassword", "Login");
-                    }
-                    else
-                    {
-                        ur.AddLoginLog(tblUser.UserId);
-                        if (Request.Url.Host == "quiz.rockettech.co.nz" && tblUser.RoleId == 3)
+                        response.StatusCode = 1;
+                        //set User object to session
+                        Session["UserSession"] = tblUser; //use in layout.cshtml to hide show menus.
+                        if (tblUser.IsNew)
                         {
-                            return RedirectToAction("MyAssignments", "Assignment");
+                            return RedirectToAction("ChangePassword", "Login");
                         }
                         else
                         {
+                            ur.AddLoginLog(tblUser.UserId);
+                            if (Request.Url.Host == "quiz.rockettech.co.nz" && tblUser.RoleId == 3)
+                            {
+                                return RedirectToAction("MyAssignments", "Assignment");
+                            }
+                            else
+                            {
+                                
+                            if (loginUser.RememberMe)
+                            {
+                                HttpCookie cookieuser = new HttpCookie("Username", loginUser.EmailId);
+                                HttpCookie cookiepass = new HttpCookie("Password", decodepassword);
+                                HttpContext.Response.Cookies.Add(cookiepass);
+                                HttpContext.Response.Cookies.Add(cookieuser);
+                                cookieuser.Expires = DateTime.Now.AddDays(2);
+                                cookiepass.Expires = DateTime.Now.AddDays(2);
+                            }
+                            else
+                            {
+                                //HttpContext.Response.Cookies.Add(cookieuser);
+                                //cookieuser.Expires = DateTime.Now.AddDays(-1);
+                                //HttpContext.Response.Cookies.Add(cookieuser);
+                                //cookieuser.Expires = DateTime.Now.AddDays(-1);
+
+
+                            }
                             return RedirectToAction("Index", "Home");
+                            }
+
                         }
 
                     }
 
-                }
-
-                TempData["LogoutMessage"] = "The Username/Password does not match.";
-
-                return RedirectToAction("Index");
+                    TempData["LogoutMessage"] = "The Username/Password does not match.";
+                
+                    return RedirectToAction("Index");
                 
             }
             catch (Exception ex)
@@ -132,6 +166,29 @@ namespace LMSWeb.Controllers
                 TempData["LogoutMessage"] = "The Username/Password does not match.";
                 return RedirectToAction("Index");
             }
+        }
+
+       
+        public TblUser checkcookie()
+        {
+            TblUser loginus = null;
+            string usernm = string.Empty;
+            string passwrd= string.Empty;
+            // They do, so let's create an authentication cookie
+            if (Response.Cookies["Username"] != null)
+            {
+                 usernm = HttpContext.Request.Cookies["Username"].Value;
+            }
+            if (Response.Cookies["Password"] != null)
+            {
+                 passwrd = HttpContext.Request.Cookies["Password"].Value;
+            }
+            if(!string.IsNullOrEmpty(usernm) && !string.IsNullOrEmpty(passwrd))
+            {
+                loginus = new TblUser { EmailId = usernm, Password = passwrd };               
+
+            }
+            return loginus;
         }
 
         public ActionResult Logout()

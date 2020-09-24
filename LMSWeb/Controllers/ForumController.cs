@@ -28,6 +28,8 @@ namespace LMSWeb.Controllers
         UserRepository userRepository = new UserRepository();
         ForumRepository fr = new ForumRepository();
         Exceptions newException = new Exceptions();
+        CoursesRepository cc = new CoursesRepository();
+        EmailTemplateRepository etr = new EmailTemplateRepository();
         public ActionResult Index()
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
@@ -206,6 +208,8 @@ namespace LMSWeb.Controllers
         public ActionResult AssignForumTouser(string jsonData, int fId)
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
+            List<tblForum> ForumDetails = new List<tblForum>();
+            
 
             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
             json_serializer.MaxJsonLength = int.MaxValue;
@@ -215,6 +219,38 @@ namespace LMSWeb.Controllers
                 objData = (object[])json_serializer.DeserializeObject(jsonData);
             }
             var result = fr.AssignForumToDB(objData, fId);
+            if (result == 1)
+            {
+                // TblUser sessionUser = (TblUser)Session["UserSession"];
+                var lstTemplate = etr.GetEmailTemplateAssigns(sessionUser.TenantId);
+                ForumDetails = fr.GetForumById(fId);
+                foreach (Dictionary<string, object> item in objData)
+                {
+                    var emailBody = lstTemplate[10].EmailBody;
+                    var objUser = userRepository.GetUserById(Convert.ToInt32(item["UserId"]));
+                    emailBody = emailBody.Replace("{UserName}", objUser[0].FirstName + " " + objUser[0].LastName);
+                    emailBody = emailBody.Replace("{ForumName}", ForumDetails[0].Title);
+                    emailBody = emailBody.Replace("{DueDate}", Convert.ToString(item["DueDate"]));
+                    emailBody = emailBody.Replace("{Admin}", objUser[0].TenantName);
+                    var emailSubject = lstTemplate[10].EmailSubject + "-" + ForumDetails[0].Title;
+                    tblEmails objEmail = new tblEmails();
+
+                    objEmail.EmailTo = objUser[0].EmailId;
+                    objEmail.EmailSubject = emailSubject;
+                    objEmail.EmailBody = emailBody;
+                    objEmail.Activityid = fId;
+                    objEmail.Activitytype = "Curriculum";
+                    objEmail.Duedate = Convert.ToDateTime(item["DueDate"]);
+                    bool status = cc.CheckInsertEmail(objEmail);
+                    if (!status)
+                    {
+                        var emailResult = userRepository.InsertEmail(objEmail);
+
+                    }
+                   
+                }
+            }
+
 
             return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }

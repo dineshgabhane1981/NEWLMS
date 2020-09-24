@@ -15,11 +15,15 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace LMSWeb.Controllers
 {
+   
     public class QuizController : Controller
     {
+        CoursesRepository cc = new CoursesRepository();
+        EmailTemplateRepository etr = new EmailTemplateRepository();
         UserRepository userRepository = new UserRepository();
         QuizRepository quizRepository = new QuizRepository();
         Exceptions newException = new Exceptions();
+        
         // GET: Quiz
         public ActionResult Index()
         {
@@ -115,6 +119,8 @@ namespace LMSWeb.Controllers
         public ActionResult AssignQuiztouser(string jsonData, int qId)
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
+            List<tblQuizAssignment> lstquizAssignedUsers = new List<tblQuizAssignment>();
+            List<TblQuiz> objQuiz = new List<TblQuiz>();
 
             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
             json_serializer.MaxJsonLength = int.MaxValue;
@@ -124,48 +130,82 @@ namespace LMSWeb.Controllers
                 objData = (object[])json_serializer.DeserializeObject(jsonData);
             }
             var result = quizRepository.AssignQuizToDB(objData, qId);
+            if (result == 1)
+            {
+                // TblUser sessionUser = (TblUser)Session["UserSession"];
+                var lstTemplate = etr.GetEmailTemplateAssigns(sessionUser.TenantId);
+                objQuiz = quizRepository.GetQuizByID(qId);
+                foreach (Dictionary<string, object> item in objData)
+                {
+                    var emailBody = lstTemplate[5].EmailBody;
+                    var objUser = userRepository.GetUserById(Convert.ToInt32(item["UserId"]));
+                    emailBody = emailBody.Replace("{UserName}", objUser[0].FirstName + " " + objUser[0].LastName);
+                    emailBody = emailBody.Replace("{QuizName}", objQuiz[0].QuizName);
+                    emailBody = emailBody.Replace("{DueDate}", Convert.ToString(item["DueDate"]));
+                    emailBody = emailBody.Replace("{Admin}", objUser[0].TenantName);
+                    var emailSubject = lstTemplate[5].EmailSubject + "-" + objQuiz[0].QuizName;
+                    tblEmails objEmail = new tblEmails();
+
+                    objEmail.EmailTo = objUser[0].EmailId;
+                    objEmail.EmailSubject = emailSubject;
+                    objEmail.EmailBody = emailBody;
+                    objEmail.Activityid = qId;
+                    objEmail.Activitytype = "Quiz";
+                    objEmail.Duedate = Convert.ToDateTime(item["DueDate"]);
+                    bool status = cc.CheckInsertEmail(objEmail);
+                    if (status)
+                    {
+
+                    }
+                    else
+                    {
+                        var emailResult = userRepository.InsertEmail(objEmail);
+                    }
+
+                }
+            }
 
             return Json(HttpStatusCode.OK, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AssignQuiz(int id)
-        {
-            List<SelectListItem> userItems = new List<SelectListItem>();
-            List<TblQuiz> objQuiz = new List<TblQuiz>();
-            QuizAssignViewModel quizAssignVieewModel = new QuizAssignViewModel();
-            TblUser sessionUser = (TblUser)Session["UserSession"];
-            var Users = userRepository.GetAllUsers(sessionUser.TenantId);
+        //public ActionResult AssignQuiz(int id)
+        //{
+        //    List<SelectListItem> userItems = new List<SelectListItem>();
+        //    List<TblQuiz> objQuiz = new List<TblQuiz>();
+        //    QuizAssignViewModel quizAssignVieewModel = new QuizAssignViewModel();
+        //    TblUser sessionUser = (TblUser)Session["UserSession"];
+        //    var Users = userRepository.GetAllUsers(sessionUser.TenantId);
 
-            foreach (var user in Users)
-            {
-                userItems.Add(new SelectListItem
-                {
-                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
-                    Value = Convert.ToString(user.UserId)
-                });
-            }
-            DataSet ds = quizRepository.GetAssignedQuizUsers(id);
-            if (ds != null)
-            {
-                if (ds.Tables.Count > 0)
-                {
-                    if (ds.Tables[0].Rows.Count > 0)
-                    {
-                        foreach (var item in userItems)
-                        {
-                            DataRow[] foundUsers = ds.Tables[0].Select("UserId = " + item.Value + "");
-                            if (foundUsers.Length != 0)
-                            {
-                                item.Selected = true;
-                            }
-                        }
-                    }
-                }
-            }
-            quizAssignVieewModel.usetList = userItems;
-            objQuiz = quizRepository.GetQuizByID(id);
-            quizAssignVieewModel.quiz = objQuiz[0];
-            return View(quizAssignVieewModel);
-        }
+        //    foreach (var user in Users)
+        //    {
+        //        userItems.Add(new SelectListItem
+        //        {
+        //            Text = Convert.ToString(user.FirstName + " " + user.LastName),
+        //            Value = Convert.ToString(user.UserId)
+        //        });
+        //    }
+        //    DataSet ds = quizRepository.GetAssignedQuizUsers(id);
+        //    if (ds != null)
+        //    {
+        //        if (ds.Tables.Count > 0)
+        //        {
+        //            if (ds.Tables[0].Rows.Count > 0)
+        //            {
+        //                foreach (var item in userItems)
+        //                {
+        //                    DataRow[] foundUsers = ds.Tables[0].Select("UserId = " + item.Value + "");
+        //                    if (foundUsers.Length != 0)
+        //                    {
+        //                        item.Selected = true;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    quizAssignVieewModel.usetList = userItems;
+        //    objQuiz = quizRepository.GetQuizByID(id);
+        //    quizAssignVieewModel.quiz = objQuiz[0];
+        //    return View(quizAssignVieewModel);
+        //}
 
         [HttpPost]
         public ActionResult AddQuiz(TblQuiz objQuiz, string submit)
@@ -535,7 +575,7 @@ namespace LMSWeb.Controllers
                 var result = quizRepository.AssignQuiz(quizAssignViewModel.quiz.QuizId, userId, quizAssignViewModel.DueDate);
 
                 var emailBody = quizAssignViewModel.quiz.QuizName + " - assigned to you. Please go through it. <br /> Your Due Date is - " + quizAssignViewModel.DueDate;
-                var emailSubject = "Course Assigned - " + quizAssignViewModel.quiz.QuizName;
+                var emailSubject = "Quiz Assigned - " + quizAssignViewModel.quiz.QuizName;
                 tblEmails objEmail = new tblEmails();
                 var objUser = userRepository.GetUserById(userId);
                 objEmail.EmailTo = objUser[0].EmailId;

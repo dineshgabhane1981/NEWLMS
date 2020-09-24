@@ -18,14 +18,25 @@
                             <i class="fas fa-file-export"></i> Export
                         </button>
                         <div class="dropdown-menu export-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {isActive=Context.Request.QueryString["isActive"]})">
-                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                Excel
-                            </a>
-                            <a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {isActive=Context.Request.QueryString["isActive"]})">
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {isActive=Context.Request.QueryString["isActive"]})">
+            <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+            Excel
+        </a>*@
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {isActive=Context.Request.QueryString["isActive"]})">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                 PDF
-                            </a>
+                            </a>*@
+                            <span class="dropdown-item" onclick='ExportDataByDateInExcel();'>
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                Excel
+
+                            </span>
+                            <span class="dropdown-item" onclick='ExportDataByDateInPDF();'>
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                PDF
+
+                            </span>
+
                         </div>
                     </div>
                 </li>
@@ -148,8 +159,36 @@
             });
             var table = $('#activityTable').DataTable();
             table.draw();
-        });        
+        });
     });
+    function ExportDataByDateInExcel() {
+        console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var type = params.get('Type');
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToExcel", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&isActive= false";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+
+    }
+    function ExportDataByDateInPDF() {
+        //console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var type = params.get('Type');
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToPdf", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&isActive= false";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+
+    }
 
 </script>
 

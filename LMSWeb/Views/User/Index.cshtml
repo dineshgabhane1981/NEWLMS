@@ -466,7 +466,7 @@
             status = false;
         }
         $.each(assignedUsers, function (index, obj) {
-            if (obj.GroupName === txtbox) {
+            if (obj.GroupName === txtbox && obj.GroupId != editvalue) {
                 status1 = false;
             }
         })

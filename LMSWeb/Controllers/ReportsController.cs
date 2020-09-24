@@ -16,6 +16,8 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html.simpleparser;
 using ClosedXML.Excel;
 using System.IO;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace LMSWeb.Controllers
 {
@@ -217,11 +219,12 @@ namespace LMSWeb.Controllers
             var objReportData = rpt.GetHighScoreUsersReportForAdmin(sessionUser.TenantId);
             return View(objReportData);
         }
-
-        public ActionResult ExportToExcel(string isActive, string ReportName, string UserId, string ActivityId, string Type)
+        
+        public ActionResult ExportToExcel(string isActive, string fDate, string tDate, string ReportName, string UserId, string ActivityId, string Type)
         {
             try
             {
+               // string fDate, string tDate,
                 TblUser sessionUser = (TblUser)Session["UserSession"];
                 
                 System.Data.DataTable table = new System.Data.DataTable();
@@ -240,6 +243,18 @@ namespace LMSWeb.Controllers
                         //excelSheet.Name = "Total User Report";
                         ReportName = "Total User Report";
                     }
+                    if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.DateCreated != "" && (Convert.ToDateTime(x.DateCreated) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.DateCreated) <= Convert.ToDateTime(tDate))).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(fDate))
+                    {
+                        objUserList = objUserList.Where(x => x.DateCreated != "" && Convert.ToDateTime(x.DateCreated) >= Convert.ToDateTime(fDate)).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.DateCreated != "" && Convert.ToDateTime(x.DateCreated) <= Convert.ToDateTime(tDate)).ToList();
+                    }
 
                     PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(UserReportModel));
                     foreach (PropertyDescriptor prop in properties)
@@ -254,12 +269,25 @@ namespace LMSWeb.Controllers
                         table.Rows.Add(row);
                     }
                     table.Columns.Remove("UserId");
+                    table.Columns.Remove("ActivityLearningAssigned");
                     
                 }
                 if (ReportName == "User Progress Report")
                 {
                     List<UserProgressReportModel> objUserList = new List<UserProgressReportModel>();
                     objUserList = rpt.GetUserProgressReportForAdmin(sessionUser.TenantId, Convert.ToInt32(UserId));
+                    if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.AttemptedOn != "" && (Convert.ToDateTime(x.AttemptedOn) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.AttemptedOn) <= Convert.ToDateTime(tDate))).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(fDate))
+                    {
+                        objUserList = objUserList.Where(x => x.AttemptedOn != "" && Convert.ToDateTime(x.AttemptedOn) >= Convert.ToDateTime(fDate)).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.AttemptedOn != "" && Convert.ToDateTime(x.AttemptedOn) <= Convert.ToDateTime(tDate)).ToList();
+                    }
 
                     PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(UserProgressReportModel));
                     foreach (PropertyDescriptor prop in properties)
@@ -283,6 +311,8 @@ namespace LMSWeb.Controllers
                         table.Rows.Add(row);
                     }
                     table.Columns.Remove("ActivityId");
+                    table.Columns.Remove("QuestionCount");
+                    table.Columns.Remove("ActivityLearningAssigned");
                     foreach (DataRow dr in table.Rows)
                     {
                         if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
@@ -295,6 +325,19 @@ namespace LMSWeb.Controllers
                 {
                     List<LearningCompletionReportModel> objUserList = new List<LearningCompletionReportModel>();
                     objUserList = rpt.GetLearningCompletionReportForAdmin(sessionUser.TenantId);
+
+                    if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && (Convert.ToDateTime(x.ActivityLearningAssigned) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.ActivityLearningAssigned) <= Convert.ToDateTime(tDate))).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(fDate))
+                    {
+                        objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && Convert.ToDateTime(x.ActivityLearningAssigned) >= Convert.ToDateTime(fDate)).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && Convert.ToDateTime(x.ActivityLearningAssigned) <= Convert.ToDateTime(tDate)).ToList();
+                    }
 
                     PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(LearningCompletionReportModel));
                     foreach (PropertyDescriptor prop in properties)
@@ -314,6 +357,20 @@ namespace LMSWeb.Controllers
                 {
                     List<LearningCompletionProgressReportModel> objUserList = new List<LearningCompletionProgressReportModel>();
                     objUserList = rpt.GetLearningCompletionProgressReportForAdmin(sessionUser.TenantId, Convert.ToInt32(ActivityId), Type);
+
+                    if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.CompletionDate != "" && (Convert.ToDateTime(x.CompletionDate) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.CompletionDate) <= Convert.ToDateTime(tDate))).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(fDate))
+                    {
+                        objUserList = objUserList.Where(x => x.CompletionDate != "" && Convert.ToDateTime(x.CompletionDate) >= Convert.ToDateTime(fDate)).ToList();
+                    }
+                    else if (!string.IsNullOrEmpty(tDate))
+                    {
+                        objUserList = objUserList.Where(x => x.CompletionDate != "" && Convert.ToDateTime(x.CompletionDate) <= Convert.ToDateTime(tDate)).ToList();
+                    }
+
 
                     PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(LearningCompletionProgressReportModel));
                     foreach (PropertyDescriptor prop in properties)
@@ -337,6 +394,7 @@ namespace LMSWeb.Controllers
 
                         table.Rows.Add(row);
                     }
+                    table.Columns.Remove("ActivityLearningAssigned");
                     foreach (DataRow dr in table.Rows)
                     {
                         if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
@@ -344,9 +402,8 @@ namespace LMSWeb.Controllers
                             dr["Comments"] = dr["Comments"].ToString().Replace("#;;#", "\n");
                         }
                     }
+                    
                 }
-
-
                 if (ReportName == "High Score Users Report")
                 {
                     List<HighScoreUsersReportModel> objUserList = new List<HighScoreUsersReportModel>();
@@ -366,7 +423,7 @@ namespace LMSWeb.Controllers
                     }
                     table.Columns.Remove("TotalQuestion");
                 }
-                table.Columns.Remove("ActivityDescription");
+              //  table.Columns.Remove("ActivityDescription");
                 
                 string fileName = ReportName + ".xlsx";
                 using (XLWorkbook wb = new XLWorkbook())
@@ -389,7 +446,7 @@ namespace LMSWeb.Controllers
             }
         }
 
-        public ActionResult ExportToPdf(string isActive, string ReportName, string UserId, string ActivityId, string Type)
+        public ActionResult ExportToPdf(string isActive, string fDate, string tDate, string ReportName, string UserId, string ActivityId, string Type)
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
 
@@ -408,6 +465,19 @@ namespace LMSWeb.Controllers
                     ReportName = "Total User Report";
                 }
 
+                if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.DateCreated != "" && Convert.ToDateTime(x.DateCreated) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.DateCreated) <= Convert.ToDateTime(tDate)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(fDate))
+                {
+                    objUserList = objUserList.Where(x => x.DateCreated != "" && Convert.ToDateTime(x.DateCreated) >= Convert.ToDateTime(fDate)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.DateCreated != "" && Convert.ToDateTime(x.DateCreated) <= Convert.ToDateTime(tDate)).ToList();
+                }
+
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(UserReportModel));
                 foreach (PropertyDescriptor prop in properties)
                     table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
@@ -421,25 +491,52 @@ namespace LMSWeb.Controllers
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("UserId");
+                table.Columns.Remove("ActivityLearningAssigned");
             }
             if (ReportName == "User Progress Report")
             {
                 List<UserProgressReportModel> objUserList = new List<UserProgressReportModel>();
                 objUserList = rpt.GetUserProgressReportForAdmin(sessionUser.TenantId, Convert.ToInt32(UserId));
 
+                if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.AttemptedOn != "" && (Convert.ToDateTime(x.AttemptedOn) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.AttemptedOn) <= Convert.ToDateTime(tDate))).ToList();
+                }
+                else if (!string.IsNullOrEmpty(fDate))
+                {
+                    objUserList = objUserList.Where(x => x.AttemptedOn != "" && Convert.ToDateTime(x.AttemptedOn) >= Convert.ToDateTime(fDate)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.AttemptedOn != "" && Convert.ToDateTime(x.AttemptedOn) <= Convert.ToDateTime(tDate)).ToList();
+                }
+
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(UserProgressReportModel));
                 foreach (PropertyDescriptor prop in properties)
-                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                {
+                    if (!prop.Name.Equals("userReportModel"))
+                    {
 
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+                }
                 foreach (UserProgressReportModel item in objUserList)
                 {
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
-                        row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                    {
+                        if (!prop.Name.Equals("userReportModel"))
+                        {
 
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                    }
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("ActivityId");
+                table.Columns.Remove("QuestionCount");
+                table.Columns.Remove("ActivityLearningAssigned");
+
                 foreach (DataRow dr in table.Rows)
                 {
                     if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
@@ -452,17 +549,40 @@ namespace LMSWeb.Controllers
             {
                 List<LearningCompletionReportModel> objUserList = new List<LearningCompletionReportModel>();
                 objUserList = rpt.GetLearningCompletionReportForAdmin(sessionUser.TenantId);
+                if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && (Convert.ToDateTime(x.ActivityLearningAssigned) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.ActivityLearningAssigned) <= Convert.ToDateTime(tDate))).ToList();
+                }
+                else if (!string.IsNullOrEmpty(fDate))
+                {
+                    objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && Convert.ToDateTime(x.ActivityLearningAssigned) >= Convert.ToDateTime(fDate)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && Convert.ToDateTime(x.ActivityLearningAssigned) <= Convert.ToDateTime(tDate)).ToList();
+                }
+
 
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(LearningCompletionReportModel));
                 foreach (PropertyDescriptor prop in properties)
-                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                {
+                    if (!prop.Name.Equals("learningCompletionReportModel"))
+                    {
 
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+                }
                 foreach (LearningCompletionReportModel item in objUserList)
                 {
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
-                        row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                    {
+                        if (!prop.Name.Equals("learningCompletionReportModel"))
+                        {
 
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                    }
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("ActivityId");
@@ -472,18 +592,42 @@ namespace LMSWeb.Controllers
                 List<LearningCompletionProgressReportModel> objUserList = new List<LearningCompletionProgressReportModel>();
                 objUserList = rpt.GetLearningCompletionProgressReportForAdmin(sessionUser.TenantId, Convert.ToInt32(ActivityId), Type);
 
+                if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.CompletionDate != "" && (Convert.ToDateTime(x.CompletionDate) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.CompletionDate) <= Convert.ToDateTime(tDate))).ToList();
+                }
+                else if (!string.IsNullOrEmpty(fDate))
+                {
+                    objUserList = objUserList.Where(x => x.CompletionDate != "" && Convert.ToDateTime(x.CompletionDate) >= Convert.ToDateTime(fDate)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(tDate))
+                {
+                    objUserList = objUserList.Where(x => x.CompletionDate != "" && Convert.ToDateTime(x.CompletionDate) <= Convert.ToDateTime(tDate)).ToList();
+                }
+
+
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(LearningCompletionProgressReportModel));
                 foreach (PropertyDescriptor prop in properties)
-                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-
+                {
+                    if (!prop.Name.Equals("LearningCompletionProgressReportModel"))
+                    {
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+                }
                 foreach (LearningCompletionProgressReportModel item in objUserList)
                 {
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
-                        row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                    {
+                        if (!prop.Name.Equals("LearningCompletionProgressReportModel"))
+                        {
 
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                    }
                     table.Rows.Add(row);
                 }
+                table.Columns.Remove("ActivityLearningAssigned");
                 foreach (DataRow dr in table.Rows)
                 {
                     if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
@@ -492,7 +636,6 @@ namespace LMSWeb.Controllers
                     }
                 }
             }
-
             if (ReportName == "High Score Users Report")
             {
                 List<HighScoreUsersReportModel> objUserList = new List<HighScoreUsersReportModel>();
@@ -500,19 +643,29 @@ namespace LMSWeb.Controllers
 
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(HighScoreUsersReportModel));
                 foreach (PropertyDescriptor prop in properties)
-                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                {
+                    if (!prop.Name.Equals("HighScoreUsersReportModel"))
+                    {
 
+                        table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                    }
+                }
                 foreach (HighScoreUsersReportModel item in objReportData)
                 {
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
-                        row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                    {
+                        if (!prop.Name.Equals("HighScoreUsersReportModel"))
+                        {
 
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                    }
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("TotalQuestion");
             }
-            table.Columns.Remove("ActivityDescription");
+           // table.Columns.Remove("ActivityDescription");
             // creating document object  
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(PageSize.LETTER);
@@ -603,7 +756,6 @@ namespace LMSWeb.Controllers
 
                 return PartialView("_UserReportList", objUserList);
             }
-
             if (ReportName == "UserProgressReport")
             {
                 List<UserProgressReportModel> objUserList = new List<UserProgressReportModel>();
@@ -627,6 +779,7 @@ namespace LMSWeb.Controllers
             {
                 List<LearningCompletionReportModel> objUserList = new List<LearningCompletionReportModel>();
                 objUserList = rpt.GetLearningCompletionReportForAdmin(sessionUser.TenantId);
+
                 if (!string.IsNullOrEmpty(fDate) && !string.IsNullOrEmpty(tDate))
                 {
                     objUserList = objUserList.Where(x => x.ActivityLearningAssigned != "" && (Convert.ToDateTime(x.ActivityLearningAssigned) >= Convert.ToDateTime(fDate) && Convert.ToDateTime(x.ActivityLearningAssigned) <= Convert.ToDateTime(tDate))).ToList();

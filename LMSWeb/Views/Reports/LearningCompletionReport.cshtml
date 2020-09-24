@@ -44,6 +44,7 @@
     });
 
     function FilterResult() {
+
         var fDate = $('#fDate').val();
         var tDate = $('#tDate').val();
        
@@ -55,7 +56,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "html",
             success: function (response) {
-                console.log(response);                
+               // console.log(response);                
                 $('#dvActivityData').html(response);
             },
             failure: function (response) {

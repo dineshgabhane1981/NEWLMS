@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace LMSBL.DBModels
         public bool isActive { get; set; }
         public string DateCreated { get; set; }
         public string LastLogin { get; set; }
+        public string ActivityLearningAssigned { get; set; }
 
 
     }
@@ -33,6 +35,7 @@ namespace LMSBL.DBModels
         public string Comments { get; set; }
         public string Duration { get; set; }
         public string CompletionTime { get; set; }
+        public string ActivityLearningAssigned { get; set; }
 
         public UserReportModel userReportModel { get; set; }
 
@@ -41,6 +44,7 @@ namespace LMSBL.DBModels
     public class LearningCompletionReportModel
     {
         public int ActivityId { get; set; }
+       
         public string ActivityName { get; set; }
         public string ActivityType { get; set; }
         public string ActivityDescription { get; set; }
@@ -59,7 +63,7 @@ namespace LMSBL.DBModels
         public string TimeSpent { get; set; }
         public string Rating { get; set; }
         public string Comments { get; set; }
-
+        public string ActivityLearningAssigned { get; set; }
         public LearningCompletionReportModel learningCompletionReportModel { get; set; }
     }
 

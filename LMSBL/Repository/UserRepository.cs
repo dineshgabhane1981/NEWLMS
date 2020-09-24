@@ -410,6 +410,9 @@ namespace LMSBL.Repository
             db.AddParameter("@EmailTo", SqlDbType.Text, objEmail.EmailTo);
             db.AddParameter("@EmailSubject", SqlDbType.Text, objEmail.EmailSubject);
             db.AddParameter("@EmailBody", SqlDbType.Text, objEmail.EmailBody);
+            db.AddParameter("@activityId", SqlDbType.Int, objEmail.Activityid);
+            db.AddParameter("@activityType", SqlDbType.Text, objEmail.Activitytype);
+            db.AddParameter("@dueDate", SqlDbType.DateTime, objEmail.Duedate);
             result = db.ExecuteQuery("sp_AddEmail");
 
             return result;
