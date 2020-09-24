@@ -1,0 +1,9 @@
+.vid-title{
+    padding-bottom: 10px;
+}
+.vid-content{
+    padding: 10px 0;
+}
+.vid-content video{
+    min-height: 340px;
+}
