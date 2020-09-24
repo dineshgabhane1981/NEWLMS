@@ -352,6 +352,7 @@ namespace LMSWeb.Controllers
                         table.Rows.Add(row);
                     }
                     table.Columns.Remove("ActivityId");
+                    table.Columns.Remove("ActivityDescription");
                 }
                 if (ReportName == "Learning Progress Report")
                 {
@@ -394,7 +395,6 @@ namespace LMSWeb.Controllers
 
                         table.Rows.Add(row);
                     }
-                    table.Columns.Remove("ActivityLearningAssigned");
                     foreach (DataRow dr in table.Rows)
                     {
                         if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
@@ -402,7 +402,9 @@ namespace LMSWeb.Controllers
                             dr["Comments"] = dr["Comments"].ToString().Replace("#;;#", "\n");
                         }
                     }
-                    
+                   // table.Columns.Remove("ActivityDescription");
+                    table.Columns.Remove("ActivityLearningAssigned");
+
                 }
                 if (ReportName == "High Score Users Report")
                 {
@@ -586,6 +588,7 @@ namespace LMSWeb.Controllers
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("ActivityId");
+                table.Columns.Remove("ActivityDescription");
             }
             if (ReportName == "Learning Progress Report")
             {
@@ -628,6 +631,7 @@ namespace LMSWeb.Controllers
                     table.Rows.Add(row);
                 }
                 table.Columns.Remove("ActivityLearningAssigned");
+                
                 foreach (DataRow dr in table.Rows)
                 {
                     if (!string.IsNullOrEmpty(Convert.ToString(dr["Comments"])))
