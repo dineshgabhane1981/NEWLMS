@@ -612,7 +612,7 @@ namespace LMSWeb.Controllers
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(LearningCompletionProgressReportModel));
                 foreach (PropertyDescriptor prop in properties)
                 {
-                    if (!prop.Name.Equals("LearningCompletionProgressReportModel"))
+                    if (!prop.Name.Equals("learningCompletionReportModel"))
                     {
                         table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
                     }
@@ -622,7 +622,7 @@ namespace LMSWeb.Controllers
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
                     {
-                        if (!prop.Name.Equals("LearningCompletionProgressReportModel"))
+                        if (!prop.Name.Equals("learningCompletionReportModel"))
                         {
 
                             row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;

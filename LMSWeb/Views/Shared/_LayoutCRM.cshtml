@@ -1,0 +1,74 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>CRM</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/gif" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/CRM/style.css">
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only"></span>
+                </button>
+            </div>
+            <div class="p-4">
+                <h1><a href="#" class="logo">Welcome <span>Portfolio Agency</span></a></h1>
+                <ul class="list-unstyled components mb-5">
+                    <li class="active">
+                        <a href="@Url.Action("Index", "CRM")"><span class="fa fa-home mr-3"></span> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Enquiry", "Clients")"><span class="fa fa-user mr-3"></span> Enquiry</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("PotentialClients", "Clients")"><span class="fa fa-briefcase mr-3"></span> Potential Clients</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Clients", "Clients")"><span class="fa fa-sticky-note mr-3"></span> Clients</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "FileNotes")"><span class="fa fa-suitcase mr-3"></span> File Notes</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Documents")"><span class="fa fa-cogs mr-3"></span> Documents</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Emails")"><span class="fa fa-cogs mr-3"></span> Emails</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Chat")"><span class="fa fa-paper-plane mr-3"></span> Chat</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Invoice")"><span class="fa fa-paper-plane mr-3"></span> Invoice</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "EnquiryForm")"><span class="fa fa-paper-plane mr-3"></span> Enquiry Form details</a>
+                    </li>
+                </ul>
+                <div class="footer">
+                    <p>                        
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved                        
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div id="content" class="p-4 p-md-5 pt-5">
+            
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/assets/CRM/jquery.min.js"></script>
+    <script src="~/assets/CRM/popper.js"></script>
+    <script src="~/assets/CRM/bootstrap.min.js"></script>
+    <script src="~/assets/CRM/main.js"></script>
+</body>
+</html>

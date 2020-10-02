@@ -182,12 +182,20 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssignmentController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\CRMController.cs" />
     <Compile Include="Controllers\CurriculumController.cs" />
+    <Compile Include="Controllers\DocumentsController.cs" />
+    <Compile Include="Controllers\EmailsController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\EnquiryController.cs" />
+    <Compile Include="Controllers\EnquiryFormController.cs" />
+    <Compile Include="Controllers\FileNotesController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
@@ -209,6 +217,11 @@
   <ItemGroup>
     <Content Include="assets\BodyImages\5.jpeg" />
     <Content Include="assets\BodyImages\appbg.jpeg" />
+    <Content Include="assets\CRM\bootstrap.min.js" />
+    <Content Include="assets\CRM\jquery.min.js" />
+    <Content Include="assets\CRM\main.js" />
+    <Content Include="assets\CRM\popper.js" />
+    <Content Include="assets\CRM\style.css" />
     <Content Include="assets\images\ajax-loader.gif" />
     <Content Include="assets\images\assign.png" />
     <Content Include="assets\images\assigned-to-users.png" />
@@ -667,6 +680,7 @@
     <Content Include="CSS\jquery-ui.min.css" />
     <Content Include="CSS\lib\styleold.css" />
     <Content Include="CSS\lib\style.css" />
+    <Content Include="CSS\simple-sidebar.css" />
     <Content Include="CSS\style.css" />
     <Content Include="DBScript\CompleteScript_19Feb2020.sql" />
     <Content Include="DBScript\LMSDB_Script.sql" />
@@ -859,6 +873,17 @@
     <Content Include="Views\Quiz\Result.cshtml" />
     <Content Include="Views\Assignment\LaunchCourse.cshtml" />
     <Content Include="Views\Assignment\LaunchCurriculum.cshtml" />
+    <Content Include="Views\Shared\_LayoutCRM.cshtml" />
+    <Content Include="Views\CRM\Index.cshtml" />
+    <Content Include="Views\Clients\Enquiry.cshtml" />
+    <Content Include="Views\Clients\PotentialClients.cshtml" />
+    <Content Include="Views\Clients\Clients.cshtml" />
+    <Content Include="Views\FileNotes\Index.cshtml" />
+    <Content Include="Views\Documents\Index.cshtml" />
+    <Content Include="Views\Emails\Index.cshtml" />
+    <Content Include="Views\EnquiryForm\Index.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
