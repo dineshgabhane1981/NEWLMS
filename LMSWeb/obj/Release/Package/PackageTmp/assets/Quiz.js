@@ -878,7 +878,7 @@ function LaunchQuizNew(QuizLaunchData) {
         item["QuestionId"] = value.QuestionId;
 
         quizQueIds.push(item);
-        queHTML += "<div class=\"que-container row mt-4 pt-2 pb-2\" id=dvQue" + value.QuestionId + ">";
+        queHTML += "<div class=\"que-container row mt-4 pt-2 pb-2 list-box\" id=dvQue" + value.QuestionId + ">";
         queHTML += "<div class=\"col-12 que-text remove-padding\" >";
         queHTML += "<label class=\"font-weight-bold\">" + value.QuestionText + " </label>";
 
@@ -1198,13 +1198,13 @@ function ViewQuiz(QuizViewData) {
 
 function NextPrevQuestion() {
     $.each(quizQueIds, function (indexQue, valueQue) {
-        if (indexQue == currentIndex) {
+        if (indexQue == currentIndex) {           
             $('#dvQue' + valueQue.QuestionId).show();
             const id = valueQue.QuestionId;            
             const p = $('[data-queid=dvQue' + id + ']');
             $(p).addClass('active-page');            
         }
-        else {
+        else {            
             $('#dvQue' + valueQue.QuestionId).hide();
             const id = valueQue.QuestionId;           
             const p = $('[data-queid=dvQue' + id + ']');

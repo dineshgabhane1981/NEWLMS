@@ -7,10 +7,10 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col" >Type</th>
-                <th scope="col">Description</th>
+                @*<th scope="col">Description</th>*@
                 <th scope="col" >Duration</th>
                 <th scope="col">Creation Date</th>
-                <th scope="col" >Users</th>
+                <th scope="col" style="text-align:center;">Assigned Users</th>
                 <th scope="col" style="text-align:center;">Status</th>
 
             </tr>
@@ -29,7 +29,7 @@
                             <tr>
                                 <td>@activity.ActivityName</td>
                                 <td  >@activity.ActivityType</td>
-                                <td style="max-width:150px;">@activity.ActivityDescription</td>
+                                @*<td style="max-width:150px;">@activity.ActivityDescription</td>*@
                                 @if (!string.IsNullOrEmpty(activity.ActivityDuration))
                                 {
                                     <td class="add-column-padding">@activity.ActivityDuration</td>
@@ -43,7 +43,7 @@
                                 <td>@activity.ActivityCreationDate</td>
                                 @if (activity.ActivityAssignedUsers > 0)
                                 {
-                                    <td class="add-column-padding">@activity.ActivityAssignedUsers</td>
+                                    <td style="text-align:center;">@activity.ActivityAssignedUsers</td>
                                     <td style="text-align:center;"><img src="~/assets/images/assigned-to-users.png"></td>
 
                                 }
@@ -113,14 +113,14 @@
 
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

@@ -1,7 +1,7 @@
 ﻿@model List<LMSBL.DBModels.LearningCompletionReportModel>
 
 
-<div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+<div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
     <div class="row">
         <div class="col search-container">
             <i class="fas fa-search"></i>
@@ -17,14 +17,24 @@
                             <i class="fas fa-file-export"></i> Export
                         </button>
                         <div class="dropdown-menu export-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {ReportName="Learning Completion Report"})">
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {ReportName="Learning Completion Report"})">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        Excel
+        </a>*@
+                            <span class="dropdown-item" onclick='ExportDataByDateInExcel();'>
                                 <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                 Excel
-                            </a>
-                            <a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {ReportName="Learning Completion Report"})">
-                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                            </span>
+                            <span class="dropdown-item" onclick='ExportDataByDateInPDF();'>
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                 PDF
-                            </a>
+
+                            </span>
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {ReportName="Learning Completion Report"})">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+            PDF
+        </a>*@
                         </div>
                     </div>
                 </li>
@@ -38,12 +48,12 @@
                     <tr>
                         <th scope="col" >Sr. No.</th>
                         <th scope="col">Learning</th>
-                        <th scope="col" >Type</th>
-                        <th scope="col">Description</th>
+                        <th scope="col" style="text-align:center;">Type</th>
+                        @*<th scope="col">Description</th>*@
                         <th scope="col">Learning Assigned Date</th>
-                        <th scope="col" >Assigned Users</th>
+                        <th scope="col" style="text-align:center;">Assigned Users</th>
                         <th scope="col" style="text-align:center;">Status</th>
-                        <th scope="col">Action</th>
+                        <th scope="col" style="text-align:center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +71,7 @@
                                     <td style="text-align:center;">@count</td>
                                     <td style="width:250px;">@user.ActivityName</td>
                                     <td style="text-align:center;">@user.ActivityType</td>
-                                    <td style="width:250px;">@user.ActivityDescription</td>
+                                    @*<td style="width:250px;">@user.ActivityDescription</td>*@
                                     @if (!string.IsNullOrEmpty(user.ActivityLearningAssigned))
                                     {
                                         <td>@user.ActivityLearningAssigned</td>
@@ -135,8 +145,7 @@
             //    }
             //}
         });
-
-        $('#activityTable_filter').hide();
+                $('#activityTable_filter').hide();
 
         $('#txtSearch').on('keyup', function () {
 
@@ -153,19 +162,47 @@
             table.draw();
         });
     });
+    function ExportDataByDateInExcel() {
+        console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var type = params.get('Type');
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToExcel", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&ReportName=Learning Completion Report";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+       
+    }
+    function ExportDataByDateInPDF() {
+        //console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var type = params.get('Type');
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToPdf", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&ReportName=Learning Completion Report";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+       
+    }
 
 
 </script>
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

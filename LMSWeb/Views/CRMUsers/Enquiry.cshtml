@@ -1,0 +1,10 @@
+﻿@model LMSWeb.ViewModel.CRMUserViewModel
+@{
+    ViewBag.Title = "Enquiry";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+    <link href="~/assets/CRM/styleSteps.css" rel="stylesheet" />
+    <div class="row">
+        
+        <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddEnquiry", "CRMUsers")">Add</a></button>
+    </div>

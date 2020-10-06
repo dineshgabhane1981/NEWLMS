@@ -4,9 +4,58 @@
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
+<style>
 
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 70%;
+        border-radius: 25px;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    th.hide_me, td.hide_me {
+        display: none;
+    }
+</style>
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
@@ -14,16 +63,16 @@
             </div>
             <div class="col text-right">
                 <li class="list-inline-item">
-                    <a href="@Url.Action("AddQuiz", "Quiz")">
+                    <a href="@Url.Action("AuthorContent", "Quiz")">
                         <button class="btn btn-secondary dropdown-toggle create-learning-btn" type="button">
                             <i class="fas fa-plus-circle"></i> Add Quiz
                         </button>
                     </a>
                 </li>
                 @*<ul class="list-inline progress-list mt-2">
-            <li class="list-inline-item"><img src="~/assets/images/shape_Active.png"> Active</li>
-            <li class="list-inline-item"><img src="~/assets/images/shape_InactiveUser.png"> Inactive</li>
-        </ul>*@
+                        <li class="list-inline-item"><img src="~/assets/images/shape_Active.png"> Active</li>
+                        <li class="list-inline-item"><img src="~/assets/images/shape_InactiveUser.png"> Inactive</li>
+                    </ul>*@
             </div>
         </div>
         <div class="row mt-3" id="dvActivityData">
@@ -31,11 +80,11 @@
                 <table class="table" id="activityTable">
                     <thead>
                         <tr>
-                            <th scope="col" >Sr No.</th>
+                            <th scope="col">Sr No.</th>
                             <th scope="col">Quiz Name</th>
                             <th scope="col">Quiz Description</th>
-                            <th scope="col" >No of Questions</th>
-                            <th scope="col" >Duration (Mins)</th>
+                            <th scope="col">No of Questions</th>
+                            <th scope="col">Duration (Mins)</th>
                             <th scope="col" style="text-align:center;" class="action-column">Actions</th>
                         </tr>
                     </thead>
@@ -64,12 +113,12 @@
                                         }
 
 
-                                    <td style="text-align:center;">
+                                        <td style="text-align:center;">
 
-                                        <a href="@Url.Action("EditQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
-                                        <a href="@Url.Action("AssignQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="Assign"><i class="fas fa-user-plus orange-color mr-1"></i></a>
-                                        <a href="@Url.Action("ViewQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="View"><img src="~/assets/images/eye.png"  /></a>
-                                    </td>
+                                            <a href="@Url.Action("AuthorContent", "Quiz", new { id = quiz.QuizId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>&nbsp;&nbsp;
+                                            <a href="#" onclick="OpenModelForAssign(@quiz.QuizId)" class="login" title="Assign"><i class="fas fa-user-plus orange-color mr-1"></i></a>
+                                            <a href="@Url.Action("ViewQuiz", "Quiz", new { id = quiz.QuizId })" class="login" title="View"><img src="~/assets/images/eye.png" /></a>
+                                        </td>
 
                                     </tr>
                                 }
@@ -93,7 +142,55 @@
         </div>
     </div>
 </div>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        @*<span class="close">&times;</span>*@
+
+        <div id="dvAxtivities" class="row" style="margin-left:20px;margin-bottom:20px;">
+            <label class="col-2 p-0">
+                Select User/s
+            </label>
+            <select id="lstUsers" name="lstUsers" size="5" style="width:300px;" multiple>
+            </select>
+        </div>
+        <div style="margin-left:20px;">
+            <label class="col-2 p-0">
+                Due Date
+            </label>
+            <input type="datetime" id="dtDueDate" class="input100 datepicker" />
+            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+        </div>
+
+        <div>
+            <div class="row mt-3" id="dvAssignedUsers">
+                <div class="table-responsive">
+                    <table id="tblAssignedUsers" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>User Name</th>
+                                <th>Due Date</th>
+                                <th>User Id</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="row justify-content-end pr-4" style="margin-top:20px;">
+            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+        </div>
+    </div>
+</div>
 <script>
+    var assignedUsers = [];
     $(document).ready(function () {
         $('#activityTable').DataTable({
             "aaSorting": [[ 0, "desc" ]],
@@ -133,7 +230,277 @@
             var table = $('#activityTable').DataTable();
             table.draw();
         });
+        $('#dtDueDate').datepicker({
+            format: 'mm/dd/yyyy',
+            showWeek: true
+        }).datepicker("setDate", new Date());
+
+        DrawTable();
+
+        $('#btnAddUsersToList').on("click", function () {
+            AddUsersToList();
+        });
+
+        $('#btnAssignUsers').on("click", function () {
+            AssignUsersInDB();
+        });
     });
+
+    var modal = document.getElementById("myModal");
+    var btnClose = document.getElementById("btnPopupClose");
+    var SelectedquizId = 0;
+
+    function OpenModelForAssign(quizId) {
+        SelectedquizId = quizId;
+        $.ajax({
+                type: "POST",
+                 url: '@Url.Action("Getuser")',
+                data: '{qId: ' + JSON.stringify(quizId) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    OnSuccess(response);
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+        });
+
+        $.ajax({
+                type: "POST",
+                 url: '@Url.Action("GetAssignedUsers")',
+            data: '{qId: ' + JSON.stringify(quizId) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                        srNo = 0;
+                        $.map(response, function (item) {
+                            srNo++;
+                              optionItem = {}
+                              optionItem["index"] = srNo;
+                              optionItem["UserName"] = item.UserName;
+                              optionItem["DueDate"] = item.DueDate;
+                              optionItem["UserId"] = item.UserId;
+                              optionItem["delete"] = "<input type='button' id='" + item.UserId + "' onclick='DeleteActivity(" + item.UserId + ")' value='Delete'>";
+                              assignedUsers.push(optionItem);
+                        });
+                    DrawTable();
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
+            });
+
+        $("#dtDueDate").datepicker().datepicker("setDate", new Date());
+       $("#myModal").show(1000);
+          //modal.style.display = "block";
+    }
+
+    btnClose.onclick = function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "The Data may lost if you not saved. please save data before closing!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ok!'
+        }).then((result) => {
+            if (result.value) {
+
+                 assignedUsers = [];
+                DrawTable();
+                $("#myModal").hide(1000);
+                
+            }
+            else {
+               
+            }
+            })
+        //modal.style.display = "none";
+    }
+
+    function OnSuccess(response) {
+        var data = response;
+
+            $('[id*=lstUsers]').empty();
+            var listBox = $('[id*=lstUsers]');
+            $.map(data, function (item) {
+                var option = document.createElement('option');
+                option.text = item.Text;
+                option.value = item.Value;
+                listBox[0].append(option);
+            });
+            $("#dvAxtivities").show();
+    }
+
+    function AddUsersToList() {
+        var isSelected = false;
+        var status = true;
+        var status1 = true;
+        var srNo = assignedUsers.length;
+        console.log(srNo)
+        $('#lstUsers option').each(function(index) {
+          if(($(this).is(':selected')))
+          {
+              var oldValue = this.value;
+
+              $.each(assignedUsers, function (index, value) {
+
+                  if (value.UserId == oldValue) {
+                      status = false;
+                  }
+                  else if ($('#dtDueDate').val() == '') {
+                      status1 = false;
+                  }
+
+              });
+
+              if (status && status1) {
+                  srNo++;
+                  optionItem = {}
+                  optionItem["index"] = srNo;
+                  optionItem["UserName"] = this.text;
+                  optionItem["DueDate"] = $('#dtDueDate').val();
+                  optionItem["UserId"] = this.value;
+                  optionItem["delete"] = "<input type='button' id='" + this.value + "' onclick='DeleteActivity(" + this.value + ")' value='Delete'>";
+                  assignedUsers.push(optionItem);
+                  isSelected = true;
+
+              }
+          }
+
+        });
+        if (!status) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'This User already added to List!'
+            })
+        }
+        else if (!isSelected) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select User!'
+            })
+        }
+        else if (!status1) {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select date!'
+            })
+        }
+        else {
+           DrawTable();
+            Swal.fire(
+                    'Added!',
+                    'User Added successfully!',
+                    'success'
+                )
+        }
+    }
+
+    function DeleteActivity(id) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this User from List!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                 var table1 = $('#tblAssignedUsers').DataTable();
+                var data = table1.rows().data().toArray();
+                assignedUsers = data;
+                assignedUsers = assignedUsers.filter(function (item) {
+                return item.UserId != id;
+                })
+
+                $.each(assignedUsers, function (index, value) {
+                    value.index = index+1;
+                });
+
+                DrawTable();
+                Swal.fire(
+                    'Deleted!',
+                    'User has been deleted.',
+                    'success'
+                )
+            }
+        })
+    }
+
+    function AssignUsersInDB() {
+         var table = $('#tblAssignedUsers').DataTable();
+        var userList = table.rows().data().toArray();
+
+        console.log(userList)
+        console.log(SelectedquizId)
+
+         $.ajax({
+                type: "POST",
+                 url: '@Url.Action("AssignQuiztouser")',
+             data: '{jsonData: ' + JSON.stringify(JSON.stringify(userList)) + ',qId: ' + JSON.stringify(SelectedquizId) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                     swal.fire({
+                       icon: 'success',
+                        title: 'Assigned',
+                        text: 'Changes Saved Successfully!'
+                    }).then((value) => {
+                        assignedUsers = [];
+                        modal.style.display = "none";
+                    });
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                   })
+                }
+         });
+
+
+    }
+
+    function DrawTable() {
+        var table1 = $('#tblAssignedUsers').DataTable();
+        table1.destroy();
+
+        var table = $('#tblAssignedUsers').DataTable({
+            "data": assignedUsers,
+            "paging": false,
+            "columns": [
+                { data: "index" },
+                { data: "UserName" },
+                { data: "DueDate" },
+                { data: "UserId" },
+                { data: "delete" }
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+         $('#tblAssignedUsers_filter').hide();
+    }
+
+
 
 
 </script>
@@ -141,14 +508,14 @@
 
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

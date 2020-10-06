@@ -1,0 +1,21 @@
+﻿@model LMSBL.DBModels.tblCourse
+@{
+    ViewBag.Title = "LaunchCourse";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+    <div class="row justify-content-center h-100">
+        <div class="col align-self-center add-user-section add-new-quiz list-box" style="max-width:80%;">
+            <div class="row">
+                @Html.Raw(Model.ContentModuleDescription)
+
+            </div>
+
+            <div class="row justify-content-center">                
+                <a href="@Model.ContentModuleURL" target="_blank" style="width:180px;" class="btn btn-outline-primary cancel-btn">Launch Course <img src="~/assets/images/launch.png" style="color:white;" /> </a>
+
+            </div>
+        </div>
+    </div>
+</div>

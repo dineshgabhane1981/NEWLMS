@@ -8,10 +8,10 @@
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     <div class="row mb-1">
         <div class="col">
-            <h4>Learning Progress</h4>
+            <h4 class="title-color">Learning Progress</h4>
         </div>
     </div>
-    <div class="row user-quiz-top-section learning-completion mb-2 mt-3 p-2">
+    <div class="row user-quiz-top-section learning-completion mb-2 mt-3 p-2 list-box">
         <div class="col-12">
             <span class="grey-color"></span>
             @if (Model != null)
@@ -20,7 +20,7 @@
                 {
                     if (Model[0].learningCompletionReportModel != null)
                     {
-                        <div class="float-left blue-color" style="padding-top:20px;">
+                        <div class="float-left" style="padding-top:20px;">
                             <b>Learning Name - </b> @Model[0].learningCompletionReportModel.ActivityName <br />                            
                             <b>Learning Type - </b>@Model[0].learningCompletionReportModel.ActivityType <br />
 
@@ -31,7 +31,7 @@
 
             <div class="float-right">
                 <div class="grey-color" style="margin-top:10px;">
-                    Date Range: &nbsp;&nbsp;
+                    Due Date : &nbsp;&nbsp;
                     <input class="input50 datepicker" type="text" id="fDate" readonly name="fDate" placeholder="Select From Date">&nbsp;&nbsp;
                     <input class="input50 datepicker" type="text" id="tDate" readonly name="tDate" placeholder="Select To Date">&nbsp;&nbsp;
                     <button type="submit" id="btnFilter" class="btn btn-primary create-learning-btn mr-4" onclick="FilterResult();"><img src="~/assets/images/check-img.png" width="20" height="20" /> Apply</button>

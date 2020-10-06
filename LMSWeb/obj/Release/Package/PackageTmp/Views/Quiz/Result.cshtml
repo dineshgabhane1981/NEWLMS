@@ -1,0 +1,229 @@
+﻿@model LMSBL.DBModels.EnquiryResult
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Result</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/CSS/style.css" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="~/assets/SweetAlert.js"></script>
+
+    <style>
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 25px;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        th.hide_me, td.hide_me {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    @Html.AntiForgeryToken()
+    <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+        <div class="row justify-content-center h-100">
+            <div class="col align-self-center add-user-section" style="border-radius:25px;">
+                @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Issue"])))
+                {
+                    <script>
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Issue Occured',
+                            text: 'Please contact your Administrator! or Email this screenshot to sales@logicieltech.com'
+                        });
+                        $("#btnEnquiryShare").prop("disabled", true);
+                    </script>
+
+                }
+                @if (@Model != null)
+                {
+                    <div class="col">
+
+                        <h4 class="mt-3 ml-2 mb-3">Thanks for taking the quiz, <b> @Model.FullName.   </b></h4>
+                        <h4 class="mt-3 ml-2 mb-3">Here is your score. You scored  <b> @Model.Score% </b></h4>
+
+                        <h5>Here is your opportunity to get ahead of the rest.</h5>
+                        <h5>Secure your investment and make sure you start well.</h5>
+                        <h5>Read about our <a href="http://www.logicieltech.com/it-foundation-course-study-abroad.html">IT foundation course</a> now to prepare well for your IT study or work overseas next year.</h5>
+                    </div>
+                    <div class="row pt-5 pl-4">
+
+                    </div>
+                    <div class="row justify-content-end">
+                        @*<button type="submit" id="btnEnquiryShare" class="btn btn-primary profle-submit-btn"><img src="~/assets/images/check-img.png" /> Share</button> &nbsp;&nbsp;*@
+                        @*<button type="submit" id="btnCurriculumContent" class="btn btn-primary profle-submit-btn"><img src="~/assets/images/check-img.png" /> Curriculum</button>*@
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div>Share with your friend who want to test their knowledge</div>
+            <div class="row pt-5 pl-4">
+                <input type="text" id="txtEmailId" placeholder="Email Id" class="input100" />
+            </div>
+            <div class="row justify-content-end " style="margin-top:20px;">
+                <button type="button" id="btnSend" class="btn btn-primary profle-submit-btn"><img src="~/assets/images/check-img.png" /> Send</button>&nbsp;&nbsp;
+                <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="curriculumModel" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div>-- Curriculum topics --</div>
+            <div>
+
+                1) Object Oriented PRogramming<br />
+                2) Requirement analysis<br />
+
+            </div>
+            <div class="row justify-content-end pr-4" style="margin-top:20px;">
+
+                <button type="button" id="btnPopupClose1" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/Validations.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#btnEnquiryShare').on("click", function () {
+                $("#myModal").show(1000);
+            });
+
+            $('#btnCurriculumContent').on("click", function () {
+                $("#curriculumModel").show(1000);
+            });
+
+            $('#btnPopupClose').on("click", function () {
+                $("#myModal").hide(1000);
+            });
+            $('#btnPopupClose1').on("click", function () {
+                $("#curriculumModel").hide(1000);
+            });
+
+            $('#btnSend').on("click", function () {
+                ShareLink();
+            });
+
+            var issue = '@Html.Raw(TempData["Issue"])';
+            
+            if (issue != "") {                 
+                $("#btnEnquiryShare").prop("disabled", true);
+                
+
+            }
+
+        });
+        function ShareLink() {
+            if ($("#txtEmailId").val() == "") {
+                swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter emailid!'
+                })
+                $("#txtEmailId").focus();
+                return false;
+            }
+
+             $.ajax({
+                type: "POST",
+                 url: '@Url.Action("ShareLink")',
+                data: '{emailId: ' + JSON.stringify($("#txtEmailId").val()) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                swal.fire({
+                icon: 'success',
+                title: 'Shared',
+                text: 'Test sent successfully!'
+                })
+                },
+                failure: function (response) {
+                swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went Wrong! Please contact your Administrator! or Email this screenshot to sales@logicieltech.com'
+                })
+                }
+                });
+                }
+
+    </script>
+</body>
+
+</html>

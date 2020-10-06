@@ -1,0 +1,66 @@
+.template-mcq .option{
+    color:gray;
+}
+.template-mcq .radio-button  {
+    display: table;
+    position: relative;
+    margin: 12px 0;
+    width: 100%;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .template-mcq .radio-button.review{
+    cursor:default
+  }
+  .template-mcq .radio-button>span{
+    display: table-cell;
+    vertical-align: top;
+  }
+  .template-mcq .option-container{
+    display: block;
+  }
+  .template-mcq .radio-button .icon-container{
+    width: 20px;
+    height: 20px;
+  }
+  .template-mcq .radio-button .option-text{
+    padding-left: 8px;
+  }
+  .template-mcq .option-text{
+    width: 100%;
+    display: block;
+  }
+
+  .template-mcq .radio-button .icon-radio-button:before {
+    content: "\ea56";
+  }
+  .template-mcq .radio-button.hover .icon-radio-button:before,
+  .template-mcq .radio-button.selected .icon-radio-button:before {
+    content: "\ea55";
+    color:#f74c06;
+  }
+  .template-mcq .radio-button.correct{
+    color: black;
+  }
+  .template-mcq .radio-button .icon-tick{
+    color:green;
+    font-size: 20px;
+  }
+  .template-mcq .radio-button .icon-cross{
+    color:red;
+    font-size: 20px;
+  }
+  .template-mcq .points{
+      margin: 12px 0;
+      color:gray;
+  }
+  .template-mcq .feedback{
+      margin: 12px 0;
+      color:gray;
+  }
+  .template-mcq .question-counter{
+    margin: 0 0 20px 0;
+  }

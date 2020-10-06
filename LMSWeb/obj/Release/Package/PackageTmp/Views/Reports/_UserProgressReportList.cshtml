@@ -1,6 +1,6 @@
 ﻿@model List<LMSBL.DBModels.UserProgressReportModel>
 
-<div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+<div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
     <div class="row">
         <div class="col search-container">
             <i class="fas fa-search"></i>
@@ -17,14 +17,25 @@
                             <i class="fas fa-file-export"></i> Export
                         </button>
                         <div class="dropdown-menu export-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {ReportName="User Progress Report", UserId=Context.Request.QueryString["UserId"]})">
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToExcel", "Reports", new {ReportName="User Progress Report", UserId=Context.Request.QueryString["UserId"]})">
+            <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+            Excel
+        </a>*@
+                            @*<a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {ReportName="User Progress Report", UserId=Context.Request.QueryString["UserId"]})">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+            PDF
+        </a>*@
+                            <span class="dropdown-item" onclick='ExportDataByDateInExcel();'>
                                 <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                 Excel
-                            </a>
-                            <a class="dropdown-item" href="@Url.Action("ExportToPdf", "Reports", new {ReportName="User Progress Report", UserId=Context.Request.QueryString["UserId"]})">
-                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                            </span>
+                            <span class="dropdown-item" onclick='ExportDataByDateInPDF();'>
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                 PDF
-                            </a>
+
+                            </span>
+
                         </div>
                     </div>
                 </li>
@@ -214,17 +225,48 @@
             table.draw();
         });
     });
+    function ExportDataByDateInExcel() {
+        console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var UserId = params.get('UserId'); 
+        var type = params.get('Type');
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToExcel", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&UserId=" + UserId + "&ReportName=User Progress Report";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+
+    }
+    function ExportDataByDateInPDF() {
+        //console.log("enter");
+        var params = new URLSearchParams(window.location.search);
+        var ActivityId = params.get('ActivityId');
+        var type = params.get('Type');
+        var UserId = params.get('UserId'); 
+        var fDate = $('#fDate').val();
+        var tDate = $('#tDate').val();
+        var urlLink = "@Url.Action("ExportToPdf", "Reports")";
+        urlLink = urlLink + "?fDate=" + fDate + "&tDate=" + tDate + "&UserId=" + UserId + "&ReportName=User Progress Report";
+        console.log(urlLink);
+        window.location.href = urlLink;
+
+
+    }
+
 </script>
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

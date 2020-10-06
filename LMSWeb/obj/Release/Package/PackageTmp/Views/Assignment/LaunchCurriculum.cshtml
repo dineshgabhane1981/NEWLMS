@@ -1,0 +1,189 @@
+﻿@model List<LMSWeb.ViewModel.CurriculumActivities>
+@{
+    ViewBag.Title = "Curriculum";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+
+    LMSBL.DBModels.TblUser objUser = new LMSBL.DBModels.TblUser();
+    objUser = (LMSBL.DBModels.TblUser)Session["UserSession"];
+    var baseURL = System.Configuration.ConfigurationManager.AppSettings["CourseBaseURL"];
+    var CourseOtherBaseURL = System.Configuration.ConfigurationManager.AppSettings["CourseOtherBaseURL"];
+}
+<style>
+    #container {
+        position: relative;
+    }
+
+    #img2 {
+        position: absolute;
+        left: 20px;
+        top: 0px;
+        fill: #fff;
+    }
+
+    #text1 {
+        position: absolute;
+        left: 275px;
+        top: 100px;
+        font-size: 30px;
+        color: #fff;
+    }
+
+    #text2 {
+        position: absolute;
+        left: 320px;
+        top: 100px;
+        font-size: 30px;
+        color: #fff;
+    }
+
+    #text3 {
+        position: absolute;
+        left: 290px;
+        top: 100px;
+        font-size: 30px;
+        color: #fff;
+    }
+</style>
+<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+
+
+    @if (Model != null)
+    {
+        <div class="row mb-1">
+            <div class="col">
+                <h4 class="title-color">Curriculum Details</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="user-quiz-top-section learning-completion mb-2 mt-3 p-2 list-box">
+                <div class="col-12">
+                    <span class="grey-color"></span>
+                    <div style="padding-top:15px;">
+                        <h6><b>Name</b> - @Model[0].CurriculumName</h6>
+                        <h6><b>Due Date</b> -  @Convert.ToDateTime(Model[0].DueDate).ToString("MM/dd/yyyy")</h6>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        var isAttempt = false;
+        var durationInSeconds = 0;
+        var duration = "0";
+        <div class="row mt-4">
+            @foreach (var activity in Model)
+            {
+                if (!string.IsNullOrEmpty(activity.Duration) && activity.Duration != "0")
+                {
+                    if (Convert.ToInt32(activity.Duration) >= 60)
+                    {
+                        duration = activity.Duration + ":00 Min";
+                    }
+                    else
+                    {
+                        durationInSeconds = Convert.ToInt32(activity.Duration) * 60;
+                        TimeSpan t = TimeSpan.FromSeconds(durationInSeconds);
+                        duration = string.Format("{0:D2}:{1:D2}", (int)t.Minutes, t.Seconds);
+                        duration = duration + " Min";
+                    }
+                }
+                else
+                {
+                    duration = "-";
+                }
+
+                <div class="col-lg-4 col-md-4 col-sm-6 mt-3">
+                    <div class="course-badge mt-4" style="border:1px solid gray;box-shadow:3px 3px 3px 3px lightgray;">
+                        <div id="container" style="width:100%; height:150px;">
+                            <img src="~/assets/BodyImages/5.jpeg" id="img1" style="width:100%; height:150px;" />
+                            @if (activity.ActivityType == "Course")
+                            {
+                                <img src="~/assets/images/course.svg" width="150px" id="img2" /> <div id="text1">COURSE</div>
+                            }
+                            @if (activity.ActivityType == "Survey")
+                            {
+                                <img src="~/assets/images/quiz.svg" width="150px" id="img2" /><div id="text2">QUIZ</div>
+                            }
+                            @if (activity.ActivityType == "Forum")
+                            {
+                                <img src="~/assets/images/forum.svg" width="150px" id="img2" /><div id="text3">FORUM</div>
+                            }
+
+                        </div>
+
+                        <div class="add-column-padding" style="width:100%;margin-top:10px;"><b>Name </b> - @activity.ActivityText</div>
+                        @if (activity.ActivityType != "Forum")
+                        {
+                            <div class="mobile-hide add-column-padding"><b>Duration</b> - @duration</div>
+                        }
+                        else
+                        {
+                            <div class="mobile-hide add-column-padding" style="color:transparent;"><b>Duration</b> - @duration</div>
+                        }
+                        <div style="display:inline-block;width:100%;">
+                            @if (activity.ActivityType != "Forum")
+                            {
+                                <div class="mobile-hide add-column-padding" style="width:50%; float:left;">
+                                    <b>Status</b> -
+                                    @if (activity.ActivityStatus == "Completed")
+                                    {
+                                        <span style="color:green; font-weight:bold;">@activity.ActivityStatus</span>
+                                    }
+                                    @if (activity.ActivityStatus == "Not Started")
+                                    {
+                                        <span style="color:red; font-weight:bold;">@activity.ActivityStatus</span>
+                                    }
+                                    @if (activity.ActivityStatus == "InProgress")
+                                    {
+                                        <span style="color:orange; font-weight:bold;">@activity.ActivityStatus</span>
+                                    }
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mobile-hide add-column-padding" style="width:50%; float:left;color:transparent;">
+                                    <b>Status</b> -<span style="color:orange; font-weight:bold;">@activity.ActivityStatus</span>
+                                </div>
+                            }
+
+                            <div style="width:50%; float:right;padding-left:150px;">
+                                @if (activity.ActivityType == "Course" && !isAttempt)
+                                {
+                                    if (activity.CourseSubType == "Scorm1.2")
+                                    {
+                                        <a href="@Url.Action("LaunchCourse", "Assignment", new { CourseId = activity.ActivityId })" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                    }
+                                    if (activity.CourseSubType == "Other")
+                                    {
+                                        <a href="@CourseOtherBaseURL\ContentModules\@activity.ActivityId@activity.CourseModuleURL" class="login" title="Launch Course" target="_blank"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                    }
+                                }
+                                @if (activity.ActivityType == "Survey" && !isAttempt)
+                                {
+                                    <a href="@Url.Action("LaunchQuiz", "Assignment", new { QuizId = activity.ActivityId })" class="login" title="Launch Quiz"><img src="~/assets/images/launch.png" width="35px;" /></a>
+                                }
+                                @if (activity.ActivityType == "Forum")
+                                {
+                                    <a href="@Url.Action("PostComment", "Forum", new { forumId = activity.ActivityId })" class="login" title="Launch Curriculum"><img src="~/assets/images/eye.png" width="35px;" /></a>
+                                }
+
+                                @if (activity.ActivityStatus == "Completed" && activity.ActivityType != "Forum")
+                                {
+                                    isAttempt = false;
+                                }
+                                else
+                                {
+                                    isAttempt = true;
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>

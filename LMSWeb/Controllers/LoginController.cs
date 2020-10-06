@@ -139,14 +139,9 @@ namespace LMSWeb.Controllers
                                 cookieuser.Expires = DateTime.Now.AddDays(2);
                                 cookiepass.Expires = DateTime.Now.AddDays(2);
                             }
-                            else
+                            if(!string.IsNullOrEmpty(Convert.ToString(tblUser.CRMClientId)))
                             {
-                                //HttpContext.Response.Cookies.Add(cookieuser);
-                                //cookieuser.Expires = DateTime.Now.AddDays(-1);
-                                //HttpContext.Response.Cookies.Add(cookieuser);
-                                //cookieuser.Expires = DateTime.Now.AddDays(-1);
-
-
+                                return RedirectToAction("Index", "CRM");
                             }
                             return RedirectToAction("Index", "Home");
                         }

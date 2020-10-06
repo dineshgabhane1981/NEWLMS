@@ -1,0 +1,358 @@
+﻿@model LMSWeb.ViewModel.CRMUserViewModel
+@{
+    ViewBag.Title = "Enquiry";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+<link href="~/assets/CRM/styleSteps.css" rel="stylesheet" />
+
+    <h3 class="">Add/Edit Client Details</h3>
+    <div>
+        <!-- partial:index.partial.html -->
+        <!--PEN HEADER-->
+        <header class="header">
+        </header>
+        <!--PEN CONTENT     -->
+        <div class="content">
+            <!--content inner-->
+            <div class="content__inner">
+                <div class="container">
+                </div>
+                <div class="container overflow-hidden">
+                    <!--multisteps-form-->
+                    <div class="multisteps-form">
+                        <!--progress bar-->
+                        <div class="row">
+                            <div class="col-12 col-lg-12 ml-auto mr-auto mb-4">
+                                <div class="multisteps-form__progress">
+                                    <button class="multisteps-form__progress-btn js-active" type="button" title="Personal Details">Personal</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Other Details">Other Info</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Billing Address">Billing</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Passport Details">Passport</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Visa Details">Visa</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Medical Details">Medical</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Police Verification Info">Police Verification</button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="INZ Login & NZQA Details">INZ Login & NZQA</button>
+                                    @*<button class="multisteps-form__progress-btn" type="button" title="NZQA Details">NZQA</button>*@
+                                </div>
+                            </div>
+                        </div>
+                        <!--form panels-->
+                        @using (Html.BeginForm("AddCRMUser", "CRMUsers", FormMethod.Post, new { enctype = "multipart/form-data", @class = "multisteps-form__form" }))
+                        {
+                            @*@Html.AntiForgeryToken()*@
+                            <div class="row">
+                                <div class="col-12 col-lg-12 m-auto ">
+                                    <form class="multisteps-form__form">
+                                        <!--Personal Information-->
+                                        @Html.HiddenFor(model => model.ObjCRMUser.CurrentStage)
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white js-active" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Personal Info</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.DropDownListFor(model => model.ObjCRMUser.VisaCountry, new SelectList(Model.VisaCountriesList, "Value", "Text"), "Visa Country", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.Title, new { @class = "input150", placeholder = "Title" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.MiddleName, new { @class = "input150", placeholder = "Middle Name" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.OtherName, new { @class = "input150", placeholder = "Other Name" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.Email, new { @class = "input150", placeholder = "Email" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.SecondaryEmail, new { @class = "input150", placeholder = "Secondary Email" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.DOB, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtDOB", @readonly = "readonly", @autocomplete = "off", placeholder = "Date of Birth" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUser.MobileNoCountry, new SelectList(Model.CountriesCodes, "Value", "Text"), "Country Code", htmlAttributes: new { @class = "input50" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.MobileNo, new { @class = "input50", placeholder = "Mobile no" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.OverseasMobile, new { @class = "input150", placeholder = "Overseas Mobile" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.OtherContactInfo, new { @class = "input150", placeholder = "Other Contact Info" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.FirstName, new { @class = "input150", placeholder = "First Name" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.LastName, new { @class = "input150", placeholder = "Last Name" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUser.Gender, Model.Gender(), "Select Gender", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.AlternateEmail, new { @class = "input150", placeholder = "Alternate Email" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.OtherEmail, new { @class = "input150", placeholder = "Other Email" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.Address, new { @class = "input150", placeholder = "Address" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.SecondaryMobile, new { @class = "input150", placeholder = "Secondary Mobile" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.LandLine, new { @class = "input150", placeholder = "LandLine no" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUser.MaritalStatus, Model.MaritalStatus(), "Select Marital Status", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUser.DependentChildren, new { @class = "input150", placeholder = "No of Dependent Children" })
+                                                </div>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--Other Information-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Other Info</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.NationalId, new { @class = "input150", placeholder = "National Id" })
+                                                    @*@Html.DropDownListFor(x => Model.ObjCRMUsersOtherInfo.SalesPerson, new SelectList(Model.SalesPersonsList, "Value", "Text"), "Sales Person", htmlAttributes: new { @class = "input150" })*@
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.SourceDescription, new { @class = "input150", placeholder = "Source Description" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersOtherInfo.RegionYouResideIn, new SelectList(Model.UserCountryList, "Value", "Text"), "Region You Reside In", htmlAttributes: new { @class = "input150" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersOtherInfo.WhereDidYouFindUs, new SelectList(Model.WhereDidYouFindUsList, "Value", "Text"), "Where Did You Find Us", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.Company, new { @class = "input150", placeholder = "Company (Optional)" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.SaleDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtSaleDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Sale Date" })
+                                                    @*@Html.DropDownListFor(x => Model.ObjCRMUsersOtherInfo.ClientSource, new SelectList(Model.ClientSourceList, "Value", "Text"), "Select Client's Source", htmlAttributes: new { @class = "input150" })*@
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersOtherInfo.JobSector, new SelectList(Model.JobSectorsList, "Value", "Text"), "Select job sector", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.Qualification, new { @class = "input150", placeholder = "Qualification" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersOtherInfo.Occupation, new { @class = "input150", placeholder = "Occupation" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-sm-12">
+                                                Notes
+                                                @*@Html.TextAreaFor(model => model.ObjCRMUsersOtherInfo.Notes, new { @class = "input150", id = "notesarea" })*@
+                                                <textarea class="col-6 ml-0 form-control" id="notesarea"></textarea>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--Billing Address-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white " data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Billing Address</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.ContactPerson, new { @class = "input150", placeholder = "Contact Person" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.Street, new { @class = "input150", placeholder = "Street" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.City, new { @class = "input150", placeholder = "City" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.PostalCode, new { @class = "input150", placeholder = "Postal Code" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.House, new { @class = "input150", placeholder = "House" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.Suburb, new { @class = "input150", placeholder = "Suburb" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersBillingAddress.Country, new { @class = "input150", placeholder = "Country" })
+                                                </div>
+                                            </div>
+
+                                            <div class="button-row d-flex mt-4 col-12">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+
+                                        </div>
+                                        <!--Passport Details-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Passport Details</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.PassportNumber, new { @class = "input150", placeholder = "Passport Number" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.PassportIssueDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtPassportIssueDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Passport Issue Date" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersPassportDetail.CountryOfIssue, new SelectList(Model.UserCountryList, "Value", "Text"), "Country Of Issue", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.PassportExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtPassportExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Passport Expiry Date" })
+                                                </div>
+                                            </div>
+                                            <br /><br />
+                                            <h5>Second Passport Details (If Client is Dual National)</h5><br />
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.SecondPassportNumber, new { @class = "input150", placeholder = "Second Passport Number" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.SecondPassportIssueDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtSecondPassportIssueDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Second Passport Issue Date" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersPassportDetail.SecondCountryOfIssue, new SelectList(Model.UserCountryList, "Value", "Text"), "Second Country Of Issue", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPassportDetail.SecondPassportExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtSecondPassportExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Second Passport Expiry Date" })
+                                                </div>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--Visa Details-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Visa Details</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.VisaType, new SelectList(Model.CurrentVisaTypeList, "Value", "Text"), "Current Visa Type", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.CurrentNZVisaExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtCurrentNZVisaExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Current New Zealand Visa Expiry Date" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.UpdateVisaStatus, new SelectList(Model.VisaStatusList, "Value", "Text"), "Visa Status", htmlAttributes: new { @class = "input150" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.TravelConditionsValidTo, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtTravelConditionsValidTo", @readonly = "readonly", @autocomplete = "off", placeholder = "Travel Condition Valid To" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.TravelConditionsValidTo, new SelectList(Model.CurrentVisaTypeList, "Value", "Text"), "Intrested Visa", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.VisaExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtVisaExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Visa Expiry Date" })
+                                                </div>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--Medical Details-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Medical Details</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersMedicalDetail.NZER, new { @class = "input150", placeholder = "NZER#" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersMedicalDetail.MedicalCertificateExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtMedicalCertificateExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Medical Certificate Expiry Date" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersMedicalDetail.XrayIssueDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtXrayIssueDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Xray Issue Date" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersMedicalDetail.XrayGrading, Model.MedicalGrading(), "Select Xray Grading", htmlAttributes: new { @class = "input150" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersMedicalDetail.MedicalCertificateIssueDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtMedicalCertificateIssueDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Medical Certificate Issue Date" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersMedicalDetail.MedicalGrading, Model.MedicalGrading(), "Select Medical Grading", htmlAttributes: new { @class = "input150" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersMedicalDetail.XrayExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtXrayExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Xray Expiry Date" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersMedicalDetail.MedicalNotesDDL, Model.MedicalNotesDDL(), "Select Medical Notes", htmlAttributes: new { @class = "input150" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                Notes
+                                                @Html.TextAreaFor(model => model.ObjCRMUsersMedicalDetail.MedicalNotes, new { @class = "input150", id = "medicalnotesarea" })
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--Police Verification Info-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">Police Verification Info</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateDate1, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtPoliceCertificateDate1", @readonly = "readonly", @autocomplete = "off", placeholder = "Police Certificate Date 1" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateDate2, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtPoliceCertificateDate2", @readonly = "readonly", @autocomplete = "off", placeholder = "Police Certificate Date 2" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateDate2, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtPoliceCertificateDate2", @readonly = "readonly", @autocomplete = "off", placeholder = "Police Certificate Date 2" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateCountry1, new SelectList(Model.UserCountryList, "Value", "Text"), "Please Select Country", htmlAttributes: new { @class = "input150" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateCountry2, new SelectList(Model.UserCountryList, "Value", "Text"), "Please Select Country", htmlAttributes: new { @class = "input150" })
+                                                    @Html.DropDownListFor(model => model.ObjCRMUsersPoliceCertificateInfo.PoliceCertificateCountry3, new SelectList(Model.UserCountryList, "Value", "Text"), "Please Select Country", htmlAttributes: new { @class = "input150" })
+                                                </div>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
+                                            </div>
+                                        </div>
+                                        <!--INZ Login Details & NZQA Details-->
+                                        <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+                                            <h5 class="multisteps-form__title">INZ Login Details</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersINZLoginDetail.ClientNumber, new { @class = "input150", placeholder = "Client Number" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersINZLoginDetail.ClientUserName, new { @class = "input150", placeholder = "User Name" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersINZLoginDetail.ClientPassword, new { @class = "input150", placeholder = "Password" })
+                                                </div>
+                                            </div>
+                                            <h5 class="multisteps-form__title">NZQA Details</h5>
+                                            <div class="multisteps-form__content" style="display:flex;">
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersNZQADetail.NZQAOnlineSubmissionDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtNZQAOnlineSubmissionDate", @readonly = "readonly", @autocomplete = "off", placeholder = "NZQA Online Submission Date" })
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersNZQADetail.NZQADocumentsSubmissionDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtNZQADocumentsSubmissionDate", @readonly = "readonly", @autocomplete = "off", placeholder = "NZQA Documents Submission Date" })
+                                                    @Html.TextBoxFor(model => model.ObjCRMUsersNZQADetail.NZQADocumentsReturnedDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtNZQADocumentsReturnedDate", @readonly = "readonly", @autocomplete = "off", placeholder = "NZQA Documents Returned Date" })
+                                                </div>
+                                            </div>
+                                            <div class="button-row d-flex mt-4">
+                                                <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
+                                                <button class="btn btn-success ml-auto" type="submit" title="Save">Save</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        </div>
+                </div>
+            </div>
+        </div>
+        <!-- partial -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'></script>
+
+
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
+        <script src="~/assets/CRM/scriptSteps.js"></script>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#notesarea').summernote();
+            $('#medicalnotesarea').summernote();
+            $('#dtDOB').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtSaleDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtPassportIssueDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtPassportExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtSecondPassportIssueDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtSecondPassportExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtCurrentNZVisaExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtTravelConditionsValidTo').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtVisaExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtMedicalCertificateExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtXrayIssueDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtMedicalCertificateIssueDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtXrayExpiryDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtPoliceCertificateDate1').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtPoliceCertificateDate2').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtPoliceCertificateDate3').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtNZQAOnlineSubmissionDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtNZQADocumentsSubmissionDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+            $('#dtNZQADocumentsReturnedDate').datepicker({
+                format: 'mm/dd/yyyy',
+                showWeek: true
+            });
+        });
+    </script>

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,6 +12,8 @@
     <AssemblyName>LMSBL</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -66,6 +67,26 @@
     <Compile Include="Common\Exceptions.cs" />
     <Compile Include="Common\Response.cs" />
     <Compile Include="Common\SharpZipLibHelper.cs" />
+    <Compile Include="DBModels\CRMNew\CRMContext.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMClient.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMConfigDocument.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMConfigStage.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMConfigSubStage.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMCountry.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMCountryCode.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMDocument.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMNote.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUser.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersBillingAddress.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersINZLoginDetail.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersMedicalDetail.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersNZQADetail.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersOtherInfo.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersPassportDetail.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersPoliceCertificateInfo.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMUsersVisaDetail.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMVisaStatu.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMVisaType.cs" />
     <Compile Include="DBModels\EnquiryResult.cs" />
     <Compile Include="DBModels\HomeModel.cs" />
     <Compile Include="DBModels\LMSContext.cs" />
@@ -106,6 +127,8 @@
     <Compile Include="DBModels\UserReportModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DBModels\Response.cs" />
+    <Compile Include="Repository\CRMRepository.cs" />
+    <Compile Include="Repository\CRMUsersRepository.cs" />
     <Compile Include="Repository\CoursesRepository.cs" />
     <Compile Include="Repository\CurriculumRepository.cs" />
     <Compile Include="Repository\DataRepository.cs" />
@@ -124,6 +147,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

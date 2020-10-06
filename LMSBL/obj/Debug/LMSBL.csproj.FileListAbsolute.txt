@@ -87,9 +87,12 @@ E:\Projects\NEWLMS\LMSBL\bin\Debug\LMSBL.dll
 E:\Projects\NEWLMS\LMSBL\bin\Debug\LMSBL.pdb
 E:\Projects\NEWLMS\LMSBL\bin\Debug\EntityFramework.dll
 E:\Projects\NEWLMS\LMSBL\bin\Debug\EntityFramework.SqlServer.dll
+E:\Projects\NEWLMS\LMSBL\bin\Debug\ICSharpCode.SharpZipLib.dll
 E:\Projects\NEWLMS\LMSBL\bin\Debug\System.Web.Mvc.dll
 E:\Projects\NEWLMS\LMSBL\bin\Debug\EntityFramework.xml
 E:\Projects\NEWLMS\LMSBL\bin\Debug\EntityFramework.SqlServer.xml
+E:\Projects\NEWLMS\LMSBL\bin\Debug\ICSharpCode.SharpZipLib.pdb
+E:\Projects\NEWLMS\LMSBL\bin\Debug\ICSharpCode.SharpZipLib.xml
 E:\Projects\NEWLMS\LMSBL\bin\Debug\System.Web.Mvc.xml
 E:\Projects\NEWLMS\LMSBL\obj\Debug\LMSBL.csproj.CopyComplete
 E:\Projects\NEWLMS\LMSBL\obj\Debug\LMSBL.dll

@@ -1,11 +1,17 @@
-﻿var count = 0;
+﻿var VideoAudioLink = "http://localhost:7777/QuizMedia/";
+var count = 9999999;
 var optionCount = 2;
 var questionObj = [];
 var base64StringArray = [];
 var statisQueId = 0;
+var quizQueIds = [];
+var currentIndex = 0;
 
 $(document).ready(function () {
-
+    if ($('#hdnEditData').val() != null && $('#hdnEditData').val() != "") {   
+        SetEditData(JSON.parse($("#hdnEditData").val()));        
+    }
+    
     $('#btnAddQuestion').on("click", function () {
         AddQuestion();
         $("#btnSaveQuestion").show();
@@ -14,16 +20,50 @@ $(document).ready(function () {
     $('#btnSaveQuestion').on("click", function () {
         var returnStatus = SaveQuestion();
         if (returnStatus) {
-            swal.fire("Question Added Successfully !!!");
+            //swal.fire("Question Added Successfully !!!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved',
+                text: 'Question Added Successfully !!!'
+            })
             $("#btnSaveQuestion").hide();
             $("#questionDetails").empty();
-            AddQuestionInList();
+            DrawTable();
         }
     });
+
+    $("#btnPreview").on("click", function () {
+        if ($("#hdnData").val() != "" && $("#hdnData").val() != "[]") {
+            console.log($("#hdnData").val());
+            $("#dvQuizDetails").hide(1000);
+            $("#dvQuizQuestions").hide(1000);
+            $("#dvPreviewQuiz").show(1000);
+            $("#dvPublishQuiz").hide();
+            $("#stepPreview").addClass("step-active");
+            //View Quiz for Admin
+            var QuizViewData = JSON.parse($("#hdnData").val());
+            console.log(QuizViewData);
+            //$("#hdnViewData").val("");
+            ViewQuiz(QuizViewData);
+        }
+        else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please add Questions!'
+            })
+            return false;
+        }
+        
+
+    });
+    
 });
 
 function AddQuestion() {
+    statisQueId = 0;
     $("#questionDetails").empty();
+    console.log(count)
     count++;
     optionCount = 2;
     var queHTML = "<div class=\"que-containerNew container-fluid mt-4 mb-4 pl-4 pr-4 pt-4 pb-4\" id=queContainer" + count + ">";
@@ -274,7 +314,7 @@ function editQuestion(queId) {
         optionCount = valueOption.OptionId;
     });
 
-    count = item.QuestionId;
+    //count = item.QuestionId;
 
     item1 = {}
     item1["QId"] = item.QuestionId;
@@ -336,12 +376,19 @@ function deleteQuestion(queCount) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.value) {
-            $("#" + queCount).remove();
+            //questionObj
+            questionObj = questionObj.filter(function (item) {
+                return item.QuestionId != queCount;
+            })
+            //$("#" + queCount).remove();
             Swal.fire(
                 'Deleted!',
                 'Question has been deleted.',
                 'success'
             )
+            DrawTable();
+            console.log(questionObj)
+            $("#hdnData").val(JSON.stringify(questionObj));
         }
     })
 
@@ -409,6 +456,30 @@ function ChangeType(id) {
     });
 
 }
+function handleFileSelect(evt) {
+    var id = evt.currentTarget.id;
+    var qId = id.substring(4, id.length);
+    var f = evt.target.files[0]; // FileList object    
+    var reader = new FileReader();
+    // Closure to capture the file information.    
+    reader.onload = (function (theFile) {
+        return function (e) {
+            var binaryData = e.target.result;
+            //Converting Binary Data to base 64    
+
+            var base64String = window.btoa(binaryData);
+            item = {}
+            item["QId"] = qId;
+            item["mediaFile"] = base64String;
+            item["qTypeId"] = $("#file" + qId)[0].files[0].name;
+            base64StringArray.push(item);
+
+            alert('File converted to base64 successfuly!');
+        };
+    })(f);
+    // Read in the image file as a data URL.    
+    reader.readAsBinaryString(f);
+}  
 
 function SaveQuestion() {
     var returnStatus = true;
@@ -426,7 +497,10 @@ function SaveQuestion() {
     //console.log(IDs.length)
 
     $.each(IDs, function (index, value) {
+        console.log(value)
+        console.log(value.id)
         var id = value.id.substring(6, value.id.length);
+        console.log(id)
 
         if ($("#que" + id).val() == null || $("#que" + id).val() == "") {
             Swal.fire({
@@ -447,7 +521,7 @@ function SaveQuestion() {
         item["qTypeId"] = "";
         item["QuestionPoints"] = $("#que" + id + "points").val();
 
-        Swal.fire($("#que" + id + "points").val());
+        //Swal.fire($("#que" + id + "points").val());
 
         if ($("#queType" + id + " option:selected").val() == 2) {
            
@@ -524,8 +598,11 @@ function SaveQuestion() {
                 }
             });
         }
-        if (statisQueId == 0) {           
-            questionObj.push(item);            
+        var sorted = SortedData();
+        if (statisQueId == 0) { 
+            
+            questionObj.push(item);          
+            console.log(questionObj);
         }
         else {
             index = questionObj.findIndex(x => x.QuestionId == statisQueId);
@@ -533,31 +610,274 @@ function SaveQuestion() {
             statisQueId = 0;
         }
     });
-    //$("#hdnData").val(JSON.stringify(questionObj));
+    $("#hdnData").val(JSON.stringify(questionObj));
     //console.log(questionObj);
     //return false;
     return returnStatus;
 }
 
-function AddQuestionInList1() {
-    var questionToAdd = questionObj[questionObj.length - 1];
-    var queHTML = "<div  style=\"cursor:pointer; border:1px solid red; \"  id=" + questionToAdd.QuestionId + ">";
-
-    queHTML += "<label>" + questionToAdd.QuestionText + "</label>";
-    queHTML += "<div style=\"float:right;\">";
-
-    queHTML += "<div style=\"float:right;\"  onclick=\"deleteQuestion(" + questionToAdd.QuestionId + ")\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i> &nbsp;&nbsp;</div>";
-    queHTML += "<div style=\"float:right;\" onclick=\"editQuestion(" + questionToAdd.QuestionId + ")\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i>&nbsp;&nbsp;</div>";
-
-    queHTML += "</div>";
-    queHTML += "</div>";
-
-    $("#questionList").append(queHTML);
-    
-}
-function AddQuestionInList() {
-
-}
 function DrawTable() {
+    var arrayOfQuestions = [];
+    var srNo = 0;
+    $.map(questionObj, function (item) {
+        srNo++;
+        optionItem = {}
+        optionItem["index"] = srNo;
+        optionItem["QuestionTitle"] = item.QuestionText.substring(0,20);
+        //optionItem["DueDate"] = item.DueDate;
+        optionItem["QuestionId"] = item.QuestionId;
+        optionItem["delete"] = "<div style=\"float:right; cursor:pointer;\"  onclick=\"deleteQuestion(" + item.QuestionId + ")\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i> &nbsp;&nbsp;</div>";
+        optionItem["delete"] += "<div style=\"float:right; cursor:pointer;\" onclick=\"editQuestion(" + item.QuestionId + ")\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i>&nbsp;&nbsp;</div>"
+        arrayOfQuestions.push(optionItem);
+    });
+    
+    var table1 = $('#tblQuestions').DataTable();
+    table1.destroy();
+
+    var table = $('#tblQuestions').DataTable({
+        "data": arrayOfQuestions,
+        "paging": false,
+        "responsive": true,
+        "columns": [
+            { data: "index" },
+            { data: "QuestionTitle" },            
+            { data: "QuestionId" },
+            { data: "delete" }
+            
+        ],
+        "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [2] }],
+        "rowReorder": {
+            dataSrc: "index"
+        }
+    });
+    $('#tblQuestions_filter').hide();
+}
+
+function SetEditData(editJSON) {    
+    questionObj = editJSON.TblQuestions;
+    console.log(questionObj);
+    $.each(questionObj, function (index, value) {
+        optionObj = {}
+        //optionObj["Options"] = value.TblQuestionOptions;
+        value["Options"] = value.TblQuestionOptions;
+        value["qTypeId"] = value.MediaType;
+        value["mediaFile"] = "";
+    });
+    
+    console.log(questionObj);
+    $("#hdnData").val(JSON.stringify(questionObj));
+    DrawTable();
+}
+
+function ViewQuiz(QuizViewData) {
+    //Reorder actual Questions Array      
+    QuizViewData = SortedData();
+    $("#hdnData").val(JSON.stringify(questionObj));
+    //Reorder ENDED
+    
+    //Reset and Unbind events
+    $('#btnNext').unbind();
+    $('#btnPrev').unbind();
+    quizQueIds = [];
+    currentIndex = 0;
+    $('#paginator-list').empty();
+    $('#dvQuestions').empty();    
+    $('#btnPrev').hide();
+    $('#btnResponseSubmit').hide();
+    //Reset and Unbind events ENDED
+
+    var queHTML = "<div class=\"user-quiz-container container-fluid\">";
+    $.each(QuizViewData, function (index, value) {
+        item = {}
+        item["QuestionId"] = value.QuestionId;
+
+        quizQueIds.push(item);
+        queHTML += "<div class=\"que-container row mt-4 pt-2 pb-2\" id=dvQue" + value.QuestionId + ">";
+        queHTML += "<div class=\"col-12 que-text font-weight-bold\" >";
+        queHTML += "<label>" + value.QuestionText + " </label>";
+        queHTML += "</div>";
+        //queHTML += "<div class=\"col-2 blue-color text-right\">Weightage Point: 1</div>";
+        queHTML += "<div class=\"col-12 mt-3\">";
+        if (value.QuestionTypeId == 1 || value.QuestionTypeId == 2) {
+            queHTML += "<h6 class=\"font-weight-bold\">Options</h6>";
+        }
+        queHTML += "<ul class=\"option-list list-unstyled\">";
+
+        if (value.QuestionTypeId == 1) {
+            $.each(value.Options, function (indexOption, valueOption) {
+                queHTML += "<li>";
+                queHTML += "<label>";
+                queHTML += "<input type=\"radio\" value=1 name=Options" + value.QuestionId + " id=que" + value.QuestionId + "rbtnOption" + valueOption.OptionId + " name=que" + value.QuestionId + "rbtnOption" + valueOption.OptionId + " />";
+                queHTML += "<span class=\"ml-2\"> " + valueOption.OptionText + " </span>";
+                queHTML += "</label>";
+                queHTML += "</li>";
+
+            });
+        }
+        if (value.QuestionTypeId == 2) {
+            $.each(value.Options, function (indexOption, valueOption) {
+                queHTML += "<li>";
+                queHTML += "<label>";
+                queHTML += "<input type=\"checkbox\" value=1 name=Options" + value.QuestionId + " id=que" + value.QuestionId + "rbtnOption" + valueOption.OptionId + " name=que" + value.QuestionId + "rbtnOption" + valueOption.OptionId + " />";
+                queHTML += "<span class=\"ml-2\"> " + valueOption.OptionText + " </span>";
+                queHTML += "</label>";
+                queHTML += "</li>";
+            });
+        }
+        if (value.QuestionTypeId == 3) {
+            queHTML += "<li>";
+            queHTML += "<textarea class=\"form-control\" id=que" + value.QuestionId + "ParaOption  name=que" + value.QuestionId + "ParaOption rows=\"3\" placeholder=\"Write your answer here\" ></textarea>"
+            queHTML += "</li>";
+        }
+        if (value.QuestionTypeId == 4) {
+            var source = VideoAudioLink + value.QuestionId + ".mp4";
+            queHTML += "<li>";
+            queHTML += "<video src=" + source + " width=\"90%\" controls=\"controls\" controlsList=\"nodownload\" oncontextmenu=\"return false;\" />";
+            queHTML += "</li>";
+
+        }
+        if (value.QuestionTypeId == 5) {
+            var source = VideoAudioLink + value.QuestionId + ".mp3";
+            queHTML += "<li>";
+            queHTML += "<audio controls=\"controls\" width=\"90%\" controlsList=\"nodownload\" oncontextmenu=\"return false; \">";
+            queHTML += "<source src=" + source + " type=\"audio/mpeg\" /></audio>";
+            queHTML += "</li>";
+
+        }
+        queHTML += "</ul>";
+        queHTML += "</div>";
+        queHTML += "</div>";
+
+        // append paginator list
+        const paginatorHtml = " <li class=\"list-inline-item\" data-queid='dvQue" + value.QuestionId + "'>" + (index + 1) + "</li>";
+        
+        $('#paginator-list').append(paginatorHtml);
+    });
+    queHTML += "</div>";
+    $('#dvQuestions').append(queHTML);
+
+    // click handler for paginator
+    $('#paginator-list > li').on('click', function () {
+        $('#paginator-list > li').removeClass('active-page');
+        $(this).addClass('active-page');
+        const getCurrQueId = $(this).attr('data-queid');
+        $('.que-container').hide();
+        $('#' + getCurrQueId).show();
+
+        var queId = getCurrQueId.substring(5, getCurrQueId.length)
+
+        $.each(quizQueIds, function (indexQue, valueQue) {
+            if (valueQue["QuestionId"] == queId) {
+                currentIndex = indexQue;
+                //alert(quizQueIds.length);
+                //alert(currentIndex);
+                if (quizQueIds.length == (currentIndex + 1)) {
+                    $('#btnNext').hide();
+                    $('#btnPrev').show();
+                    $('#btnResponseSubmit').show();
+                }
+                else {
+                    if (currentIndex != 0) {
+                        $('#btnPrev').show();
+                        $('#btnNext').show();
+                        $('#btnResponseSubmit').hide();
+                    }
+                    else {
+                        $('#btnPrev').hide();
+                        $('#btnNext').show();
+                        $('#btnResponseSubmit').hide();
+                    }
+                }
+            }
+        });
+    });
+
+    $.each(quizQueIds, function (indexQue, valueQue) {
+        $('#queFeedback' + valueQue.QuestionId).summernote();
+        if (indexQue == 0) {
+            $('#dvQue' + valueQue.QuestionId).show();
+        }
+        else {
+            $('#dvQue' + valueQue.QuestionId).hide();
+        }
+    });
+    NextPrevQuestion();
+
+    $('#btnPrev').on("click", function () {
+        if (currentIndex > 0) {
+            currentIndex--;
+            NextPrevQuestion();
+            if (currentIndex == 0) {
+                $('#btnPrev').hide();
+            }
+            if (currentIndex != (quizQueIds.length - 1)) {
+                //$('#btnPrev').hide();
+                $('#btnNext').show();
+                $('#btnResponseSubmit').hide();
+            }
+        }
+    });
+
+    $('#btnNext').on("click", function () {    
+        console.log(111)
+        if (currentIndex != (quizQueIds.length - 1)) {
+            currentIndex++;
+            NextPrevQuestion();
+            if (currentIndex > 0) {
+                $('#btnPrev').show();
+            }
+        }
+        if (currentIndex == (quizQueIds.length - 1)) {
+            $('#btnNext').hide();
+            $('#btnResponseSubmit').show();
+        }
+
+    });
+
+    $('#btnCancel').on("click", function () {
+        location.reload();
+    });
+
+    if (QuizViewData.Duration > 0) {
+        min = QuizViewData.Duration;
+        examTimer();
+    }
+    if (QuizViewData.length == 1) {
+        $('#btnNext').click();
+    }
+}
+
+function SortedData() {
+    var questionObjSorted = [];
+    var table = $('#tblQuestions').DataTable();
+    var questions = table.rows().data().toArray();
+    $.each(questions, function (index, value) {
+        var questionItem = questionObj.filter(function (item) {
+            return item.QuestionId == value.QuestionId;
+        })
+        questionObjSorted.push(questionItem[0]);
+    });
+    questionObj = questionObjSorted;
+    return questionObjSorted;
+}
+
+function NextPrevQuestion() {
+    
+    console.log(currentIndex)
+    $.each(quizQueIds, function (indexQue, valueQue) {
+        if (indexQue == currentIndex) {
+            $('#dvQue' + valueQue.QuestionId).show();
+            const id = valueQue.QuestionId;
+            const p = $('[data-queid=dvQue' + id + ']');
+            $(p).addClass('active-page');
+        }
+        else {
+            $('#dvQue' + valueQue.QuestionId).hide();
+            const id = valueQue.QuestionId;
+            const p = $('[data-queid=dvQue' + id + ']');
+            $(p).removeClass('active-page');
+        }
+        //$('#paginator-list > li').removeClass('active-paginator');
+    });
 
 }

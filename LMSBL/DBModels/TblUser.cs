@@ -72,5 +72,8 @@ namespace LMSBL.DBModels
         public string TenantLogo { get; set; }
         
         public bool RememberMe { get; set; }
+        public string CRMClientId { get; set; }
+        public bool? isLMS { get; set; }
+
     }
 }

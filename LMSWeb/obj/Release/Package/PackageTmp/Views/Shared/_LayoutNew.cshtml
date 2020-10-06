@@ -52,13 +52,13 @@
             Response.Redirect(Url.Action("Logout", "Login", null));
         }
         var baseURL = model.TenantURL;
-        var logo = "https://" + baseURL + "/assets/images/rt_logo.png";
+        var logo = "https://" + baseURL + "/assets/images/Logiciel_Logo.png";
         if (!string.IsNullOrEmpty(model.TenantLogo))
         {
             logo = model.TenantLogo;
         }
         var fullname = model.FirstName + " " + model.LastName;
-        var helpDetails = "support@rockettech.co.nz \n Phone No: +919834545425";
+        var helpDetails = "sales@logicieltech.com \n +919834545425";
         var profileImage = model.profileImage;
     }
 
@@ -136,6 +136,15 @@
                         </div>
                     </li>
                     <li class="dropdown mr-4">
+                        <a class="nav-link @Html.IsSelected(controller:"EmailTemplate",action: "Index")" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-tools"></i> Settings</a>
+                        <div class="dropdown-menu create-learning" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="@Url.Action("Index", "EmailTemplate")">
+                                <img class="quiz-image" src="~/assets/images/EmailTemplate.jpg" width="25%" />
+                                Email Template
+                            </a>                            
+                        </div>
+                    </li>
+                    <li class="dropdown mr-4">
                         <a class="nav-link @Html.IsSelected(controller:"Reports",action: "LearningCompletionReport,UserReport,UserProgressReport,LearningProgressCompletionReport,HighScoreUsersReport")" href="#" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-poll"></i> Reports</a>
                         <div class="dropdown-menu create-learning" aria-labelledby="dropdownMenuButton1">
                             <a class="dropdown-item" href="@Url.Action("LearningCompletionReport", "Reports")">
@@ -148,59 +157,54 @@
                             </a>
                         </div>
                     </li>
-                }
-                @if (model.RoleId == 1)
-                {
-                }
-                <li class="nav-item mobile-hide">
-                    <a class="nav-link" href="#"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       title="@Html.Raw(helpDetails)">
-                        <i class="far fa-question-circle"></i>
-                    </a>
-                </li>
+                    }
+                    @if (model.RoleId == 1)
+                    {
+                    }
+                    <li class="nav-item mobile-hide">
+                        <a class="nav-link" href="#"
+                           data-toggle="tooltip"
+                           data-placement="bottom"
+                           title="@Html.Raw(helpDetails)">
+                            <i class="far fa-question-circle"></i>
+                        </a>
+                    </li>
 
-                <li class="nav-item user-details">
-                    <span class="user-name">@fullname</span>
-                    @*<p class="user-role">Student</p>*@
-                </li>
-                <li class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @if (profileImage != "")
-                        {
-                            <img id="user_img" class="fas fa-user-circle mb-4" width="20" height="20" src="@profileImage" />
-                        }
-                        else
-                        {
-                            <i class="fas fa-user-circle font24"></i>
-                        }
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right user-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="@Url.Action("MyProfile", "Account")"><i class="fas fa-user"></i> My Profile</a>
-                        <a class="dropdown-item" href="@Url.Action("Logout", "Login")"><i class="fas fa-power-off red-color"></i> Log Out</a>
-                    </div>
-                </li>
-            </ul>
+                    <li class="nav-item user-details">
+                        <span class="user-name">@fullname</span>
+                        @*<p class="user-role">Student</p>*@
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @if (profileImage != "")
+                            {
+                                <img id="user_img" class="fas fa-user-circle mb-4" width="20" height="20" src="@profileImage" />
+                            }
+                            else
+                            {
+                                <i class="fas fa-user-circle font24"></i>
+                            }
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right user-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="@Url.Action("MyProfile", "Account")"><i class="fas fa-user"></i> My Profile</a>
+                            <a class="dropdown-item" href="@Url.Action("Logout", "Login")"><i class="fas fa-power-off red-color"></i> Log Out</a>
+                        </div>
+                    </li>
+                </ul>
         </div>
     </nav>
     <div>
-        <div id="divLoading" style="display:none; margin-top: -9em;margin-left: -15em; position: fixed; left: 50%; top: 50%; width: 30em; height: 18em;  z-index: 30001; opacity: 0.8;">
-            <p style="position: absolute; color: White; top: 50%; left: 50%;">               
-                <img src="~/assets/images/preloader.gif">
-            </p>
-        </div>
-         
+                
         @RenderBody()
     </div>
     <footer class="footer">
         <div class="container-fluid">
-            <span class="text-muted">&copy; 2019 - 2020 Rocket Technologies Limited</span>
+            <span class="text-muted">&copy; 2020 Logiciel Softtech Pvt. Ltd.</span>
             <div class="terms-policy">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item"><a href="@Url.Action("TermsAndConditions", "Home")" target="_blank">Terms & Conditions</a></li>
-                    <li class="list-inline-item"><a href="https://www.rockettech.co.nz/#about" target="_blank">About us</a></li>
+                    <li class="list-inline-item"><a href="http://www.logicieltech.com/#about" target="_blank">About us</a></li>
                 </ul>
 
             </div>

@@ -1,0 +1,243 @@
+@font-face {
+    font-family: 'roboto-regular';
+    src:  url('../fonts/roboto-regular.eot?2qoyos');
+    src:  url('../fonts/roboto-regular.eot?2qoyos#iefix') format('embedded-opentype'),
+      url('../fonts/roboto-regular.ttf?2qoyos') format('truetype'),
+      url('../fonts/roboto-regular.woff?2qoyos') format('woff'),
+      url('../fonts/roboto-regular.svg?2qoyos#roboto-regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+/********    Icomoon Start  ************/
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?2qoyos');
+    src:  url('../fonts/icomoon.eot?2qoyos#iefix') format('embedded-opentype'),
+      url('../fonts/icomoon.ttf?2qoyos') format('truetype'),
+      url('../fonts/icomoon.woff?2qoyos') format('woff'),
+      url('../fonts/icomoon.svg?2qoyos#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+
+  [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /*** used icons ***/
+  .icon-tick:before {
+    content: "\e90d";
+  }
+  .icon-left:before {
+    content: "\e904";
+  }
+  .icon-right:after {
+    content: "\e906";
+  }
+  .icon-cross:before {
+    content: "\e909";
+  }
+  .icon-check:before {
+    content: "\e90a";
+  }
+  /*** un-used icons ***/
+  
+.icon-clear:before {
+    content: "\e905";
+  }
+  .icon-keyboard_arrow_down:before {
+    content: "\e900";
+  }
+
+  .icon-keyboard_arrow_up:before {
+    content: "\e903";
+  }
+  .icon-cancel:before {
+    content: "\e909";
+  }
+  .icon-check_circle:before {
+    content: "\e90d";
+  }
+  .icon-highlight_remove:before {
+    content: "\e90e";
+  }
+  .icon-check_circle_outline:before {
+    content: "\e90f";
+  }
+
+
+  /********    Icomoon End   ************/
+
+body{
+    background-color:#F0F6FA;
+    padding: 5%;
+    font-family: 'roboto-regular';
+}
+a{
+    color:inherit;
+    text-decoration: inherit;
+}
+.quiz{
+    font-size: 16px;
+}
+.shadow{
+    box-shadow: 3px 3px 2px 0px lightgray;
+}
+.quiz-header{
+    padding: 15px;
+    background-color: white;
+    margin-bottom: 30px;
+}
+.quiz-title{
+    font-size: 32px;
+}
+.quiz-title-content{
+    display: table;
+    width: 100%;
+    padding: 10px 0;
+}
+.quiz-details{
+    display: table-cell;
+    vertical-align: top;
+}
+.quiz-time{
+    display: table-cell;
+    text-align: right;
+    color:blue;
+    width: 30%;
+    vertical-align: top;
+}
+.quiz-name, .quiz-desc{
+    display: table;
+    padding: 5px;
+}
+.name-label, .name-text, .desc-label, .desc-text{
+    display: table-cell;
+}
+.name-text, .desc-text{
+    color: gray;
+    padding-left: 8px;
+}
+.score-container{
+    color:blue;
+    padding: 5px;
+}
+/***** Content ******/
+.quiz-content{
+    padding: 20px;
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+/**** Footer *****/
+.quiz-footer{
+    padding: 15px 0;
+}
+.quiz-navigation{
+    display: table;
+    width: 100%;
+}
+.swiper-pagination, .buttons{
+    display: table-cell;
+    vertical-align: middle;
+}
+.buttons{
+    text-align: right;
+}
+.nav-button{
+    text-align: center;
+    color:white;
+    background-color: #f74c06;
+    padding: 10px 10px;
+    border-radius: 40px;
+    display: inline-block;
+    height: 20px;
+    width: 65px;
+    line-height: 16px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.swiper-container {
+    width: 100%;
+  }
+  .swiper-slide {
+    text-align: left;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically 
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;*/
+  }
+  .swiper-pagination-bullet {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color:gray;
+    opacity: 1;
+    background: lightgray;
+    margin-right: 2px;
+  }
+  .swiper-pagination-bullet-active {
+    color:#fff;
+    background: #f74c06;
+  }
+  .hide{
+      display: none;
+  }
+
+  /******** Review quiz *******/
+  .review-quiz .review-question{
+        padding: 15px;
+        background-color: white;
+        margin-bottom: 30px;
+  }
+
+  .prev-button .icon-left,
+  .next-button .icon-right{
+      vertical-align: middle;
+      font-size: 20px;
+  }
+  .prev-button .button-text{
+      margin-left: -11px;
+      vertical-align: middle;
+  }
+  .next-button .button-text{
+      margin-right: -5px;
+      margin-left: 10px;
+      vertical-align: middle;
+  }
+  .submit-button,
+  .retry-button,
+  .close-button{
+      line-height: 20px;
+  }
+
+  .review-quiz .review-question:last-child{
+      margin-bottom: 10px;
+  }

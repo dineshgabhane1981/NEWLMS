@@ -7,10 +7,10 @@
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     <div class="row mb-1">
         <div class="col">
-            <h4>Activity Report</h4>
+            <h4 class="title-color">Activity Report</h4>
         </div>
     </div>
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
@@ -75,6 +75,10 @@
                                                 score = Convert.ToString((Convert.ToInt32(activity.ActivityScore) * 100) / Convert.ToInt32(activity.ActivityQuestionCount)) + "%";
                                             }
                                         }
+                                        else if (activity.ActivityType == "Curriculum")
+                                        {
+                                            score = "-";
+                                        }
                                         else
                                         {
                                             score = activity.ActivityScore + "%";
@@ -107,6 +111,11 @@
                                         @if (activity.ActivityType == "Quiz" && !string.IsNullOrEmpty(activity.ActivityAttempts))
                                         {
                                             <td style="text-align:center;"><a href="@Url.Action("DetailReport", "Reports", new { activityId = activity.ActivityId })" class="login" title="View Detail"><img src="~/assets/images/eye.png" /></a></td>
+                                        }
+
+                                        else if (activity.ActivityType == "Curriculum")
+                                        {
+                                            <td style="text-align:center;"><a href="@Url.Action("DetailReport", "Reports", new { activityId = activity.ActivityId, cId="C" })" class="login" title="View Detail"><img src="~/assets/images/eye.png" /></a></td>
                                         }
                                         else
                                         {
@@ -183,14 +192,14 @@
 </script>
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

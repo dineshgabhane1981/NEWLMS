@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,6 +51,12 @@
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
@@ -183,7 +190,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssignmentController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
-    <Compile Include="Controllers\ClientsController.cs" />
+    <Compile Include="Controllers\CRMUsersController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CRMController.cs" />
     <Compile Include="Controllers\CurriculumController.cs" />
@@ -206,6 +213,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\CRMUserViewModel.cs" />
     <Compile Include="ViewModel\CurriculumActivities.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MyLearningViewModel.cs" />
@@ -221,7 +229,9 @@
     <Content Include="assets\CRM\jquery.min.js" />
     <Content Include="assets\CRM\main.js" />
     <Content Include="assets\CRM\popper.js" />
+    <Content Include="assets\CRM\scriptSteps.js" />
     <Content Include="assets\CRM\style.css" />
+    <Content Include="assets\CRM\styleSteps.css" />
     <Content Include="assets\images\ajax-loader.gif" />
     <Content Include="assets\images\assign.png" />
     <Content Include="assets\images\assigned-to-users.png" />
@@ -875,15 +885,16 @@
     <Content Include="Views\Assignment\LaunchCurriculum.cshtml" />
     <Content Include="Views\Shared\_LayoutCRM.cshtml" />
     <Content Include="Views\CRM\Index.cshtml" />
-    <Content Include="Views\Clients\Enquiry.cshtml" />
-    <Content Include="Views\Clients\PotentialClients.cshtml" />
-    <Content Include="Views\Clients\Clients.cshtml" />
+    <Content Include="Views\CRMUsers\Enquiry.cshtml" />
+    <Content Include="Views\CRMUsers\PotentialClients.cshtml" />
+    <Content Include="Views\CRMUsers\Clients.cshtml" />
     <Content Include="Views\FileNotes\Index.cshtml" />
     <Content Include="Views\Documents\Index.cshtml" />
     <Content Include="Views\Emails\Index.cshtml" />
     <Content Include="Views\EnquiryForm\Index.cshtml" />
     <Content Include="Views\Invoice\Index.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\CRMUsers\AddEnquiry.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -942,7 +953,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

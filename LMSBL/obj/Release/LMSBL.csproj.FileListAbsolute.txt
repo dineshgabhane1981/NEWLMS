@@ -37,3 +37,6 @@ E:\Projects\NEWLMS\LMSBL\obj\Release\LMSBL.csprojAssemblyReference.cache
 E:\Projects\NEWLMS\LMSBL\obj\Release\LMSBL.csproj.CopyComplete
 E:\Projects\NEWLMS\LMSBL\obj\Release\LMSBL.dll
 E:\Projects\NEWLMS\LMSBL\obj\Release\LMSBL.pdb
+E:\Projects\NEWLMS\LMSBL\bin\Release\ICSharpCode.SharpZipLib.dll
+E:\Projects\NEWLMS\LMSBL\bin\Release\ICSharpCode.SharpZipLib.pdb
+E:\Projects\NEWLMS\LMSBL\bin\Release\ICSharpCode.SharpZipLib.xml

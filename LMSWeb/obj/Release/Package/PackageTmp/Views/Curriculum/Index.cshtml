@@ -3,61 +3,63 @@
     ViewBag.Title = "Curriculum List";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
-    <style>
+<style>
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 70%;
+        border-radius: 25px;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-            .close:hover,
-            .close:focus {
-                color: #000;
-                text-decoration: none;
-                cursor: pointer;
-            }
-
-        th.hide_me, td.hide_me {
-            display: none;
-        }
-    </style>
+    th.hide_me, td.hide_me {
+        display: none;
+    }
+</style>
 <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
     @if (!string.IsNullOrEmpty(Convert.ToString(TempData["Message"])))
     {
         if (Convert.ToString(TempData["Message"]) == "-1")
         {
-            <script>swal.fire({
+            <script>
+                swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Something went Wrong!'
@@ -65,7 +67,7 @@
         }
 
     }
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">
             <div class="col-lg-6 col-md-12 search-container test">
                 <i class="fas fa-search"></i>
@@ -143,18 +145,22 @@
     <!-- Modal content -->
     <div class="modal-content">
         @*<span class="close">&times;</span>*@
-        
-        <div id="dvAxtivities" >
-            Select User/s
-            <select id="lstUsers" name="lstUsers" size="5" multiple>
-            </select><br />
-            Due Date <input type="datetime" id="dtDueDate" class="input100 datepicker" />            
-            <br /> <br /> 
-            
-            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
-            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
-        
+
+        <div id="dvAxtivities" class="row" style="margin-left:20px;margin-bottom:20px;">
+            <label class="col-2 p-0">
+                Select User/s
+            </label>
+            <select id="lstUsers" name="lstUsers" size="5" style="width:300px;" multiple>
+            </select>
         </div>
+        <div style="margin-left:20px;">
+            <label class="col-2 p-0">
+                Due Date
+            </label>
+            <input type="datetime" id="dtDueDate" class="input100 datepicker" />
+            <button type="button" id="btnAddUsersToList" class="btn btn-primary profle-submit-btn mr-4 trigger"><i class="fas fa-plus-circle"></i> Add to List</button>
+        </div>
+
         <div>
             <div class="row mt-3" id="dvAssignedUsers">
                 <div class="table-responsive">
@@ -172,9 +178,12 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-                
+
             </div>
+        </div>
+        <div class="row justify-content-end pr-4" style="margin-top:20px;">
+            <button type="button" id="btnAssignUsers" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+            <button type="button" id="btnPopupClose" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Close</button>
         </div>
     </div>
 </div>
@@ -214,32 +223,13 @@
             table.draw();
             table.rowReordering();
         });
-
-        
-
+               
         $('#dtDueDate').datepicker({
             format: 'mm/dd/yyyy',
             showWeek: true
         }).datepicker("setDate", new Date());
 
-        
-        var table = $('#tblAssignedUsers').DataTable({
-            "data": assignedUsers,
-            "paging": false,
-               "columns": [
-                 { data: "index" },
-                   { data: "UserName" },
-                 { data: "DueDate" },
-                 { data: "UserId" },                 
-                 { data: "delete" }
-
-            ],
-            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
-            "rowReorder": {
-                dataSrc: "index"
-            }
-        });
-        $('#tblAssignedUsers_filter').hide();
+        DrawTable();
 
         $('#btnAddUsersToList').on("click", function () {
              AddUsersToList();
@@ -250,10 +240,11 @@
          });
 
     });
-     
+
     var modal = document.getElementById("myModal");
     var btnClose = document.getElementById("btnPopupClose");
     var SelectedCurriculumId = 0;
+
     function OpenModelForAssign(CurriculumId) {
         SelectedCurriculumId = CurriculumId;
         $.ajax({
@@ -272,26 +263,74 @@
                     text: 'Something went Wrong!'
                 })
                 }
+        });
+
+        $.ajax({
+                type: "POST",
+                 url: '@Url.Action("GetAssignedUsers")',
+                data: '{cId: ' + JSON.stringify(CurriculumId) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                        srNo = 0;
+                        $.map(response, function (item) {
+                            srNo++;
+                              optionItem = {}
+                              optionItem["index"] = srNo;
+                              optionItem["UserName"] = item.UserName;
+                              optionItem["DueDate"] = item.DueDate;
+                              optionItem["UserId"] = item.UserId;
+                              optionItem["delete"] = "<input type='button' id='" + item.UserId + "' onclick='DeleteActivity(" + item.UserId + ")' value='Delete'>";
+                              assignedUsers.push(optionItem);
+                        });
+                    DrawTable();
+                },
+                failure: function (response) {
+                    swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went Wrong!'
+                })
+                }
             });
 
-
-
-          modal.style.display = "block";        
+        $("#dtDueDate").datepicker().datepicker("setDate", new Date());
+       $("#myModal").show(1000);
+          //modal.style.display = "block";
     }
 
     btnClose.onclick = function () {
-        modal.style.display = "none";
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "The Data may lost if you not saved. please save data before closing!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ok!'
+        }).then((result) => {
+            if (result.value) {
+                assignedUsers = [];
+                DrawTable();
+                $("#myModal").hide(1000);
+
+            }
+            else {
+               
+            }
+        })
+         //modal.style.display = "none";
     }
 
     function OnSuccess(response) {
         var data = response;
-        
+
             $('[id*=lstUsers]').empty();
             var listBox = $('[id*=lstUsers]');
             $.map(data, function (item) {
                 var option = document.createElement('option');
                 option.text = item.Text;
-                option.value = item.Value;                
+                option.value = item.Value;
                 listBox[0].append(option);
             });
             $("#dvAxtivities").show();
@@ -333,43 +372,24 @@
             swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'This Activity already added to Curriculum!'
+                text: 'This User already added to List!'
             })
         }
         else if (!isSelected) {
             swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Please select Activity!'
+                text: 'Please select User!'
             })
         }
         else {
-           var table1 = $('#tblAssignedUsers').DataTable();
-            table1.destroy();
-
-           var table = $('#tblAssignedUsers').DataTable({
-               "data": assignedUsers,
-               "paging": false,
-               "columns": [
-                 { data: "index" },
-                   { data: "UserName" },
-                 { data: "DueDate" },
-                 { data: "UserId" },                 
-                 { data: "delete" }
-
-            ],
-            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }] 
-             
-        });
-            $('#tblAssignedUsers_filter').hide();
+           DrawTable();
             Swal.fire(
                     'Added!',
-                    'Activity Added successfully!',
+                    'User Added successfully!',
                     'success'
                 )
         }
-
-        console.log(assignedUsers);
     }
 
     function DeleteActivity(id) {
@@ -393,33 +413,15 @@
                 $.each(assignedUsers, function (index, value) {
                     value.index = index+1;
                 });
-                
-        var table1 = $('#tblAssignedUsers').DataTable();
-            table1.destroy();
 
-        var table = $('#tblAssignedUsers').DataTable({
-            "data": assignedUsers,
-            "paging": false,
-            "columns": [
-                { data: "index" },
-                { data: "UserName" },
-                { data: "DueDate" },
-                { data: "UserId" },                 
-                { data: "delete" }
-            ],
-            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
-            "rowReorder": {
-                dataSrc: "index"
-            }
-        });
-        $('#example_filter').hide();
+                DrawTable();
                 Swal.fire(
                     'Deleted!',
                     'User has been deleted.',
                     'success'
                 )
             }
-        })       
+        })
     }
 
     function AssignUsersInDB() {
@@ -432,11 +434,19 @@
          $.ajax({
                 type: "POST",
                  url: '@Url.Action("AssignCurriculum")',
-                data: '{jsonData: ' + JSON.stringify(JSON.stringify(userList)) + ',cId: ' + JSON.stringify(CurriculumId) + '}',
+                data: '{jsonData: ' + JSON.stringify(JSON.stringify(userList)) + ',cId: ' + JSON.stringify(SelectedCurriculumId) + '}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    OnSuccess(response);
+                    console.log(response);
+                     swal.fire({
+                       icon: 'success',
+                        title: 'Assigned',
+                        text: 'Changes Saved Successfully!'
+                    }).then((value) => {
+                        assignedUsers = [];
+                        modal.style.display = "none";
+                    });
                 },
                 failure: function (response) {
                     swal.fire({
@@ -450,20 +460,43 @@
 
     }
 
-    </script>
+    function DrawTable() {
+        var table1 = $('#tblAssignedUsers').DataTable();
+        table1.destroy();
+
+        var table = $('#tblAssignedUsers').DataTable({
+            "data": assignedUsers,
+            "paging": false,
+            "columns": [
+                { data: "index" },
+                { data: "UserName" },
+                { data: "DueDate" },
+                { data: "UserId" },
+                { data: "delete" }
+            ],
+            "aoColumnDefs": [{ "sClass": "hide_me", "aTargets": [3] }],
+            "rowReorder": {
+                dataSrc: "index"
+            }
+        });
+         $('#tblAssignedUsers_filter').hide();
+    }
+
+
+</script>
 
 <style>
 
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>
 

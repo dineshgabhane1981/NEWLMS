@@ -7,13 +7,13 @@
     <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
         <div class="row mb-1">
             <div class="col">
-                <h4>Progress</h4>
+                <h4 class="title-color">Progress</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6" style="cursor:pointer;" onclick="FilterResult('1');">
                 @*<a class="login"  href="@Url.Action("UserReport", "Reports", new { isActive = 1})">*@
-                <div class="prog-badge total-users">
+                <div class="prog-badge total-users" >
                     <h1>@Model.allCounts.TotalUserCount</h1>
                     <span class="status">Total Users</span>
                 </div>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+        <div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
             <div class="row">
                 <div class="col search-container">
                     <i class="fas fa-search"></i>

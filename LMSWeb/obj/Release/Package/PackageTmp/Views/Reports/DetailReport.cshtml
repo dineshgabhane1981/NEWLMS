@@ -5,20 +5,20 @@
 }
 
 
-<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
+<div class="container-fluid mt-4 mb-4 pl-4 pr-4" >
     <div class="row mb-1">
         <div class="col">
-            <h4>Detail Activity Report</h4>
+            <h4 class="title-color">Detail Activity Report</h4>
         </div>
     </div>
-    <div class="mt-5 pt-3 pl-3 pr-3 course-list-container">
+    <div class="pt-3 pl-3 pr-3 course-list-container list-box">
         <div class="row">            
             @*<div class="col search-container">
                 <i class="fas fa-search"></i>
                 <input class="search-box" type="text" id="txtSearch" placeholder="Search activity..." />
             </div>*@
 
-            <div class="col blue-color">
+            <div class="col">
                 <b> Learning - </b> @Model[0].ActivityName <br /><b> Type</b> - @Model[0].ActivityType
             </div>
         </div>
@@ -149,14 +149,14 @@
 
 <style>
     table.dataTable thead .sorting_asc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_asc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting_desc {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_desc.png") no-repeat center left;
     }
 
     table.dataTable thead .sorting {
-        background: url("http://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
+        background: url("https://cdn.datatables.net/1.10.0/images/sort_both.png") no-repeat center left;
     }
 </style>

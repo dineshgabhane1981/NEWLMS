@@ -316,3 +316,6 @@ E:\Projects\NEWLMS\LMSWeb\obj\Release\LMSWeb.csprojAssemblyReference.cache
 E:\Projects\NEWLMS\LMSWeb\obj\Release\LMSWeb.csproj.CopyComplete
 E:\Projects\NEWLMS\LMSWeb\obj\Release\LMSWeb.dll
 E:\Projects\NEWLMS\LMSWeb\obj\Release\LMSWeb.pdb
+E:\Projects\NEWLMS\LMSWeb\bin\ICSharpCode.SharpZipLib.dll
+E:\Projects\NEWLMS\LMSWeb\bin\ICSharpCode.SharpZipLib.pdb
+E:\Projects\NEWLMS\LMSWeb\bin\ICSharpCode.SharpZipLib.xml
