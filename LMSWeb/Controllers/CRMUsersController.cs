@@ -18,6 +18,7 @@ namespace LMSWeb.Controllers
         public ActionResult Enquiry()
         {
             CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
+
             return View(objCRMUserViewModel);
         }
         public ActionResult AddEnquiry()
@@ -52,7 +53,7 @@ namespace LMSWeb.Controllers
 
         //[HttpPost, ValidateInput(false)]
         [HttpPost]
-        public ActionResult AddCRMUser(CRMUserViewModel objCRMUserViewModel)
+        public bool AddCRMUser(CRMUserViewModel objCRMUserViewModel)
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
             objCRMUserViewModel.ObjCRMUser.CreatedBy = sessionUser.UserId;
@@ -65,7 +66,7 @@ namespace LMSWeb.Controllers
                 objCRMUserViewModel.ObjCRMUsersNZQADetail);
 
 
-            return null;
+            return status;
         }
     }
 }

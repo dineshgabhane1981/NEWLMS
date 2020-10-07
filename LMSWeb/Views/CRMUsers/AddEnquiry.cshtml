@@ -283,7 +283,13 @@
                 dataType: "html",
                 data: data,
                 success: function (data) {
-                    toastr.success("User Saved");
+                    console.log(data)
+                    if (data == "True") {
+                        toastr.success("User Saved");
+                    }
+                    else {
+                        toastr.error('error occured while saving data');
+                    }
                     //// for success - green box
                     //toastr.success('Success messages');
 

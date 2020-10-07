@@ -82,5 +82,6 @@ namespace LMSBL.DBModels.CRMNew
         public int? UpdatedBy { get; set; }
 
         public DateTime? UpdatedOn { get; set; }
+        public int ClientId { get; set; }
     }
 }

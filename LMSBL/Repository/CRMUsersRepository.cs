@@ -10,7 +10,6 @@ using LMSBL.Common;
 using LMSBL.DBModels.CRMNew;
 using LMSBL.DBModels;
 using System.Data.Entity;
-
 namespace LMSBL.Repository
 {
     public class CRMUsersRepository
@@ -310,6 +309,7 @@ namespace LMSBL.Repository
 
 
                         transaction.Commit();
+                        status = true;
                     }
                     catch (Exception ex)
                     {
@@ -322,5 +322,8 @@ namespace LMSBL.Repository
 
             return status;
         }
+    
+    
+    
     }
 }
