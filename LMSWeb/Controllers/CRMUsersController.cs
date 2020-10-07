@@ -17,9 +17,10 @@ namespace LMSWeb.Controllers
         // GET: Clients
         public ActionResult Enquiry()
         {
-            CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
-
-            return View(objCRMUserViewModel);
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            List<tblCRMUser> objCRMUserModel = new List<tblCRMUser>();
+            objCRMUserModel = crmUsersRepository.GetCRMUsersAll(Convert.ToInt32(sessionUser.CRMClientId));
+            return View(objCRMUserModel);
         }
         public ActionResult AddEnquiry()
         {

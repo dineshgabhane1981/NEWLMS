@@ -325,5 +325,14 @@ namespace LMSBL.Repository
     
     
     
+        public List<tblCRMUser> GetCRMUsersAll(int ClientId)
+        {
+            List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
+            using (var context = new CRMContext())
+            {
+                lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId).ToList();
+            }
+            return lstCRMUsers;
+        }
     }
 }
