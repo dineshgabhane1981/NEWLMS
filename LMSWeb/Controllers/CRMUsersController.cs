@@ -58,6 +58,7 @@ namespace LMSWeb.Controllers
             TblUser sessionUser = (TblUser)Session["UserSession"];
             objCRMUserViewModel.ObjCRMUser.CreatedBy = sessionUser.UserId;
             objCRMUserViewModel.ObjCRMUser.CreatedOn = DateTime.Now;
+            objCRMUserViewModel.ObjCRMUser.ClientId = Convert.ToInt32(sessionUser.CRMClientId);
 
             var status = crmUsersRepository.SaveUserData(objCRMUserViewModel.ObjCRMUser, objCRMUserViewModel.ObjCRMUsersOtherInfo, 
                 objCRMUserViewModel.ObjCRMUsersBillingAddress, objCRMUserViewModel.ObjCRMUsersPassportDetail, 
