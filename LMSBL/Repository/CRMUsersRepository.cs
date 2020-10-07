@@ -272,7 +272,7 @@ namespace LMSBL.Repository
                 {
                     try
                     {
-                        var address = context.tblCRMUsers.First(a => a.Id == 2);
+                        //var address = context.tblCRMUsers.First(a => a.Id == 2);
                         context.tblCRMUsers.Add(ObjCRMUser);
                         context.SaveChanges();
 

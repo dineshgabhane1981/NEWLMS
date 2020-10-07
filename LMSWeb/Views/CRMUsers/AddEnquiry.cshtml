@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <!--form panels-->
-                        @using (Html.BeginForm("AddCRMUser", "CRMUsers", FormMethod.Post, new { enctype = "multipart/form-data", @class = "multisteps-form__form" }))
+                        @using (Html.BeginForm("AddCRMUser", "CRMUsers", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmadduser", @class = "multisteps-form__form" }))
                         {
                             @*@Html.AntiForgeryToken()*@
                             <div class="row">
@@ -253,7 +253,7 @@
                                             </div>
                                             <div class="button-row d-flex mt-4">
                                                 <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
-                                                <button class="btn btn-success ml-auto" type="submit" title="Save">Save</button>
+                                                <button class="btn btn-success ml-auto" type="button" id="btnSubmitUser" title="Save">Save</button>
                                             </div>
                                         </div>
 
@@ -261,21 +261,51 @@
                                 </div>
                             </div>
                         }
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- partial -->
         <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'></script>
-
-
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
         <script src="~/assets/CRM/scriptSteps.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
     </div>
 
     <script type="text/javascript">
+        function AddUser() {            
+            var data = $('#frmadduser').serialize();
+            $.ajax({
+                url: $('#frmadduser').attr('action'),
+                type: 'post',
+                dataType: "html",
+                data: data,
+                success: function (data) {
+                    toastr.success("User Saved");
+                    //// for success - green box
+                    //toastr.success('Success messages');
+
+                    //// for errors - red box
+                    //toastr.error('errors messages');
+
+                    //// for warning - orange box
+                    //toastr.warning('warning messages');
+
+                    //// for info - blue box
+                    //toastr.info('info messages');
+                }
+            });
+        }
+
         $(document).ready(function () {
+             $('#btnSubmitUser').on("click", function () {
+                AddUser();
+                //$("#btnSaveQuestion").show();
+            });
+
+
             $('#notesarea').summernote();
             $('#medicalnotesarea').summernote();
             $('#dtDOB').datepicker({
