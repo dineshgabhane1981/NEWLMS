@@ -213,6 +213,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\CRMNotesViewModel.cs" />
     <Compile Include="ViewModel\CRMUserViewModel.cs" />
     <Compile Include="ViewModel\CurriculumActivities.cs" />
     <Compile Include="ViewModel\EnquiryListingViewModel.cs" />
@@ -898,6 +899,7 @@
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\CRMUsers\AddEnquiry.cshtml" />
     <Content Include="Views\CRMUsers\_EnquiryList.cshtml" />
+    <Content Include="Views\FileNotes\_NotesList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

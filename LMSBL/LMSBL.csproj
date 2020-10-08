@@ -129,6 +129,7 @@
     <Compile Include="DBModels\UserReportModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DBModels\Response.cs" />
+    <Compile Include="Repository\CRMNotesRepository.cs" />
     <Compile Include="Repository\CRMRepository.cs" />
     <Compile Include="Repository\CRMUsersRepository.cs" />
     <Compile Include="Repository\CoursesRepository.cs" />

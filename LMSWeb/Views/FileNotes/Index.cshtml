@@ -1,8 +1,108 @@
-﻿
+﻿@model LMSWeb.ViewModel.CRMNotesViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
 }
 
-<h2>Index</h2>
+ 
+@using (Html.BeginForm("AddNotes", "FileNotes", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddNotes", @class = "multisteps-form__form" }))
+{
 
+    <div class="row justify-content-center h-100">
+        <div class="col align-self-center add-user-section ">
+            <div class="col align-self-center add-user-section ">
+                <div class="col">
+                    @*@Html.DropDownListFor(model => model.)*@
+                    @Html.DropDownListFor(model => model.objCRMnotes.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input150" })
+
+                </div>
+
+                <br />
+
+            </div>
+            <div class="row pt-2 pl-4">
+                <div>
+
+                    @Html.TextAreaFor(model => model.objCRMnotes.Notes, new { id = "txtnotes" })
+                </div>
+            </div>
+            <br />
+            <div class="row justify-content-end pr-4">
+                <button type="button" id="btnReplySubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                <button type="submit" onclick="location.href='@Url.Action("MyAssignments", "Assignment")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+            </div>
+        </div>
+        <br />
+
+
+
+    </div>
+    <div class="container-fluid mt-2 mb-2 pl-2 pr-4">
+
+
+<div class="container-fluid mt-4 mb-4 pl-4 pr-2">
+    
+
+        @Html.Partial("~/Views/FileNotes/_NotesList.cshtml", Model)
+
+
+
+    </div>
+
+    </div>
+ } 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#txtReply').summernote();
+
+            $('#btnReplySubmit').on("click", function () {
+                AddReplyToDB();
+            });
+        });
+
+        function AddReplyToDB() {
+
+            if ($('#txtnotes').val() == null || $("#txtnotes").val() == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter your comment!'
+                })
+            }
+            else {
+               
+                var data = $('#frmaddNotes').serialize();
+                console.log(data);
+                $.ajax({
+                    url: $('#frmaddNotes').attr('action'),
+                    type: 'post',
+                    dataType: "html",
+                    data: data,
+                    success: function (data) {
+                        console.log(data)
+                        if (data == "True") {
+                            toastr.success("Notes Added");
+                            console.log(sucess);
+                        }
+                        else {
+                            toastr.error('error occured while adding data');
+                        }
+                        //// for success - green box
+                        //toastr.success('Success messages');
+
+                        //// for errors - red box
+                        //toastr.error('errors messages');
+
+                        //// for warning - orange box
+                        //toastr.warning('warning messages');
+
+                        //// for info - blue box
+                        //toastr.info('info messages');
+                    }
+                });
+            }
+        }
+    </script>
