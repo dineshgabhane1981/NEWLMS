@@ -9,9 +9,13 @@
     {
         <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddEnquiry", "CRMUsers")">Add Enquiry</a></button>
     }
-    else
+    else if (ViewBag.StageForButton == 2)
     {
         <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddPotentialClient", "CRMUsers")">Add Potential Client</a></button>
+    }
+    else if (ViewBag.StageForButton == 3)
+    {
+        <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddClient", "CRMUsers")">Add Client</a></button>
     }
 </div>
 

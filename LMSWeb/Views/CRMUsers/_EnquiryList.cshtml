@@ -45,11 +45,18 @@
                                             <a href="@Url.Action("AddEnquiry", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
                                             <a href="#" onclick="MoveClient(@user.Id,2,1);" class="login" title="Move to Potential Client"><img src="~/assets/images/PotentialClient.jpg" /></a>
                                         }
-                                        else
+                                        else if (ViewBag.StageForButton == 2)
                                         {
                                             <a href="@Url.Action("AddPotentialClient", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
                                             <a href="#" onclick="MoveClient(@user.Id,3,2);" class="login" title="Move to Client"><img src="~/assets/images/PotentialClient.jpg" /></a>
                                         }
+                                        else if (ViewBag.StageForButton == 3)
+                                        {
+
+                                            <a href="@Url.Action("AddClient", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
+                                            @*<a href="#" onclick="MoveClient(@user.Id,3,2);" class="login" title="Move to Client"><img src="~/assets/images/PotentialClient.jpg" /></a>*@
+                                        }
+
 
                                     </td>
 

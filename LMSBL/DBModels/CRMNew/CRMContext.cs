@@ -32,6 +32,9 @@ namespace LMSBL.DBModels.CRMNew
         public virtual DbSet<tblCRMVisaStatu> tblCRMVisaStatus { get; set; }
         public virtual DbSet<tblCRMVisaType> tblCRMVisaTypes { get; set; }
 
+        public virtual DbSet<tblCRMClientStage> tblCRMClientStages { get; set; }
+        public virtual DbSet<tblCRMClientSubStage> tblCRMClientSubStages { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }

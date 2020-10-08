@@ -119,7 +119,6 @@ namespace LMSBL.Repository
             return clientSource;
 
         }
-
         public List<SelectListItem> GetJobSector()
         {
             List<SelectListItem> clientSource = new List<SelectListItem>();
@@ -154,7 +153,6 @@ namespace LMSBL.Repository
             return clientSource;
 
         }
-
         public List<SelectListItem> GetCountries()
         {
             List<SelectListItem> clientSource = new List<SelectListItem>();
@@ -189,7 +187,6 @@ namespace LMSBL.Repository
             return clientSource;
 
         }
-
         public List<SelectListItem> GetVisaType()
         {
             List<SelectListItem> visaType = new List<SelectListItem>();
@@ -447,6 +444,34 @@ namespace LMSBL.Repository
             return objCRMNote;
         }
 
+        public List<tblCRMClientStage> GetCRMClientStages(int id)
+        {
+            List<tblCRMClientStage> objCRMClientStage = new List<tblCRMClientStage>();
+            using (var context = new CRMContext())
+            {
+                objCRMClientStage = context.tblCRMClientStages.Where(a => a.ClientId == id).ToList();
+            }
+            return objCRMClientStage;
+        }
+
+        public List<tblCRMClientSubStage> GetCRMClientSubStages(int id)
+        {
+            List<tblCRMClientSubStage> objCRMClientSubStage = new List<tblCRMClientSubStage>();
+            using (var context = new CRMContext())
+            {
+                objCRMClientSubStage = context.tblCRMClientSubStages.Where(a => a.ClientId == id).ToList();
+            }
+            return objCRMClientSubStage;
+        }
+        public List<tblCRMUser> GetCRMClientsAll(int ClientId, int stage)
+        {
+            List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
+            using (var context = new CRMContext())
+            {
+                lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
+            }
+            return lstCRMUsers;
+        }
         public bool UpdateStage(int id, int stage)
         {
             bool result = false;
@@ -461,6 +486,19 @@ namespace LMSBL.Repository
             return result;
 
         }
+        public bool UpdateSubStage(int userId, int subStage)
+        {
+            bool result = false;
+            using (var context = new CRMContext())
+            {
+                var objCRMUser = context.tblCRMUsers.First(a => a.Id == userId);
+                objCRMUser.CurrentSubStage = subStage;
+                context.tblCRMUsers.AddOrUpdate(objCRMUser);
+                context.SaveChanges();
+                result = true;
+            }
+            return result;
 
+        }
     }
 }

@@ -14,8 +14,7 @@ namespace LMSWeb.Controllers
 {
     public class CRMUsersController : Controller
     {
-        CRMUsersRepository crmUsersRepository = new CRMUsersRepository();
-        // GET: Clients
+        CRMUsersRepository crmUsersRepository = new CRMUsersRepository();        
         public ActionResult Enquiry()
         {
             TblUser sessionUser = (TblUser)Session["UserSession"];
@@ -26,16 +25,7 @@ namespace LMSWeb.Controllers
         }
         public ActionResult AddEnquiry(string id)
         {
-            CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();           
-
-            //objCRMUserViewModel.VisaCountriesList = crmUsersRepository.GetVisaCountries();
-            //objCRMUserViewModel.CountriesCodes= crmUsersRepository.GetCountryCodes();
-            //objCRMUserViewModel.WhereDidYouFindUsList = crmUsersRepository.WhereDidYouFindUs();
-            //objCRMUserViewModel.JobSectorsList = crmUsersRepository.GetJobSector();
-            //objCRMUserViewModel.UserCountryList = crmUsersRepository.GetCountries();
-            //objCRMUserViewModel.CurrentVisaTypeList = crmUsersRepository.GetVisaType();
-            //objCRMUserViewModel.VisaStatusList = crmUsersRepository.GetVisaStatus();            
-
+            CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
             if(!string.IsNullOrEmpty(id))
             {
                 //Edit mode
@@ -43,8 +33,7 @@ namespace LMSWeb.Controllers
                 objCRMUserViewModel = LoadModel(userId);                
             }            
             else
-            {
-                
+            {                
                 //Add mode
                 objCRMUserViewModel = FillAlldropdownLists(objCRMUserViewModel);
                 tblCRMUser ObjCRMUser = new tblCRMUser();
@@ -65,15 +54,6 @@ namespace LMSWeb.Controllers
         public ActionResult AddPotentialClient(string id)
         {
             CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
-
-            //objCRMUserViewModel.VisaCountriesList = crmUsersRepository.GetVisaCountries();
-            //objCRMUserViewModel.CountriesCodes = crmUsersRepository.GetCountryCodes();
-            //objCRMUserViewModel.WhereDidYouFindUsList = crmUsersRepository.WhereDidYouFindUs();
-            //objCRMUserViewModel.JobSectorsList = crmUsersRepository.GetJobSector();
-            //objCRMUserViewModel.UserCountryList = crmUsersRepository.GetCountries();
-            //objCRMUserViewModel.CurrentVisaTypeList = crmUsersRepository.GetVisaType();
-            //objCRMUserViewModel.VisaStatusList = crmUsersRepository.GetVisaStatus();
-            
             if (!string.IsNullOrEmpty(id))
             {
                 //Edit mode
@@ -95,11 +75,39 @@ namespace LMSWeb.Controllers
 
         public ActionResult Clients()
         {
-            CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
-            objCRMUserViewModel.ObjCRMUser.CurrentStage = 3;
-            return View();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            CRMClientViewModel objCRMClientViewModel = new CRMClientViewModel();
+            objCRMClientViewModel.lstClientSubStages = crmUsersRepository.GetCRMClientSubStages(Convert.ToInt32(sessionUser.CRMClientId));
+            objCRMClientViewModel.objCRMUserLST = crmUsersRepository.GetCRMClientsAll(Convert.ToInt32(sessionUser.CRMClientId), 3);
+            //List<EnquiryListing> listingViewModel = new List<EnquiryListing>();
+            //listingViewModel = crmUsersRepository.GetCRMUsersAll(Convert.ToInt32(sessionUser.CRMClientId), 3);
+            ViewBag.StageForButton = 3;
+            return View(objCRMClientViewModel);
         }
-                
+
+        public ActionResult AddClient(string id)
+        {
+            CRMUserViewModel objCRMUserViewModel = new CRMUserViewModel();
+            if (!string.IsNullOrEmpty(id))
+            {
+                //Edit mode
+                int userId = Convert.ToInt32(id);
+                objCRMUserViewModel = LoadModel(userId);
+
+            }
+            else
+            {
+                //Add mode
+                objCRMUserViewModel = FillAlldropdownLists(objCRMUserViewModel);
+                tblCRMUser ObjCRMUser = new tblCRMUser();
+                ObjCRMUser.CurrentStage = 3;
+                objCRMUserViewModel.ObjCRMUser = ObjCRMUser;
+            }
+
+            return View("AddEnquiry", objCRMUserViewModel);
+
+        }
+
         [HttpPost]
         public bool AddCRMUser(CRMUserViewModel objCRMUserViewModel)
         {
@@ -127,8 +135,17 @@ namespace LMSWeb.Controllers
             var result = crmUsersRepository.UpdateStage(id, stage);
             List<EnquiryListing> listingViewModel = new List<EnquiryListing>();
             listingViewModel = crmUsersRepository.GetCRMUsersAll(Convert.ToInt32(sessionUser.CRMClientId), currentstage);
+            ViewBag.StageForButton = currentstage;
             return PartialView("_EnquiryList", listingViewModel);
         }
+
+        [HttpPost]
+        public ActionResult MoveUserToSubStage(int uId, int sId)
+        {
+            var result = crmUsersRepository.UpdateSubStage(uId, sId);
+            return null;
+        }
+
 
         public CRMUserViewModel LoadModel(int userId)
         {
