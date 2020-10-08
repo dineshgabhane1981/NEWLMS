@@ -5,6 +5,7 @@ namespace LMSBL.DBModels.CRMNew
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     [Table("tblCRMUsersPoliceCertificateInfo")]
     public partial class tblCRMUsersPoliceCertificateInfo
@@ -30,5 +31,9 @@ namespace LMSBL.DBModels.CRMNew
 
         [StringLength(100)]
         public string PoliceCertificateCountry3 { get; set; }
+
+        [AllowHtml]
+        [StringLength(250)]
+        public string PCCNotes { get; set; }
     }
 }

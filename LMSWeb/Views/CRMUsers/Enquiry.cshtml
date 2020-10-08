@@ -1,110 +1,59 @@
-﻿@model List<LMSBL.DBModels.CRMNew.tblCRMUser>
+﻿@model List<LMSBL.DBModels.CRMNew.EnquiryListing>
 @{
     ViewBag.Title = "Enquiry";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
 }
 <link href="~/assets/CRM/styleSteps.css" rel="stylesheet" />
-<div class="row">
-
-    <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddEnquiry", "CRMUsers")">Add</a></button>
+<div class="row" style="float:right; margin-right:50px;">
+    @if (ViewBag.StageForButton == 1)
+    {
+        <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddEnquiry", "CRMUsers")">Add Enquiry</a></button>
+    }
+    else
+    {
+        <button class="btn btn-primary js-btn-prev" type="button" title="Prev"><a href="@Url.Action("AddPotentialClient", "CRMUsers")">Add Potential Client</a></button>
+    }
 </div>
-<div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-<div class="mt-5 pt-3 pl-3 pr-3 course-list-container list-box">
-    <div class="row">
-        <div class="col search-container" style="max-width:40%;">
-            <i class="fas fa-search"></i>
-            <input class="search-box" type="text" id="txtSearch" placeholder="Search User by name..." />
-        </div>
-        <div class="col text-right" style="max-width:60%;">
-            <ul class="list-inline progress-list mt-2">
-                <li class="list-inline-item">
-                    <a href="#" onclick="Filterdata(this.id=null);" id="all">
-                        All
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="#" onclick="Filterdata(this.id=1);" id="active"><img src="~/assets/images/shape_Active.png">Active</a>
-                </li>
-                <li class="list-inline-item">
 
-                    <a href="#" onclick="Filterdata(this.id=0);" id="inactive"><img src="~/assets/images/shape_InactiveUser.png">Inactive</a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="#" onclick="OpenModelForAssign();" class="btn btn-secondary dropdown-toggle create-learning-btn">
-                        <i class="fas fa-plus-circle"></i> Create Group
+<div id="dvActivityData">
 
-                    </a>
-                </li>
-
-                <li class="list-inline-item">
-                    <a href="@Url.Action("AddUser", "User")">
-                        <button class="btn btn-secondary dropdown-toggle create-learning-btn" type="button">
-                            <i class="fas fa-plus-circle"></i> Add User
-                        </button>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="@Url.Action("Upload", "User")">
-                        <button class="btn btn-secondary dropdown-toggle create-upload-btn" type="button">
-                            <i class="fas fa-cloud-upload-alt"></i> Bulk Upload
-                        </button>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row mt-3" id="dvActivityData">
-        <div class="table-responsive">
-            <table class="table" id="activityTable">
-                <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email ID</th>
-                        <th scope="col">Phone No</th>
-                        @*<th scope="col">Role</th>
-                        <th scope="col">Date Added</th>
-                        <th scope="col" style="text-align:center;">Status</th>*@
-                        <th scope="col" style="text-align:center;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null)
-                    {
-                        if (Model.Count > 0)
-                        {
-
-                            foreach (var user in Model)
-                            {
-                                <tr>
-                                    <td>@user.FirstName  @user.LastName</td>
-                                    <td>@user.Email</td>
-                                    <td style="max-width:150px;">@user.MobileNo</td>
-                                    @*<td>@user.RoleName</td>
-                                    <td>@user.CreatedDate</td>*@
-                                   
-                                    <td style="text-align:center;">                                        
-                                        <a href="@Url.Action("EditUser", "User", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
-                                    </td>
-
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="8" align="center">No User Available</td>
-                            </tr>
-                        }
+    @Html.Partial("~/Views/CRMUsers/_EnquiryList.cshtml", Model)
+</div>
+<script>
+    function MoveClient(id, stage, currentstage) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to move User to Potential Client!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ok!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/CRMUsers/MoveUser",
+                    data: '{id: "' + id + '",stage: "' + stage + '",currentstage: "' + currentstage + '" }',
+                    //data: '{fDate: "' + fDate + '",tDate: "' + tDate + '",ReportName: "LearningCompletionReport" }',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        toastr.success("Successfully moved to Potential Client");
+                        $('#dvActivityData').html(response);
+                    },
+                    failure: function (response) {
+                    },
+                    error: function (response) {
+                        toastr.success("Successfully moved to Potential Client");
+                        $('#dvActivityData').html(response.responseText);
                     }
-                    else
-                    {
-                        <tr>
-                            <td colspan="8">No User Available</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-</div>
+                });
+
+            }
+            else {
+
+            }
+        })
+    }
+</script>

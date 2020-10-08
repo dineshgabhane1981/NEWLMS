@@ -10,7 +10,7 @@ namespace LMSWeb.ViewModel
     public class CRMUserViewModel
     {
         public tblCRMUser ObjCRMUser { get; set; }
-        public tblCRMUsersOtherInfo ObjCRMUsersOtherInfo { get; set; }
+
         public tblCRMUsersBillingAddress ObjCRMUsersBillingAddress { get; set; }
         public tblCRMUsersPassportDetail ObjCRMUsersPassportDetail { get; set; }
         public tblCRMUsersVisaDetail ObjCRMUsersVisaDetail { get; set; }
@@ -18,7 +18,9 @@ namespace LMSWeb.ViewModel
         public tblCRMUsersPoliceCertificateInfo ObjCRMUsersPoliceCertificateInfo { get; set; }
         public tblCRMUsersINZLoginDetail ObjCRMUsersINZLoginDetail { get; set; }
         public tblCRMUsersNZQADetail ObjCRMUsersNZQADetail { get; set; }
-        
+        public tblCRMNote ObjCRMNote { get; set; }
+        public List<tblCRMNote> ObjCRMNoteLST { get; set; }
+
         public List<SelectListItem> VisaCountriesList { get; set; }
         public List<SelectListItem> CountriesCodes { get; set; }
 
@@ -47,5 +49,5 @@ namespace LMSWeb.ViewModel
         }
     }
 
-    
+
 }

@@ -10,6 +10,9 @@ using LMSBL.Common;
 using LMSBL.DBModels.CRMNew;
 using LMSBL.DBModels;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Web.Script.Serialization;
+
 namespace LMSBL.Repository
 {
     public class CRMUsersRepository
@@ -255,58 +258,61 @@ namespace LMSBL.Repository
             return visaType;
 
         }
-        
+
         [HttpPost, ValidateInput(false)]
-        public bool SaveUserData(tblCRMUser ObjCRMUser, tblCRMUsersOtherInfo ObjCRMUsersOtherInfo, 
-            tblCRMUsersBillingAddress ObjCRMUsersBillingAddress, tblCRMUsersPassportDetail ObjCRMUsersPassportDetail, 
-            tblCRMUsersVisaDetail ObjCRMUsersVisaDetail, tblCRMUsersMedicalDetail ObjCRMUsersMedicalDetail, 
-            tblCRMUsersPoliceCertificateInfo ObjCRMUsersPoliceCertificateInfo, 
-            tblCRMUsersINZLoginDetail ObjCRMUsersINZLoginDetail, tblCRMUsersNZQADetail ObjCRMUsersNZQADetail)
+        public bool SaveUserData(tblCRMUser ObjCRMUser,
+            tblCRMUsersBillingAddress ObjCRMUsersBillingAddress, tblCRMUsersPassportDetail ObjCRMUsersPassportDetail,
+            tblCRMUsersVisaDetail ObjCRMUsersVisaDetail, tblCRMUsersMedicalDetail ObjCRMUsersMedicalDetail,
+            tblCRMUsersPoliceCertificateInfo ObjCRMUsersPoliceCertificateInfo,
+            tblCRMUsersINZLoginDetail ObjCRMUsersINZLoginDetail, tblCRMUsersNZQADetail ObjCRMUsersNZQADetail,
+            tblCRMNote ObjCRMNote)
         {
             bool status = false;
             using (var context = new CRMContext())
             {
-                context.Database.Log = Console.Write;
+
                 using (DbContextTransaction transaction = context.Database.BeginTransaction())
                 {
                     try
                     {
-                        //var address = context.tblCRMUsers.First(a => a.Id == 2);
-                        context.tblCRMUsers.Add(ObjCRMUser);
-                        context.SaveChanges();
 
-                        ObjCRMUsersOtherInfo.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersOtherInfoes.Add(ObjCRMUsersOtherInfo);
+                        context.tblCRMUsers.AddOrUpdate(ObjCRMUser);
                         context.SaveChanges();
 
                         ObjCRMUsersBillingAddress.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersBillingAddresses.Add(ObjCRMUsersBillingAddress);
+                        context.tblCRMUsersBillingAddresses.AddOrUpdate(ObjCRMUsersBillingAddress);
                         context.SaveChanges();
 
                         ObjCRMUsersPassportDetail.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersPassportDetails.Add(ObjCRMUsersPassportDetail);
+                        context.tblCRMUsersPassportDetails.AddOrUpdate(ObjCRMUsersPassportDetail);
                         context.SaveChanges();
 
                         ObjCRMUsersVisaDetail.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersVisaDetails.Add(ObjCRMUsersVisaDetail);
+                        context.tblCRMUsersVisaDetails.AddOrUpdate(ObjCRMUsersVisaDetail);
                         context.SaveChanges();
 
                         ObjCRMUsersMedicalDetail.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersMedicalDetails.Add(ObjCRMUsersMedicalDetail);
+                        context.tblCRMUsersMedicalDetails.AddOrUpdate(ObjCRMUsersMedicalDetail);
                         context.SaveChanges();
 
                         ObjCRMUsersPoliceCertificateInfo.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersPoliceCertificateInfoes.Add(ObjCRMUsersPoliceCertificateInfo);
+                        context.tblCRMUsersPoliceCertificateInfoes.AddOrUpdate(ObjCRMUsersPoliceCertificateInfo);
                         context.SaveChanges();
 
                         ObjCRMUsersINZLoginDetail.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersINZLoginDetails.Add(ObjCRMUsersINZLoginDetail);
+                        context.tblCRMUsersINZLoginDetails.AddOrUpdate(ObjCRMUsersINZLoginDetail);
                         context.SaveChanges();
 
                         ObjCRMUsersNZQADetail.CRMUserId = ObjCRMUser.Id;
-                        context.tblCRMUsersNZQADetails.Add(ObjCRMUsersNZQADetail);
+                        context.tblCRMUsersNZQADetails.AddOrUpdate(ObjCRMUsersNZQADetail);
                         context.SaveChanges();
 
+                        if (!string.IsNullOrEmpty(ObjCRMNote.Notes))
+                        {
+                            ObjCRMNote.ClientId = ObjCRMUser.Id;
+                            context.tblCRMNotes.Add(ObjCRMNote);
+                            context.SaveChanges();
+                        }
 
                         transaction.Commit();
                         status = true;
@@ -322,17 +328,139 @@ namespace LMSBL.Repository
 
             return status;
         }
-    
-    
-    
-        public List<tblCRMUser> GetCRMUsersAll(int ClientId)
+        public List<EnquiryListing> GetCRMUsersAll(int ClientId, int stage)
         {
-            List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
+            List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();            
             using (var context = new CRMContext())
             {
-                lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId).ToList();
+                //lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
+                //lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
+                var lstResult = (from a in context.tblCRMUsers
+                                 join b in context.tblCRMUsersVisaDetails on a.Id equals b.CRMUserId
+                                 join c in context.tblCRMVisaTypes on b.IntrestedVisa equals c.VisaId into temp
+                                 from d in temp.DefaultIfEmpty()
+                                 where a.ClientId == ClientId && a.CurrentStage == stage
+                                 select new EnquiryListing
+                                 {
+                                     Id = a.Id,
+                                     Name = a.FirstName + " " + a.LastName,
+                                     Email = a.Email,
+                                     Contact = a.MobileNoCountry + " " + a.MobileNo,
+                                     CreatedDate = a.CreatedOn,
+                                     IntrestedVisa = d.VisaName
+
+                                 }).ToList();
+               
+                return lstResult;
             }
-            return lstCRMUsers;
+            //return null;
+            
         }
+        public tblCRMUser GetCRMUserById(int id)
+        {
+            tblCRMUser objCRMUsers = new tblCRMUser();
+            using (var context = new CRMContext())
+            {
+                objCRMUsers = context.tblCRMUsers.First(a => a.Id == id);
+            }
+            return objCRMUsers;
+        }
+        //public tblCRMUsersOtherInfo GetCRMUserOtherInfoById(int id)
+        //{
+        //    tblCRMUsersOtherInfo objCRMUsersOtherInfo = new tblCRMUsersOtherInfo();
+        //    using (var context = new CRMContext())
+        //    {
+        //        objCRMUsersOtherInfo = context.tblCRMUsersOtherInfoes.First(a => a.CRMUserId == id);
+        //    }
+        //    return objCRMUsersOtherInfo;
+        //}
+        public tblCRMUsersBillingAddress GetCRMUserBillingAddressById(int id)
+        {
+            tblCRMUsersBillingAddress objCRMUsersBillingAddress = new tblCRMUsersBillingAddress();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersBillingAddress = context.tblCRMUsersBillingAddresses.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersBillingAddress;
+        }
+        public tblCRMUsersPassportDetail GetCRMUserPassportDetailById(int id)
+        {
+            tblCRMUsersPassportDetail objCRMUsersPassportDetail = new tblCRMUsersPassportDetail();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersPassportDetail = context.tblCRMUsersPassportDetails.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersPassportDetail;
+        }
+        public tblCRMUsersVisaDetail GetCRMUserVisaDetailById(int id)
+        {
+            tblCRMUsersVisaDetail objCRMUsersVisaDetail = new tblCRMUsersVisaDetail();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersVisaDetail = context.tblCRMUsersVisaDetails.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersVisaDetail;
+        }
+        public tblCRMUsersMedicalDetail GetCRMUserMedicalDetailById(int id)
+        {
+            tblCRMUsersMedicalDetail objCRMUsersMedicalDetail = new tblCRMUsersMedicalDetail();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersMedicalDetail = context.tblCRMUsersMedicalDetails.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersMedicalDetail;
+        }
+        public tblCRMUsersPoliceCertificateInfo GetCRMUserPoliceCertificateInfoById(int id)
+        {
+            tblCRMUsersPoliceCertificateInfo objCRMUsersPoliceCertificateInfo = new tblCRMUsersPoliceCertificateInfo();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersPoliceCertificateInfo = context.tblCRMUsersPoliceCertificateInfoes.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersPoliceCertificateInfo;
+        }
+        public tblCRMUsersINZLoginDetail GetCRMUserINZLoginDetailById(int id)
+        {
+            tblCRMUsersINZLoginDetail objCRMUsersINZLoginDetail = new tblCRMUsersINZLoginDetail();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersINZLoginDetail = context.tblCRMUsersINZLoginDetails.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersINZLoginDetail;
+        }
+        public tblCRMUsersNZQADetail GetCRMUserNZQADetailById(int id)
+        {
+            tblCRMUsersNZQADetail objCRMUsersNZQADetail = new tblCRMUsersNZQADetail();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersNZQADetail = context.tblCRMUsersNZQADetails.First(a => a.CRMUserId == id);
+            }
+            return objCRMUsersNZQADetail;
+        }
+        public List<tblCRMNote> GetCRMUserFileNotesById(int id)
+        {
+            List<tblCRMNote> objCRMNote = new List<tblCRMNote>();
+            using (var context = new CRMContext())
+            {
+                objCRMNote = context.tblCRMNotes.Where(a => a.ClientId == id).ToList();
+            }
+            return objCRMNote;
+        }
+
+        public bool UpdateStage(int id, int stage)
+        {
+            bool result = false;
+            using (var context = new CRMContext())
+            {
+                var objCRMUser = context.tblCRMUsers.First(a => a.Id == id);
+                objCRMUser.CurrentStage = stage;
+                context.tblCRMUsers.AddOrUpdate(objCRMUser);
+                context.SaveChanges();
+                result = true;
+            }
+            return result;
+
+        }
+
     }
 }

@@ -12,7 +12,7 @@ namespace LMSBL.DBModels.CRMNew
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int VisaId { get; set; }
+        public string VisaId { get; set; }
 
         [Key]
         [Column(Order = 1)]

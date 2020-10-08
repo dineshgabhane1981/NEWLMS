@@ -5,6 +5,7 @@ namespace LMSBL.DBModels.CRMNew
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     public partial class tblCRMUsersMedicalDetail
     {
@@ -36,6 +37,7 @@ namespace LMSBL.DBModels.CRMNew
         [StringLength(20)]
         public string MedicalNotesDDL { get; set; }
 
+        [AllowHtml]
         public string MedicalNotes { get; set; }
     }
 }

@@ -215,6 +215,7 @@
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CRMUserViewModel.cs" />
     <Compile Include="ViewModel\CurriculumActivities.cs" />
+    <Compile Include="ViewModel\EnquiryListingViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MyLearningViewModel.cs" />
     <Compile Include="ViewModel\QuizAssignViewModel.cs" />
@@ -250,6 +251,7 @@
     <Content Include="assets\images\details_open.png" />
     <Content Include="assets\images\favicon.ico" />
     <Content Include="assets\images\Logiciel_Logo.png" />
+    <Content Include="assets\images\PotentialClient.jpg" />
     <Content Include="assets\images\rt_logo.png" />
     <Content Include="assets\images\course.png" />
     <Content Include="assets\images\gettyimages-157318827-2048x2048.jpg" />
@@ -895,6 +897,7 @@
     <Content Include="Views\Invoice\Index.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\CRMUsers\AddEnquiry.cshtml" />
+    <Content Include="Views\CRMUsers\_EnquiryList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

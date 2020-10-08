@@ -5,7 +5,6 @@ namespace LMSBL.DBModels.CRMNew
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
-    using System.Web.Mvc;
 
     [Table("tblCRMUsersOtherInfo")]
     public partial class tblCRMUsersOtherInfo
@@ -43,7 +42,7 @@ namespace LMSBL.DBModels.CRMNew
 
         [StringLength(100)]
         public string Company { get; set; }
-        [AllowHtml]
+
         public string Notes { get; set; }
     }
 }

@@ -5,6 +5,7 @@ namespace LMSBL.DBModels.CRMNew
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     public partial class tblCRMNote
     {
@@ -15,6 +16,7 @@ namespace LMSBL.DBModels.CRMNew
 
         [Key]
         [Column(Order = 1, TypeName = "ntext")]
+        [AllowHtml]
         public string Notes { get; set; }
 
         [Key]

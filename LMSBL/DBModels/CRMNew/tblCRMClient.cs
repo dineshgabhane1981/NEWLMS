@@ -23,6 +23,7 @@ namespace LMSBL.DBModels.CRMNew
         public DateTime CreatedDate { get; set; }
 
         public bool? isLMS { get; set; }
-        
+
+        public int? TenantId { get; set; }
     }
 }

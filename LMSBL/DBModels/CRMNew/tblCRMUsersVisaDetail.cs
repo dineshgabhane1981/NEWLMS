@@ -29,5 +29,11 @@ namespace LMSBL.DBModels.CRMNew
 
         [Column(TypeName = "date")]
         public DateTime? VisaExpiryDate { get; set; }
+
+        [StringLength(250)]
+        public string CountryResideIn { get; set; }
+
+        [StringLength(250)]
+        public string AnyPreviousVisaDecline { get; set; }
     }
 }

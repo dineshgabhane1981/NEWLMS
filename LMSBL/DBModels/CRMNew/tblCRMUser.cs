@@ -49,7 +49,8 @@ namespace LMSBL.DBModels.CRMNew
         [StringLength(250)]
         public string Address { get; set; }
 
-        public int? MobileNoCountry { get; set; }
+        [StringLength(20)]
+        public string MobileNoCountry { get; set; }
 
         [StringLength(50)]
         public string MobileNo { get; set; }
@@ -82,6 +83,16 @@ namespace LMSBL.DBModels.CRMNew
         public int? UpdatedBy { get; set; }
 
         public DateTime? UpdatedOn { get; set; }
-        public int ClientId { get; set; }
+
+        public int? ClientId { get; set; }
+
+        [StringLength(100)]
+        public string Qualification { get; set; }
+
+        [StringLength(100)]
+        public string Occupation { get; set; }
+
+        [StringLength(100)]
+        public string WhereDidYouFindUs { get; set; }
     }
 }
