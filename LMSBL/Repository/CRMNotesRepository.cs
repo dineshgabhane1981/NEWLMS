@@ -66,5 +66,15 @@ namespace LMSBL.Repository
 
             return status;
         }
-     }
+
+        public List<tblCRMNote> GetCRMUserFileNotesById(int id)
+        {
+            List<tblCRMNote> objCRMNote = new List<tblCRMNote>();
+            using (var context = new CRMContext())
+            {
+                objCRMNote = context.tblCRMNotes.Where(a => a.ClientId == id).ToList();
+            }
+            return objCRMNote;
+        }
+    }
 }

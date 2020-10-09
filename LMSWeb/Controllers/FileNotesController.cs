@@ -35,9 +35,18 @@ namespace LMSWeb.Controllers
             cRMNotesViewModel.objCRMnotes.CreatedDate = DateTime.Now;
             cRMNotesViewModel.objCRMnotes.CreatedBy = sessionUser.UserId;
             var status = crmnr.SaveUserData(cRMNotesViewModel.objCRMnotes);
-
+            LoadNotes(cRMNotesViewModel.objCRMnotes.ClientId);
 
             return status;
+        }
+
+        
+        public ActionResult LoadNotes(int Id)
+        {
+            CRMNotesViewModel objnotesvm = new CRMNotesViewModel();
+            objnotesvm.lstNotes = crmnr.GetCRMUserFileNotesById(Id);
+            return PartialView("_NotesList", objnotesvm);
+
         }
     }
 }

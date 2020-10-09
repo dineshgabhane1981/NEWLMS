@@ -1,9 +1,9 @@
 ﻿@model LMSWeb.ViewModel.CRMNotesViewModel
 
 
-<div class="container-fluid mt-4 mb-4 pl-4 pr-2">
+<div div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
    
-        <div id="dvClientNotes">
+        <div id="dvClientNotes" class="col-sm-12">
 
 
             @if (Model.lstNotes != null)
@@ -41,7 +41,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
 
 <script>
-        $('#txtReply').summernote();
+       // $('#txtReply').summernote();
 
    
 
