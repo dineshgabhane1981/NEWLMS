@@ -68,6 +68,7 @@
     <Compile Include="Common\Exceptions.cs" />
     <Compile Include="Common\Response.cs" />
     <Compile Include="Common\SharpZipLibHelper.cs" />
+    <Compile Include="DBModels\ClientTicket.cs" />
     <Compile Include="DBModels\CRMNew\CRMContext.cs" />
     <Compile Include="DBModels\CRMNew\EnquiryListing.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMClient.cs" />

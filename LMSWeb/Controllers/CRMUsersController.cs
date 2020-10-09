@@ -78,7 +78,7 @@ namespace LMSWeb.Controllers
             TblUser sessionUser = (TblUser)Session["UserSession"];
             CRMClientViewModel objCRMClientViewModel = new CRMClientViewModel();
             objCRMClientViewModel.lstClientSubStages = crmUsersRepository.GetCRMClientSubStages(Convert.ToInt32(sessionUser.CRMClientId));
-            objCRMClientViewModel.objCRMUserLST = crmUsersRepository.GetCRMClientsAll(Convert.ToInt32(sessionUser.CRMClientId), 3);
+            objCRMClientViewModel.objClientTicketLST = crmUsersRepository.GetCRMTicketsAll(Convert.ToInt32(sessionUser.CRMClientId), 3);
             //List<EnquiryListing> listingViewModel = new List<EnquiryListing>();
             //listingViewModel = crmUsersRepository.GetCRMUsersAll(Convert.ToInt32(sessionUser.CRMClientId), 3);
             ViewBag.StageForButton = 3;
@@ -140,10 +140,26 @@ namespace LMSWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult MoveUserToSubStage(int uId, int sId)
+        public string MoveUserToSubStage(int uId, int sId)
         {
+            List<string> lstResult = new List<string>();
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            var currentUserStage = crmUsersRepository.GetCRMUserById(uId);
+            lstResult.Add(Convert.ToString(currentUserStage.CurrentSubStage));
+
             var result = crmUsersRepository.UpdateSubStage(uId, sId);
-            return null;
+
+            var currentNoOfUsers = crmUsersRepository.GetCRMUsersBySubStageId(Convert.ToInt32(sessionUser.CRMClientId), Convert.ToInt32(currentUserStage.CurrentSubStage));
+            lstResult.Add(Convert.ToString(currentNoOfUsers.Count));            
+
+            var noOfUsers = crmUsersRepository.GetCRMUsersBySubStageId(Convert.ToInt32(sessionUser.CRMClientId), sId);
+            lstResult.Add(Convert.ToString(noOfUsers.Count));
+
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+            var jsonData = json_serializer.Serialize(lstResult);
+
+            return jsonData;
         }
 
 

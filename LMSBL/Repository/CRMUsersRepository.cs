@@ -463,6 +463,15 @@ namespace LMSBL.Repository
             }
             return objCRMClientSubStage;
         }
+        public List<tblCRMUser> GetCRMUsersBySubStageId(int clientId, int subStageId)
+        {
+            List<tblCRMUser> objCRMUsersOfSubStage = new List<tblCRMUser>();
+            using (var context = new CRMContext())
+            {
+                objCRMUsersOfSubStage = context.tblCRMUsers.Where(a => a.ClientId == clientId && a.CurrentSubStage == subStageId && a.CurrentStage == 3).ToList();
+            }
+            return objCRMUsersOfSubStage;
+        }
         public List<tblCRMUser> GetCRMClientsAll(int ClientId, int stage)
         {
             List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
@@ -472,6 +481,35 @@ namespace LMSBL.Repository
             }
             return lstCRMUsers;
         }
+
+        public List<ClientTicket> GetCRMTicketsAll(int ClientId, int stage)
+        {
+            List<ClientTicket> lstCRMUsers = new List<ClientTicket>();
+            using (var context = new CRMContext())
+            {
+                //lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
+                var lstResult = (from a in context.tblCRMUsers
+                                 join b in context.tblCRMUsersVisaDetails on a.Id equals b.CRMUserId
+                                 join c in context.tblCRMVisaTypes on b.IntrestedVisa equals c.VisaId into temp
+                                 from d in temp.DefaultIfEmpty()
+                                 where a.ClientId == ClientId && a.CurrentStage == stage
+                                 select new ClientTicket
+                                 {
+                                     UserId = a.Id,
+                                     UserName = a.FirstName + " " + a.LastName,
+                                     CurrentSubStage = a.CurrentSubStage,
+                                     ContactNo = a.MobileNoCountry + " " + a.MobileNo,
+                                     //Email = a.Email,
+                                     //Contact = a.MobileNoCountry + " " + a.MobileNo,
+                                     //CreatedDate = a.CreatedOn,
+                                     VisaIntrested = d.VisaName
+
+                                 }).ToList();
+
+                return lstResult;
+            }
+            //return lstCRMUsers;
+        }
         public bool UpdateStage(int id, int stage)
         {
             bool result = false;
@@ -479,6 +517,10 @@ namespace LMSBL.Repository
             {
                 var objCRMUser = context.tblCRMUsers.First(a => a.Id == id);
                 objCRMUser.CurrentStage = stage;
+                if(stage==3)
+                {
+                    objCRMUser.CurrentSubStage = 1;
+                }
                 context.tblCRMUsers.AddOrUpdate(objCRMUser);
                 context.SaveChanges();
                 result = true;

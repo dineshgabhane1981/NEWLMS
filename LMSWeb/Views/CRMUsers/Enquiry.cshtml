@@ -25,9 +25,16 @@
 </div>
 <script>
     function MoveClient(id, stage, currentstage) {
+        var txtMessage = "Do you want to move User to Potential Client!";
+        if (stage == 3) {
+            txtMessage="Do you want to move User to Client!"
+        }
+        if (stage == 1) {
+            txtMessage="Do you want to move User to Inquiry!"
+        }
         Swal.fire({
             title: 'Are you sure?',
-            text: "Do you want to move User to Potential Client!",
+            text: txtMessage,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
