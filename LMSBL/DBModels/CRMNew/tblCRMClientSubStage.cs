@@ -22,5 +22,11 @@ namespace LMSBL.DBModels.CRMNew
         [Column(Order = 2)]
         [StringLength(250)]
         public string SubStageName { get; set; }
+
+        public bool? IsActive { get; set; }
+
+        public int? CreatedBy { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
     }
 }

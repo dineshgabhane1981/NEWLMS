@@ -22,5 +22,9 @@ namespace LMSBL.DBModels.CRMNew
         [Column(Order = 2)]
         [StringLength(50)]
         public string StageName { get; set; }
+
+        public int? CreatedBy { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
     }
 }

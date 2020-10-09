@@ -329,9 +329,7 @@ namespace LMSBL.Repository
         {
             List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();            
             using (var context = new CRMContext())
-            {
-                //lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
-                //lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == stage).ToList();
+            {               
                 var lstResult = (from a in context.tblCRMUsers
                                  join b in context.tblCRMUsersVisaDetails on a.Id equals b.CRMUserId
                                  join c in context.tblCRMVisaTypes on b.IntrestedVisa equals c.VisaId into temp
@@ -349,8 +347,7 @@ namespace LMSBL.Repository
                                  }).ToList();
                
                 return lstResult;
-            }
-            //return null;
+            }           
             
         }
         public tblCRMUser GetCRMUserById(int id)
@@ -498,10 +495,7 @@ namespace LMSBL.Repository
                                      UserId = a.Id,
                                      UserName = a.FirstName + " " + a.LastName,
                                      CurrentSubStage = a.CurrentSubStage,
-                                     ContactNo = a.MobileNoCountry + " " + a.MobileNo,
-                                     //Email = a.Email,
-                                     //Contact = a.MobileNoCountry + " " + a.MobileNo,
-                                     //CreatedDate = a.CreatedOn,
+                                     ContactNo = a.MobileNoCountry + " " + a.MobileNo,                                     
                                      VisaIntrested = d.VisaName
 
                                  }).ToList();

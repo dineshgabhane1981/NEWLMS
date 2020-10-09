@@ -62,35 +62,38 @@
                 <div class="p-4">
                     <h1><a href="#" class="logo">Welcome <span>@fullname</span></a></h1>
                     <ul class="list-unstyled components mb-5">
-                        <li class="active">
+                        <li class="@Html.IsSelected(controller: "CRM", action: "Index")">
                             <a href="@Url.Action("Index", "CRM")"><span class="fa fa-home mr-3"></span> Dashboard</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "CRMUsers", action: "Enquiry,AddEnquiry")">
                             <a href="@Url.Action("Enquiry", "CRMUsers")"><span class="fa fa-user mr-3"></span> Enquiry</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "CRMUsers", action: "PotentialClients,AddPotentialClient")">
                             <a href="@Url.Action("PotentialClients", "CRMUsers")"><span class="fa fa-briefcase mr-3"></span> Potential Clients</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "CRMUsers", action: "Clients,AddClient")">
                             <a href="@Url.Action("Clients", "CRMUsers")"><span class="fa fa-sticky-note mr-3"></span> Clients</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "FileNotes", action: "Index")">
                             <a href="@Url.Action("Index", "FileNotes")"><span class="fa fa-suitcase mr-3"></span> File Notes</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "Documents", action: "Index")">
                             <a href="@Url.Action("Index", "Documents")"><span class="fa fa-cogs mr-3"></span> Documents</a>
                         </li>
                         @*<li>
-                            <a href="@Url.Action("Index", "Emails")"><span class="fa fa-cogs mr-3"></span> Emails</a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index", "Chat")"><span class="fa fa-paper-plane mr-3"></span> Chat</a>
-                        </li>*@
-                        <li>
+            <a href="@Url.Action("Index", "Emails")"><span class="fa fa-cogs mr-3"></span> Emails</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index", "Chat")"><span class="fa fa-paper-plane mr-3"></span> Chat</a>
+        </li>*@
+                        <li class="@Html.IsSelected(controller: "Invoice", action: "Index")">
                             <a href="@Url.Action("Index", "Invoice")"><span class="fa fa-paper-plane mr-3"></span> Invoice</a>
                         </li>
-                        <li>
+                        <li class="@Html.IsSelected(controller: "EnquiryForm", action: "Index")">
                             <a href="@Url.Action("Index", "EnquiryForm")"><span class="fa fa-paper-plane mr-3"></span> Enquiry Form details</a>
+                        </li>
+                        <li class="@Html.IsSelected(controller: "AdminSettings", action: "Index")">
+                            <a href="@Url.Action("Index", "AdminSettings")"><span class="fa fa-paper-plane mr-3"></span> Admin Setting</a>
                         </li>
                     </ul>
                     <div>
