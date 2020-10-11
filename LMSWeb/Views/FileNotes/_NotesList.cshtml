@@ -1,48 +1,71 @@
 ﻿@model LMSWeb.ViewModel.CRMNotesViewModel
 
-
+<style>
+    .optionClass {
+        background-color: lightgray;
+    }
+</style>
 <div div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
-   
-        <div id="dvClientNotes" class="col-sm-12">
-
-
-            @if (Model.lstNotes != null)
+    
+    <div id="dvClientNotes" class="col-sm-12">
+        @if (Model.lstNotes != null)
+        {
+            if (Model.lstNotes.Count > 0)
             {
-                if (Model.lstNotes.Count > 0)
-                {
-                    <div class="row justify-content-center h-100">
-                        <div class="col   add-user-section ">
-                            <div style="margin-bottom:10px;"><b>Previous Comments -</b></div>
-                            @foreach (var item in Model.lstNotes)
+                <div style="margin-bottom:10px;"><b>All File Notes</b></div>
+                <div class="row justify-content-center h-100">
+                    <div class="col   add-user-section ">
+
+                        @foreach (var item1 in Model.lstNotesSubStages)
+                        {
+                            <b> @item1 </b>
+                            foreach (var item in Model.lstNotes)
                             {
-                                <div>
+                                if (item1 == item.SubStageName)
+                                {
                                     <div>
-                                        <div style="margin-left:40px;">
-
-                                            <i class="fa fa-clock-o" aria-hidden="true"></i> @item.CreatedDate
+                                        <div>
+                                            <div style="margin-left:40px;">
+                                                <i class="fa fa-clock-o" aria-hidden="true"></i> @item.CreatedDate || communicated by <b> @item.CommunicationSource </b>
+                                            </div>
                                         </div>
-
+                                        <div>
+                                            <div style="margin-left:40px;">@Html.Raw(item.Notes)</div>
+                                        </div>
                                     </div>
-                                    <div>
-
-                                        <div style="margin-left:40px;">@Html.Raw(item.Notes)</div>
-                                    </div>
-                                </div>
-                                <hr />
+                                }
                             }
-                        </div>
+                            <hr />
+                        }
                     </div>
-                }
+                </div>
             }
-        </div>
+            else
+            {
+                <div class="col-sm-12" style="margin-bottom:10px; text-align:center;"><b>No File Notes available</b></div>
+            }
+        }
 
     </div>
+</div>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
-
 <script>
-       // $('#txtReply').summernote();
+    $(document).ready(function () {
+        var CurrentSubStage=@Html.Raw(@ViewBag.CurrentStage);
+        $('#ddlSubStageList').val(CurrentSubStage);
+        $('#ddlSubStageList option').each(function (item) {
+            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', false);
+            $("#ddlSubStageList option[value*='" + item + "']").removeClass('optionClass');
+        });
+        $('#ddlSubStageList option').each(function (item) {
 
-   
-
-    </script>
+        if (item > CurrentSubStage)
+        {
+            //console.log(item);
+            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', true);
+            $("#ddlSubStageList option[value*='" + item + "']").addClass('optionClass');
+        }
+    });
+    });
+</script>

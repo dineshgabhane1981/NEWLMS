@@ -256,6 +256,25 @@ namespace LMSBL.Repository
 
         }
 
+        public List<SelectListItem> GetCRMStagesList(int id)
+        {
+            List<SelectListItem> Stages = new List<SelectListItem>();
+            List<tblCRMClientStage> objCRMClientStage = new List<tblCRMClientStage>();
+            using (var context = new CRMContext())
+            {
+                objCRMClientStage = context.tblCRMClientStages.Where(a => a.ClientId == id).ToList();
+            }
+            foreach(var item in objCRMClientStage)
+            {
+                Stages.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(item.StageName),
+                    Value = Convert.ToString(item.StageId)
+                });
+            }
+            return Stages;
+        }
+
         [HttpPost, ValidateInput(false)]
         public bool SaveUserData(tblCRMUser ObjCRMUser,
             tblCRMUsersBillingAddress ObjCRMUsersBillingAddress, tblCRMUsersPassportDetail ObjCRMUsersPassportDetail,
@@ -306,7 +325,11 @@ namespace LMSBL.Repository
 
                         if (!string.IsNullOrEmpty(ObjCRMNote.Notes))
                         {
-                            ObjCRMNote.ClientId = ObjCRMUser.Id;
+                            if (string.IsNullOrEmpty(Convert.ToString(ObjCRMNote.SubStage)))
+                            {
+                                ObjCRMNote.SubStage = 1;
+                            }
+                                ObjCRMNote.ClientId = ObjCRMUser.Id;
                             context.tblCRMNotes.Add(ObjCRMNote);
                             context.SaveChanges();
                         }
@@ -456,7 +479,7 @@ namespace LMSBL.Repository
             List<tblCRMClientSubStage> objCRMClientSubStage = new List<tblCRMClientSubStage>();
             using (var context = new CRMContext())
             {
-                objCRMClientSubStage = context.tblCRMClientSubStages.Where(a => a.ClientId == id).ToList();
+                objCRMClientSubStage = context.tblCRMClientSubStages.Where(a => a.ClientId == id && a.IsActive == true).ToList();
             }
             return objCRMClientSubStage;
         }

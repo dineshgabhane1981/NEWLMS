@@ -5,8 +5,25 @@
 }
 
 <link href="~/assets/CRM/styleSteps.css" rel="stylesheet" />
-
-<h4 class="">Add/Edit Client Details</h4>
+<style>
+    .optionClass {
+        background-color: lightgray;
+    }
+</style>
+<h5 class="">Add/Edit Client Details</h5>
+@if (Model != null)
+{
+    if (Model.ObjCRMUser != null)
+    {
+        if (Model.ObjCRMUser.CurrentStage ==3)
+        {
+        <div style="float:right;">
+            Move To
+            @Html.DropDownListFor(model => model.ObjCRMUser.CurrentSubStage, new SelectList(Model.SubStagesList, "Value", "Text"), htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
+        </div>
+        }
+    }
+}
 <div>
     <!-- partial:index.partial.html -->
     <!--PEN HEADER-->
@@ -212,47 +229,71 @@
                                     <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
                                         <h5 class="multisteps-form__title">File Notes</h5>
                                         <div class="multisteps-form__content">
+                                            @if (Model.ObjCRMUser.CurrentStage == 3)
+                                            {
+                                                @Html.DropDownListFor(model => model.ObjCRMNote.SubStage, new SelectList(Model.SubStagesList, "Value", "Text"), "Select Sub stage", htmlAttributes: new { id = "ddlSubStageList", @class = "input100" })
+                                            }
+                                            @Html.RadioButtonFor(model => model.ObjCRMNote.CommunicationSource, "Phone") Phone
+                                            @Html.RadioButtonFor(model => model.ObjCRMNote.CommunicationSource, "Personally") Personally
+                                            @Html.RadioButtonFor(model => model.ObjCRMNote.CommunicationSource, "Whats App") Whats App
+                                            @Html.RadioButtonFor(model => model.ObjCRMNote.CommunicationSource, "Email") Email
+                                            <br />
                                             File Notes
                                             @Html.TextAreaFor(model => model.ObjCRMNote.Notes, new { @class = "input150", id = "filenotesarea" })
+
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="button-row d-flex mt-4">
                                                 <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button>
                                                 <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button>
                                             </div>
+                                        </div>
+                                        <br />
+                                        <div div class="col-sm-12 list-box bg-white" data-animation="scaleIn">
 
-                                            @if (Model.ObjCRMNoteLST != null)
-                                            {
-                                                if (Model.ObjCRMNoteLST.Count > 0)
+                                            <div id="dvClientNotes" class="col-sm-12">
+                                                @if (Model.lstNotes != null)
                                                 {
-
-                                                    <div style="margin-bottom:10px;"><b>Previous file Notes:</b></div>
-                                                    foreach (var item in Model.ObjCRMNoteLST)
+                                                    if (Model.lstNotes.Count > 0)
                                                     {
-                                                        @*<div>
-                        <div style="margin-left:40px;">@Html.Raw(item.Notes)</div>
-                    </div>*@
-                                                        <div>
-                                                            <div>
-                                                                <div style="margin-left:40px;">
+                                                        <div style="margin-bottom:10px;"><b>All File Notes</b></div>
+                                                        <div class="row justify-content-center h-100">
+                                                            <div class="col   add-user-section ">
 
-                                                                    <i class="fa fa-clock-o" aria-hidden="true"></i> @item.CreatedDate
-                                                                </div>
-
-                                                            </div>
-                                                            <div>
-
-                                                                <div style="margin-left:40px;">@Html.Raw(item.Notes)</div>
+                                                                @foreach (var item1 in Model.lstNotesSubStages)
+                                                                {
+                                                                    <b> @item1 </b>
+                                                                    foreach (var item in Model.lstNotes)
+                                                                    {
+                                                                        if (item1 == item.SubStageName)
+                                                                        {
+                                                                            <div>
+                                                                                <div>
+                                                                                    <div style="margin-left:40px;">
+                                                                                        <i class="fa fa-clock-o" aria-hidden="true"></i> @item.CreatedDate || communicated by <b> @item.CommunicationSource </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <div style="margin-left:40px;">@Html.Raw(item.Notes)</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                    <hr />
+                                                                }
                                                             </div>
                                                         </div>
-                                                        <hr />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-sm-12" style="margin-bottom:10px; text-align:center;"><b>No File Notes available</b></div>
                                                     }
                                                 }
-                                            }
 
+                                            </div>
                                         </div>
 
-                                        
+
                                     </div>
                                     <!--Documents-->
                                     <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
@@ -336,10 +377,36 @@
     }
 
     $(document).ready(function () {
-        $('#btnSubmitUser').on("click", function () {
-            AddUser();
-            //$("#btnSaveQuestion").show();
+        var CurrentSubStage=@Html.Raw(Model.ObjCRMUser.CurrentSubStage);
+        $('#ddlSubStageList').val(CurrentSubStage);
+        $('#ddlSubStageList option').each(function (item) {
+            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', false);
+            $("#ddlSubStageList option[value*='" + item + "']").removeClass('optionClass');
         });
+        $('#ddlSubStageList option').each(function (item) {
+
+        if (item > CurrentSubStage)
+        {
+            //console.log(item);
+            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', true);
+            $("#ddlSubStageList option[value*='" + item + "']").addClass('optionClass');
+        }
+        });
+
+        $('#btnSubmitUser').on("click", function () {
+            AddUser();            
+        });
+        
+        $('#ddlclientlist').change(function () {
+                $('#ddlclientlist option').each(function (index) {
+                    if (($(this).is(':selected'))) {
+                        var id = this.value;
+                        console.log(id);
+                        $("#ObjCRMUser_CurrentSubStage").val(id);
+                    }
+                })
+            });
+
 
         $('#filenotesarea').summernote();
         $('#pccnotesarea').summernote();

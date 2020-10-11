@@ -11,28 +11,48 @@ using System.Data.Entity;
 
 namespace LMSBL.Repository
 {
-   public class CRMNotesRepository
+    public class CRMNotesRepository
     {
         Exceptions newException = new Exceptions();
         public List<SelectListItem> GetClient(int ClientId)
         {
             List<SelectListItem> lstCRMclient = new List<SelectListItem>();
-            
+
             List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
             using (var context = new CRMContext())
             {
                 lstCRMUsers = context.tblCRMUsers.Where(a => a.ClientId == ClientId && a.CurrentStage == 3).ToList();
             }
-            foreach(var user in lstCRMUsers)
+            foreach (var user in lstCRMUsers)
             {
                 lstCRMclient.Add(new SelectListItem
                 {
-                    Text = Convert.ToString(user.FirstName +" " + user.LastName),
+                    Text = Convert.ToString(user.FirstName + " " + user.LastName),
                     Value = Convert.ToString(user.Id)
                 });
             }
-           
+
             return lstCRMclient;
+        }
+
+        public List<SelectListItem> GetCRMClientSubStages(int id)
+        {
+            List<SelectListItem> lstCRMSubstages = new List<SelectListItem>();
+            List<tblCRMClientSubStage> objCRMClientSubStage = new List<tblCRMClientSubStage>();
+            using (var context = new CRMContext())
+            {
+                objCRMClientSubStage = context.tblCRMClientSubStages.Where(a => a.ClientId == id && a.IsActive == true).ToList();
+            }
+
+            foreach (var subStage in objCRMClientSubStage)
+            {
+                lstCRMSubstages.Add(new SelectListItem
+                {
+                    Text = Convert.ToString(subStage.SubStageName),
+                    Value = Convert.ToString(subStage.SubStageId)
+                });
+            }
+            return lstCRMSubstages;
         }
 
         public bool SaveUserData(tblCRMNote objCRMNote)
@@ -49,7 +69,7 @@ namespace LMSBL.Repository
                         context.tblCRMNotes.Add(objCRMNote);
                         context.SaveChanges();
 
-                        
+
 
                         transaction.Commit();
                         status = true;
@@ -67,14 +87,60 @@ namespace LMSBL.Repository
             return status;
         }
 
-        public List<tblCRMNote> GetCRMUserFileNotesById(int id)
+        public List<FileNotesDetails> GetCRMUserFileNotesById(int id)
         {
-            List<tblCRMNote> objCRMNote = new List<tblCRMNote>();
+            List<FileNotesDetails> objCRMNote = new List<FileNotesDetails>();
             using (var context = new CRMContext())
-            {
-                objCRMNote = context.tblCRMNotes.Where(a => a.ClientId == id).ToList();
+            {               
+                objCRMNote = (from a in context.tblCRMNotes
+                              join b in context.tblCRMClientSubStages on a.SubStage equals b.SubStageId
+                              where a.ClientId == id
+                              orderby a.SubStage descending, a.CreatedDate
+                              select new FileNotesDetails
+                              {
+                                  ClientId = a.ClientId,
+                                  Notes = a.Notes,
+                                  SubStage = b.SubStageId,
+                                  SubStageName = b.SubStageName,
+                                  CommunicationSource = a.CommunicationSource,
+                                  CreatedDate = a.CreatedDate
+
+                              }).ToList();
             }
             return objCRMNote;
         }
+        public List<string> GetCRMUserFileNotesSubStagesById(int id)
+        {
+            List<FileNotesDetails> objCRMNote = new List<FileNotesDetails>();
+            List<string> lstItems = new List<string>();
+            using (var context = new CRMContext())
+            {
+                //objCRMNote = context.tblCRMNotes.Where(a => a.ClientId == id).ToList();
+                objCRMNote = (from a in context.tblCRMNotes
+                              join b in context.tblCRMClientSubStages on a.SubStage equals b.SubStageId
+                              where a.ClientId == id
+                              orderby a.SubStage descending
+                              select new FileNotesDetails
+                              {
+                                  ClientId = a.ClientId,
+                                  Notes = a.Notes,
+                                  SubStage = b.SubStageId,
+                                  SubStageName = b.SubStageName,
+                                  CommunicationSource = a.CommunicationSource,
+                                  CreatedDate = a.CreatedDate
+
+                              }).ToList();                
+                var objCRMNote1 = objCRMNote.GroupBy(item => item.SubStage)
+                 .Select(group => new { Customer = group.ToString(), Items = group.ToList() })
+                 .ToList();
+                
+                foreach(var item in objCRMNote1)
+                {
+                    lstItems.Add(item.Items[0].SubStageName);
+                }
+            }
+            return lstItems;
+        }
+
     }
 }

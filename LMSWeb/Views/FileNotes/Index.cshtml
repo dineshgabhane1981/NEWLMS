@@ -8,42 +8,35 @@
 @using (Html.BeginForm("AddNotes", "FileNotes", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddNotes", @class = "multisteps-form__form" }))
 {
 
-<div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
-    <h5 class="multisteps-form__title">File Notes</h5>
+    <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+        <h5 class="multisteps-form__title">File Notes</h5>
 
-    @Html.DropDownListFor(model => model.objCRMnotes.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input150" })
-
-
-    <div class="multisteps-form__content">
-       
-        @Html.TextAreaFor(model => model.objCRMnotes.Notes, new { @class = "input150", id = "txtnotes" })
-
+        @Html.DropDownListFor(model => model.objCRMnotes.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
+        @Html.DropDownListFor(model => model.objCRMnotes.SubStage, new SelectList(Model.lstSubStages, "Value", "Text"), "Select Sub stage", htmlAttributes: new { id = "ddlSubStageList", @class = "input100" })
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Phone") Phone
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Personally") Personally
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Whats App") Whats App
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Email") Email
+        <div class="multisteps-form__content">
+            @Html.TextAreaFor(model => model.objCRMnotes.Notes, new { @class = "input150", id = "txtnotes" })
+        </div>
+        <br />
+        <div class="button-row d-flex mt-4">
+            <button type="button" id="btnReplySubmit" class="btn btn-primary ml-auto js-btn-next"> Save Changes</button>
+        </div>
+        <br />
     </div>
-
-
     <br />
-    <div class="button-row d-flex mt-4">
-        <button type="button" id="btnReplySubmit" class="btn btn-primary ml-auto js-btn-next"> Save Changes</button>
-        
-    </div>
     <br />
-
-
-
-</div>
-
-    <div id="dvClientNotes">
+    
+    <div id="dvClientNotes" style="display:none;">
 
         @Html.Partial("~/Views/FileNotes/_NotesList.cshtml", Model)
-
     </div>
 }
-@*<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'></script>*@
+
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
-@*<script src="~/assets/CRM/scriptSteps.js"></script>*@
-@*<link href="~/assets/CRM/styleSteps.css" rel="stylesheet" />*@
-
 
 <script>
     $(document).ready(function () {
@@ -53,13 +46,24 @@
             AddReplyToDB();
         });
     });
-    //function OnSuccess() {
+
     $('#ddlclientlist').change(function () {
         $('#ddlclientlist option').each(function (index) {
             if (($(this).is(':selected'))) {
                 var id = this.value;
-                console.log(id);
-                GetNotes(id);
+
+                if (id != null && id != "") {
+                    console.log(id);
+                    GetNotes(id);
+                }
+                else {
+                    $('#ddlSubStageList option').each(function (item) {
+                        $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', false);
+                        $("#ddlSubStageList option[value*='" + item + "']").removeClass('optionClass');
+                    });
+                    $('#ddlSubStageList>option:eq(0)').attr('selected', true);
+                    $('#dvClientNotes').hide();
+                }
             }
         });
     });
@@ -72,47 +76,40 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-
                 console.log(response);
                 $('#dvClientNotes').html(response);
-
-
             },
             failure: function (response) {
             },
             error: function (response) {
-                console.log(response);
-                // toastr.success("Successfully moved to Potential Client");
-                //  $('#dvActivityData').html(response.responseText);
                 $('#dvClientNotes').html(response.responseText);
+                $('#dvClientNotes').show();
+
+                //alert(@ViewBag.CurrentStage);
             }
-
-
         });
     }
-   // }
+
     function AddReplyToDB() {
-       
-        var e = document.getElementById("ddlclientlist");
-        var strUser = e.options[e.selectedIndex].value;
 
-        if ($('#txtnotes').val() == null || $('#txtnotes').val() == ' ') {
-            swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please enter your comment!'
-            })
+        var ddlclientlist = document.getElementById("ddlclientlist");
+        var strUser = ddlclientlist.options[ddlclientlist.selectedIndex].value;
+
+        var ddlSubStageList = document.getElementById("ddlSubStageList");
+        var strUserSubStage = ddlSubStageList.options[ddlSubStageList.selectedIndex].value;
+
+        if (strUser == 0) {
+            toastr.error("Please select the Client!");
         }
-                 
-         else if (strUser == 0) {
-            swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select the Client!'
-            })
-            }        
+        else if ($("#txtnotes").val() == null || $("#txtnotes").val() == "") {
+            toastr.error("Please enter your comment!");
+            return false;
+        }
+        else if(strUserSubStage == 0)
+        {
+            toastr.error("Please select Client Sub Stage!");
+        }
         else {
-
             var data = $('#frmaddNotes').serialize();
             console.log(data);
             $.ajax({
@@ -131,24 +128,13 @@
                                 console.log(id);
                                 GetNotes(id);
                                 $('#txtnotes').val() == '';
-                                
+
                             }
                         });
                     }
                     else {
                         toastr.error('error occured while adding data');
                     }
-                    //// for success - green box
-                    //toastr.success('Success messages');
-
-                    //// for errors - red box
-                    //toastr.error('errors messages');
-
-                    //// for warning - orange box
-                    //toastr.warning('warning messages');
-
-                    //// for info - blue box
-                    //toastr.info('info messages');
                 }
             });
         }

@@ -20,6 +20,8 @@ namespace LMSWeb.ViewModel
         public tblCRMUsersNZQADetail ObjCRMUsersNZQADetail { get; set; }
         public tblCRMNote ObjCRMNote { get; set; }
         public List<tblCRMNote> ObjCRMNoteLST { get; set; }
+        public List<FileNotesDetails> lstNotes { get; set; }
+        public List<string> lstNotesSubStages { get; set; }
 
         public List<SelectListItem> VisaCountriesList { get; set; }
         public List<SelectListItem> CountriesCodes { get; set; }
@@ -31,6 +33,8 @@ namespace LMSWeb.ViewModel
         public List<SelectListItem> WhereDidYouFindUsList { get; set; }
         public List<SelectListItem> CurrentVisaTypeList { get; set; }
         public List<SelectListItem> VisaStatusList { get; set; }
+        public List<SelectListItem> SubStagesList { get; set; }
+        public List<SelectListItem> StagesList { get; set; }
         public SelectListItem[] Gender()
         {
             return new SelectListItem[2] { new SelectListItem() { Text = "Male" }, new SelectListItem() { Text = "Female" } };

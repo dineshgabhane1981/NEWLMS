@@ -14,6 +14,7 @@ namespace LMSWeb.Controllers
 {
     public class CRMUsersController : Controller
     {
+        CRMNotesRepository crmNotesRepository = new CRMNotesRepository();
         CRMUsersRepository crmUsersRepository = new CRMUsersRepository();        
         public ActionResult Enquiry()
         {
@@ -167,8 +168,7 @@ namespace LMSWeb.Controllers
         {
             CRMUserViewModel objModel = new CRMUserViewModel();
             objModel = FillAlldropdownLists(objModel);
-            objModel.ObjCRMUser = crmUsersRepository.GetCRMUserById(userId);
-            //objCRMUserViewModel.ObjCRMUsersOtherInfo = crmUsersRepository.GetCRMUserOtherInfoById(userId);
+            objModel.ObjCRMUser = crmUsersRepository.GetCRMUserById(userId);            
             objModel.ObjCRMUsersBillingAddress = crmUsersRepository.GetCRMUserBillingAddressById(userId);
             objModel.ObjCRMUsersPassportDetail = crmUsersRepository.GetCRMUserPassportDetailById(userId);
             objModel.ObjCRMUsersVisaDetail = crmUsersRepository.GetCRMUserVisaDetailById(userId);
@@ -177,6 +177,8 @@ namespace LMSWeb.Controllers
             objModel.ObjCRMUsersINZLoginDetail = crmUsersRepository.GetCRMUserINZLoginDetailById(userId);
             objModel.ObjCRMUsersNZQADetail = crmUsersRepository.GetCRMUserNZQADetailById(userId);
             objModel.ObjCRMNoteLST = crmUsersRepository.GetCRMUserFileNotesById(userId);
+            objModel.lstNotes = crmNotesRepository.GetCRMUserFileNotesById(userId);
+            objModel.lstNotesSubStages = crmNotesRepository.GetCRMUserFileNotesSubStagesById(userId);
 
             return objModel;
 
@@ -191,6 +193,10 @@ namespace LMSWeb.Controllers
             objModel.UserCountryList = crmUsersRepository.GetCountries();
             objModel.CurrentVisaTypeList = crmUsersRepository.GetVisaType();
             objModel.VisaStatusList = crmUsersRepository.GetVisaStatus();
+            
+            TblUser sessionUser = (TblUser)Session["UserSession"];            
+            objModel.SubStagesList = crmNotesRepository.GetCRMClientSubStages(Convert.ToInt32(sessionUser.CRMClientId));
+            objModel.StagesList = crmUsersRepository.GetCRMStagesList(Convert.ToInt32(sessionUser.CRMClientId));
             return objModel;
         }
     }

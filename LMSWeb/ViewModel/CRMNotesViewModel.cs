@@ -10,9 +10,9 @@ namespace LMSWeb.ViewModel
     public class CRMNotesViewModel
     {
         public tblCRMNote objCRMnotes { get; set;}
-
-        public List<tblCRMNote> lstNotes { get; set; }
-
+        public List<FileNotesDetails> lstNotes { get; set; }
+        public List<string> lstNotesSubStages { get; set; }
         public List<SelectListItem> lstCRMclient { get; set; }
-    }
+        public List<SelectListItem> lstSubStages { get; set; }
+    }  
 }
