@@ -10,7 +10,6 @@ const DOMstrings = {
   stepPrevBtnClass: 'js-btn-prev',
   stepNextBtnClass: 'js-btn-next' };
 
-console.log(DOMstrings)
 //remove class from a set of items
 const removeClasses = (elemSet, className) => {
 

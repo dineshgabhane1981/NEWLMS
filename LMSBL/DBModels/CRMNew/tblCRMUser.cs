@@ -94,5 +94,10 @@ namespace LMSBL.DBModels.CRMNew
 
         [StringLength(100)]
         public string WhereDidYouFindUs { get; set; }
+
+        [StringLength(250)]
+        public string CountryResideIn { get; set; }
+
+        public string UserComments { get; set; }
     }
 }

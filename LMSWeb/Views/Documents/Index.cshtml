@@ -1,8 +1,102 @@
-﻿
+﻿@model LMSWeb.ViewModel.CRMDocumentsViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
 }
 
-<h2>Index</h2>
 
+<div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+    <h5 class="multisteps-form__title">Upload Documents</h5>
+    @Html.DropDownListFor(model => model.objCRMDocument.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
+
+    <div class="row col-sm-6 col-md-4 col-xl-3">
+        @if (Model != null)
+        {
+            if (Model.objCRMDocumentLST != null)
+            {
+                if (Model.objCRMDocumentLST.Count > 0)
+                {
+                    foreach (var item in Model.objCRMDocumentLST)
+                    {
+
+                    }
+                }
+            }
+            else
+            {
+                <div class="col-12 col-lg-12 ml-auto mr-auto">
+                    <div class="col-12 col-lg-12 ml-auto mr-auto">
+                        @Html.TextBoxFor(model => model.objCRMDocument.DocumentName, new { @class = "input100", id = "txtDocName", placeholder = "Document Name" })
+                    </div>
+                    <div class="col-12 col-lg-12 ml-auto mr-auto">
+                        &nbsp;&nbsp;&nbsp;<input type="file" name="FileUpload" id="FileUpload" style="width: 100%;" />
+                        <input type="hidden" id="hdnFile" />
+                    </div>
+                    <div class="col-12 col-lg-12 ml-auto mr-auto">
+                        <br />
+                        <button type="button" id="btnDocAdd" class="btn btn-primary profle-submit-btn "><img src="~/assets/images/check-img.png" /> Add</button>
+                    </div>
+                </div>
+            }
+            <div id="dvDocuments"></div>
+            <div class="col-12 col-lg-12 ml-auto mr-auto">
+                <br />
+                <button type="button" id="btnDocSave" class="btn btn-primary profle-submit-btn "><img src="~/assets/images/check-img.png" /> Save</button>
+            </div>
+        }
+
+
+
+    </div>
+
+</div>
+<script>
+    var docList = [];
+    var srNo = 0;
+    $(document).ready(function () {
+        document.getElementById("FileUpload").addEventListener('change', handleFileSelect, false);
+        $('#btnDocAdd').on("click", function () {
+            AddDocToList();
+        });
+    });
+    function AddDocToList() {
+        var DocName = $("#txtDocName").val();
+        var clientId = $("#ddlclientlist option:selected").val();
+        var clientName = $("#ddlclientlist option:selected").text();
+        srNo++;
+        optionItem = {}
+        optionItem["index"] = srNo;
+        optionItem["ClientId"] = clientId;
+        optionItem["ClientName"] = clientName;
+        optionItem["DocName"] = DocName;
+        optionItem["FileString"] = $("#hdnFile").val();
+        //optionItem["UserId"] = this.value;
+        optionItem["delete"] = "<input type='button' id='" + srNo + "' onclick='DeleteActivity(" + srNo + ")' value='Delete'>";
+        docList.push(optionItem);
+        console.log(docList);
+    }
+
+
+    function handleFileSelect(evt) {
+        var id = evt.currentTarget.id;
+        var qId = id.substring(4, id.length);
+        var f = evt.target.files[0]; // FileList object
+        var reader = new FileReader();
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+            return function (e) {
+                var binaryData = e.target.result;
+                //Converting Binary Data to base 64
+
+                var base64String = window.btoa(binaryData);
+                //console.log(base64String)
+                $("#hdnFile").val(base64String);
+                //$("#FileName").val($("#FileUpload")[0].files[0].name);
+
+                //alert('File converted to base64 successfuly!');
+            };
+        })(f);
+        // Read in the image file as a data URL.
+        reader.readAsBinaryString(f);
+    }
+</script>

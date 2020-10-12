@@ -31,9 +31,6 @@ namespace LMSBL.DBModels.CRMNew
         public DateTime? VisaExpiryDate { get; set; }
 
         [StringLength(250)]
-        public string CountryResideIn { get; set; }
-
-        [StringLength(250)]
         public string AnyPreviousVisaDecline { get; set; }
     }
 }

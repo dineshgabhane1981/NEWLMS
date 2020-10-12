@@ -1,0 +1,156 @@
+﻿@model LMSWeb.ViewModel.EnquiryFormViewModel
+@{
+    ViewBag.Title = "websiteform";
+    //Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+    Layout = null;
+}
+<link rel="icon" href="~/assets/images/favicon.ico" type="image/gif" sizes="16x16">
+<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/assets/CRM/style.css">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+@*<link rel="stylesheet" href="~/CSS/style.css" />
+    <link rel="stylesheet" href="~/CSS/bootstrap/css/bootstrap-steps.min.css" />*@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+<script src="~/assets/SweetAlert.js"></script>
+@using (Html.BeginForm("addenquiry", "EnquiryForm", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddenquiry" }))
+{
+    @*@Html.AntiForgeryToken()*@
+    <div class="row col-sm-6 col-md-4 col-xl-3">
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            @Html.HiddenFor(model => model.uploadFile)
+            @Html.HiddenFor(model => model.FileName)
+            @Html.HiddenFor(model => model.ClientId)
+            Full Name *<br />
+            @Html.TextBoxFor(model => model.ObjCRMUser.FirstName, new { @class = "input100", placeholder = "First Name" })
+        </div>
+        @*<div class="col-12 col-lg-12 ml-auto mr-auto">
+                Last Name as shown in passport *<br />
+                @Html.TextBoxFor(model => model.ObjCRMUser.LastName, new { @class = "input100", placeholder = "Last Name" })
+            </div>*@
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Email *<br />
+            @Html.TextBoxFor(model => model.ObjCRMUser.Email, new { @class = "input100", placeholder = "Valid Email Id" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Contact No *<br />
+            @Html.TextBoxFor(model => model.ObjCRMUser.MobileNo, new { @class = "input100", placeholder = "Contact No" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Date of Birth <br />
+            @Html.TextBoxFor(model => model.ObjCRMUser.DOB, "{0:MM/dd/yyyy}", new { @class = "input100 datepicker", @id = "dtDOB", @readonly = "readonly", @autocomplete = "off", placeholder = "Date of Birth" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Marital Status <br />
+            @Html.DropDownListFor(model => model.ObjCRMUser.MaritalStatus, Model.MaritalStatus(), "Please select", htmlAttributes: new { @class = "input100" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Country you reside in <br />
+            @Html.DropDownListFor(model => model.ObjCRMUser.CountryResideIn, new SelectList(Model.UserCountryList, "Value", "Text"), "Please select", htmlAttributes: new { @class = "input100" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Where Did You Find Us <br />
+            @Html.DropDownListFor(model => model.ObjCRMUser.WhereDidYouFindUs, new SelectList(Model.WhereDidYouFindUsList, "Value", "Text"), "Please select", htmlAttributes: new { @class = "input100" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Qualification <br />
+            @Html.TextBoxFor(model => model.ObjCRMUser.Qualification, new { @class = "input100", placeholder = "Qualification" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Comments <br />
+            @Html.TextAreaFor(model => model.ObjCRMUser.UserComments, new { @class = "input100", placeholder = "Comments" })
+        </div>
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            Upload your CV <br />
+            <input type="file" name="FileUpload" id="FileUpload" style="width: 100%;" />
+
+        </div>
+
+        <div class="col-12 col-lg-12 ml-auto mr-auto">
+            <br />
+            <button type="button" id="btnEnquirySubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Submit</button>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('id');
+        $("#ClientId").val(myParam);
+       
+        $('#dtDOB').datepicker({
+            format: 'mm/dd/yyyy',
+            showWeek: true
+        });
+        document.getElementById("FileUpload").addEventListener('change', handleFileSelect, false);
+        $('#btnEnquirySubmit').on("click", function () {
+            AddEnquiry();
+        });
+    })
+    function handleFileSelect(evt) {
+        var id = evt.currentTarget.id;
+        var qId = id.substring(4, id.length);
+        var f = evt.target.files[0]; // FileList object
+        var reader = new FileReader();
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+            return function (e) {
+                var binaryData = e.target.result;
+                //Converting Binary Data to base 64
+
+                var base64String = window.btoa(binaryData);
+                console.log(base64String)
+                $("#uploadFile").val(base64String);
+                $("#FileName").val($("#FileUpload")[0].files[0].name);
+
+                //alert('File converted to base64 successfuly!');
+            };
+        })(f);
+        // Read in the image file as a data URL.
+        reader.readAsBinaryString(f);
+    }
+    function AddEnquiry() {
+        $("#divLoader").show();
+        var data = $('#frmaddenquiry').serialize();
+        console.log(data);
+        $.ajax({
+            url: $('#frmaddenquiry').attr('action'),
+            type: 'post',
+            dataType: "html",
+            data: data,
+            success: function (data) {
+                console.log(data)
+                if (data == "True") {
+                    toastr.success("User Saved");
+                    $("#divLoader").hide();
+                }
+                else {
+                    toastr.error('error occured while saving data');
+                    $("#divLoader").hide();
+                }
+            }
+        });
+    }
+</script>

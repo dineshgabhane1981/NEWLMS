@@ -86,6 +86,7 @@
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.FirstName, new { @class = "input150", placeholder = "First Name" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.LastName, new { @class = "input150", placeholder = "Last Name" })
                                                 @Html.DropDownListFor(model => model.ObjCRMUser.Gender, Model.Gender(), "Select Gender", htmlAttributes: new { @class = "input150" })
+                                                @Html.DropDownListFor(model => model.ObjCRMUser.CountryResideIn, new SelectList(Model.UserCountryList, "Value", "Text"), "Country Reside in", htmlAttributes: new { @class = "input150" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.AlternateEmail, new { @class = "input150", placeholder = "Alternate Email" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.OtherEmail, new { @class = "input150", placeholder = "Other Email" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.Address, new { @class = "input150", placeholder = "Address" })
@@ -132,13 +133,14 @@
                                                 @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.VisaType, new SelectList(Model.CurrentVisaTypeList, "Value", "Text"), "Current Visa Type", htmlAttributes: new { @class = "input150" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.CurrentNZVisaExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtCurrentNZVisaExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Current New Zealand Visa Expiry Date" })
                                                 @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.UpdateVisaStatus, new SelectList(Model.VisaStatusList, "Value", "Text"), "Visa Status", htmlAttributes: new { @class = "input150" })
-                                                @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.CountryResideIn, new { @class = "input150", placeholder = "Country Reside In" })
+                                                @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.AnyPreviousVisaDecline, new { @class = "input150", placeholder = "Any Previous Visa Decline" })
+                                                
                                             </div>
                                             <div class="col-sm-6">
                                                 @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.TravelConditionsValidTo, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtTravelConditionsValidTo", @readonly = "readonly", @autocomplete = "off", placeholder = "Travel Condition Valid To" })
                                                 @Html.DropDownListFor(model => model.ObjCRMUsersVisaDetail.IntrestedVisa, new SelectList(Model.CurrentVisaTypeList, "Value", "Text"), "Intrested Visa", htmlAttributes: new { @class = "input150" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.VisaExpiryDate, "{0:MM/dd/yyyy}", new { @class = "input150 datepicker", @id = "dtVisaExpiryDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Visa Expiry Date" })
-                                                @Html.TextBoxFor(model => model.ObjCRMUsersVisaDetail.AnyPreviousVisaDecline, new { @class = "input150", placeholder = "Any Previous Visa Decline" })
+                                               
                                             </div>
                                         </div>
                                         <div class="button-row d-flex mt-4">
@@ -377,26 +379,28 @@
     }
 
     $(document).ready(function () {
-        var CurrentSubStage=@Html.Raw(Model.ObjCRMUser.CurrentSubStage);
-        $('#ddlSubStageList').val(CurrentSubStage);
-        $('#ddlSubStageList option').each(function (item) {
-            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', false);
-            $("#ddlSubStageList option[value*='" + item + "']").removeClass('optionClass');
-        });
-        $('#ddlSubStageList option').each(function (item) {
+        var currentStage = $("#ObjCRMUser_CurrentStage").val();        
+        if (currentStage == 3) {
+            var CurrentSubStage =$("#ObjCRMUser_CurrentSubStage").val();
+            $('#ddlSubStageList').val(CurrentSubStage);
+            $('#ddlSubStageList option').each(function (item) {
+                $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', false);
+                $("#ddlSubStageList option[value*='" + item + "']").removeClass('optionClass');
+            });
+            $('#ddlSubStageList option').each(function (item) {
 
-        if (item > CurrentSubStage)
-        {
-            //console.log(item);
-            $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', true);
-            $("#ddlSubStageList option[value*='" + item + "']").addClass('optionClass');
+                if (item > CurrentSubStage) {
+                    //console.log(item);
+                    $("#ddlSubStageList option[value*='" + item + "']").prop('disabled', true);
+                    $("#ddlSubStageList option[value*='" + item + "']").addClass('optionClass');
+                }
+            });
         }
-        });
 
         $('#btnSubmitUser').on("click", function () {
-            AddUser();            
+            AddUser();
         });
-        
+
         $('#ddlclientlist').change(function () {
                 $('#ddlclientlist option').each(function (index) {
                     if (($(this).is(':selected'))) {

@@ -9,6 +9,7 @@ using LMSBL.DBModels.CRMNew;
 using LMSBL.DBModels;
 using LMSBL.Repository;
 using LMSWeb.ViewModel;
+using System.Threading;
 
 namespace LMSWeb.Controllers
 {
@@ -40,7 +41,7 @@ namespace LMSWeb.Controllers
         }
                 
         public ActionResult LoadNotes(int Id)
-        {
+        {            
             CRMNotesViewModel objNotesViewModel = new CRMNotesViewModel();
             objNotesViewModel.lstNotes = crmnr.GetCRMUserFileNotesById(Id);
             objNotesViewModel.lstNotesSubStages = crmnr.GetCRMUserFileNotesSubStagesById(Id);

@@ -14,8 +14,8 @@
         @Html.DropDownListFor(model => model.objCRMnotes.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
         @Html.DropDownListFor(model => model.objCRMnotes.SubStage, new SelectList(Model.lstSubStages, "Value", "Text"), "Select Sub stage", htmlAttributes: new { id = "ddlSubStageList", @class = "input100" })
         @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Phone") Phone
-        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Personally") Personally
-        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Whats App") Whats App
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "In Person") In Person
+        @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Chat") Chat
         @Html.RadioButtonFor(model => model.objCRMnotes.CommunicationSource, "Email") Email
         <div class="multisteps-form__content">
             @Html.TextAreaFor(model => model.objCRMnotes.Notes, new { @class = "input150", id = "txtnotes" })
@@ -69,6 +69,7 @@
     });
 
     function GetNotes(id) {
+        $("#divLoader").show();
         $.ajax({
             type: "POST",
             url: "/FileNotes/LoadNotes",
@@ -84,6 +85,7 @@
             error: function (response) {
                 $('#dvClientNotes').html(response.responseText);
                 $('#dvClientNotes').show();
+                $("#divLoader").hide();
 
                 //alert(@ViewBag.CurrentStage);
             }
@@ -110,6 +112,7 @@
             toastr.error("Please select Client Sub Stage!");
         }
         else {
+             
             var data = $('#frmaddNotes').serialize();
             console.log(data);
             $.ajax({
