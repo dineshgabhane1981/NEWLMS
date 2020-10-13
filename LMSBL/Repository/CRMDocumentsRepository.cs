@@ -30,9 +30,7 @@ namespace LMSBL.Repository
         string AWSSecretKey = ConfigurationManager.AppSettings["AWSSecretKey"];
         string AWSBucketName = ConfigurationManager.AppSettings["AWSBucketName"];
 
-        string abc = string.Empty;
-        //string AWSAccessKey = "AKIAIF6JGFPZPU7MZETA";
-        //string AWSSecretKey = "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";
+        string abc = string.Empty;       
         public bool AddEnquiryDocument(int ClientId, string fileBase64String, string fileName)
         {
             bool result = false;
