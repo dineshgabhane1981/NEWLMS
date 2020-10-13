@@ -1,8 +1,86 @@
-﻿
+﻿@model LMSWeb.ViewModel.CRMNotesViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
 }
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial;
+    }
 
-<h2>Index</h2>
+    /* Style tab links */
+    .tablink {
+        background-color: #555;
+        color: white;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        font-size: 17px;
+        width: 25%;
+    }
+
+        .tablink:hover {
+            background-color: #777;
+        }
+
+    /* Style the tab content (and add height:100% for full page content) */
+    .tabcontent {
+        color: white;
+        display: none;
+        padding: 100px 20px;
+        height: 100%;
+    }
+</style>
+@*@using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddNotes", @class = "multisteps-form__form" }))
+{*@
+
+    <button class="tablink" onclick="openPage('dvUpdateStages', this)">Update Stages</button>
+    <button class="tablink" onclick="openPage('dvprofile', this)" id="defaultOpen">profile</button>
+    <button class="tablink" onclick="openPage('dvmanageuser', this)">Manage User</button>
+
+    <div id="dvmanageuser" class="tabcontent">
+        @Html.Partial("~/Views/AdminSettings/_ManageUser.cshtml")
+    </div>
+
+    <div id="dvUpdateStages" class="tabcontent">
+        @Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml")
+    </div>
+
+    <div id="dvprofile" class="tabcontent">
+        @*@Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml", Model)*@
+        <h3>profile</h3>
+    </div>
+@*}  *@
+    <script>
+        function openPage(pageName, elmnt) {
+            // Hide all elements with class="tabcontent" by default */
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                // console.log('inside');
+            }
+
+            // Remove the background color of all tablinks/buttons
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+
+            // Add the specific color to the button used to open the tab content
+            //  elmnt.style.backgroundColor = color;
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+
+
 
