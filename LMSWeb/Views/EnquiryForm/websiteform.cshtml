@@ -147,13 +147,17 @@
         $("#divLoader").show();
         var data = $('#frmaddenquiry').serialize();
         console.log(data);
-        if (!isEmail($("#txtemailid").val()) || $("#txtemailid").val() == "") {
-            toastr.error("Please Enter Valid Email Id!");
+         if ( $("#txtfirstnm").val() == "") {
+             toastr.error("Please Enter Valid First Name!");
+             $("#txtfirstnm").focus();
+        }
+       else if (!isEmail($("#txtemailid").val()) || $("#txtemailid").val() == "") {
+             toastr.error("Please Enter Valid Email Id!");
+             $("#txtemailid").focus();
         }
         else if (!isNumberKey($("#txtcontactno").val())||$("#txtcontactno").val() == "") {
-            toastr.error("Please Enter Valid Contact Number!");
-        } else if (!onlyAlphabate($("#txtfirstnm").val())||$("#txtfirstnm").val() == "") {
-            toastr.error("Please Enter Valid First Name!");
+             toastr.error("Please Enter Valid Contact Number!");
+             $("#txtcontactno").focus();
         } else {
             $.ajax({
                 url: $('#frmaddenquiry').attr('action'),
