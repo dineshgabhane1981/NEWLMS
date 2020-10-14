@@ -21,11 +21,14 @@ namespace LMSBL.DBModels.CRMNew
 
         public DateTime UpdatedDate { get; set; }
 
-        public int UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
-        public bool? IsReviewed { get; set; }
+        public bool? IsDocumentLocation { get; set; }
 
         [StringLength(500)]
         public string Comments { get; set; }
+
+        [StringLength(250)]
+        public string DocumentfileName { get; set; }
     }
 }

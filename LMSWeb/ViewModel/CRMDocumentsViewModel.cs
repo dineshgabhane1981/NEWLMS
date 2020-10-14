@@ -13,5 +13,6 @@ namespace LMSWeb.ViewModel
         public List<tblCRMDocument> objCRMDocumentLST { get; set; }
         public List<SelectListItem> lstCRMclient { get; set; }
         public string documentData { get; set; }
+        public string documentFileName { get; set; }
     }
 }

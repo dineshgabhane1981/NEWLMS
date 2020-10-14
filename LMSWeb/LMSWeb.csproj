@@ -908,6 +908,7 @@
     <Content Include="Views\EnquiryForm\websiteform.cshtml" />
     <Content Include="Views\AdminSettings\_ManageUser.cshtml" />
     <Content Include="Views\AdminSettings\_UpdateStages.cshtml" />
+    <Content Include="Views\Documents\_documentList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
