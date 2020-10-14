@@ -13,5 +13,6 @@ namespace LMSBL.DBModels
         public string VisaIntrested { get; set; }
         public int? CurrentSubStage { get; set; }
         public string ContactNo { get; set; }
-}
+        public DateTime? DueDate { get; set; }
+    }
 }

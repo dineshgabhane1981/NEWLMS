@@ -45,8 +45,8 @@ namespace LMSWeb.Controllers
         {
             CRMDocumentsViewModel objCRMDocumentsViewModel = new CRMDocumentsViewModel();
             var docList = crmDocRepo.GetCRMDocumentList(Id);
-            objCRMDocumentsViewModel.objCRMDocumentLST = docList;            
-            return PartialView("_documentList", objCRMDocumentsViewModel);
+            //objCRMDocumentsViewModel.objCRMDocumentLST = docList;            
+            return PartialView("_documentList", docList);
         }
 
         public ActionResult DownloadDocuments(int Id)

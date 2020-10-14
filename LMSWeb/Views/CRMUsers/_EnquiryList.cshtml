@@ -31,6 +31,8 @@
 
                                 foreach (var user in Model)
                                 {
+                                    LMSWeb.App_Start.CommonFunctions common = new LMSWeb.App_Start.CommonFunctions();
+                                    string userId = common.EncryptString(Convert.ToString(user.Id));
                                     <tr>
                                         <td>@user.Name</td>
                                         <td>@user.Email</td>
@@ -39,29 +41,24 @@
                                         <td>@user.CreatedDate</td>
                                         @*  <td>@user.CreatedDate</td>*@
 
-                                    <td style="text-align:center;">
-                                        @if (ViewBag.StageForButton == 1)
-                                        {
-                                            <a href="@Url.Action("AddEnquiry", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
-                                            <a href="#" onclick="MoveClient(@user.Id,2,1);" class="login" title="Move to Potential Client"><img width="19" src="~/assets/images/PotentialClient.svg" /></a>
-                                            <a href="#" onclick="MoveClient(@user.Id,3,1);" class="login" title="Move to Client"><img width="20" src="~/assets/images/Client.svg" /></a>
-                                        }
-                                        else if (ViewBag.StageForButton == 2)
-                                        {
-                                            <a href="@Url.Action("AddPotentialClient", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
-                                            <a href="#" onclick="MoveClient(@user.Id,1,2);" class="login" title="Move to Inquiry"><img width="20" src="~/assets/images/Inquiry.svg" /></a>
-                                            <a href="#" onclick="MoveClient(@user.Id,3,2);" class="login" title="Move to Client"><img width="20" src="~/assets/images/Client.svg" /></a>
-                                        }
-                                        else if (ViewBag.StageForButton == 3)
-                                        {
-
-                                            <a href="@Url.Action("AddClient", "CRMUsers", new { id = user.Id })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
-                                            @*<a href="#" onclick="MoveClient(@user.Id,3,2);" class="login" title="Move to Client"><img src="~/assets/images/PotentialClient.jpg" /></a>*@
-                                        }
-
-
-                                    </td>
-
+                                        <td style="text-align:center;">
+                                            @if (ViewBag.StageForButton == 1)
+                                            {
+                                                <a href="@Url.Action("AddEnquiry", "CRMUsers", new { myid = userId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
+                                                <a href="#" onclick="MoveClient(@user.Id,2,1);" class="login" title="Move to Potential Client"><img width="19" src="~/assets/images/PotentialClient.svg" /></a>
+                                                <a href="#" onclick="MoveClient(@user.Id,3,1);" class="login" title="Move to Client"><img width="20" src="~/assets/images/Client.svg" /></a>
+                                            }
+                                            else if (ViewBag.StageForButton == 2)
+                                            {
+                                                <a href="@Url.Action("AddPotentialClient", "CRMUsers", new { myid = userId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>
+                                                <a href="#" onclick="MoveClient(@user.Id,1,2);" class="login" title="Move to Inquiry"><img width="20" src="~/assets/images/Inquiry.svg" /></a>
+                                                <a href="#" onclick="MoveClient(@user.Id,3,2);" class="login" title="Move to Client"><img width="20" src="~/assets/images/Client.svg" /></a>
+                                            }
+                                            else if (ViewBag.StageForButton == 3)
+                                            {
+                                                <a href="@Url.Action("AddClient", "CRMUsers", new { myid = userId })" class="login" title="Edit"><img src="~/assets/images/shape_editUser.png" /></a>                                                
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             }

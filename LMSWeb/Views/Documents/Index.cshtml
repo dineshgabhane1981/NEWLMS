@@ -8,10 +8,13 @@
 {
     <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
         <h5 class="multisteps-form__title">Upload Documents</h5>
-        @Html.DropDownListFor(model => model.objCRMDocument.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
-        @Html.HiddenFor(model => model.documentData)
-        @Html.HiddenFor(model => model.documentFileName)
-
+        <div class="row col-sm-12 col-md-12 col-xl-12 ml-auto mr-auto">
+            <div class="row col-sm-12 col-md-12 col-xl-12 ml-auto mr-auto">
+                @Html.DropDownListFor(model => model.objCRMDocument.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientdoclist", @class = "input100" })
+                @Html.HiddenFor(model => model.documentData)
+                @Html.HiddenFor(model => model.documentFileName)
+            </div>
+        </div>
         <div class="row col-sm-12 col-md-12 col-xl-12">
 
             <div class="col-12 col-lg-12 ml-auto mr-auto" style="float:left;">
@@ -35,13 +38,16 @@
                     <button type="button" id="btnDocAdd" class="btn btn-primary profle-submit-btn "><img src="~/assets/images/check-img.png" /> Add</button>
                 </div>
                 @*<div class="col-4 col-lg-4 ml-auto mr-auto" style="float:left;text-align: end;">
-                    <button type="button" id="btnDocAdd" class="btn btn-primary profle-submit-btn "><img src="~/assets/images/check-img.png" /> Add</button>
-                </div>*@
+                        <button type="button" id="btnDocAdd" class="btn btn-primary profle-submit-btn "><img src="~/assets/images/check-img.png" /> Add</button>
+                    </div>*@
             </div>
 
 
             <div id="dvDocuments" class="col-12 col-lg-12 ml-auto mr-auto">
-                @Html.Partial("~/Views/Documents/_documentList.cshtml", Model)
+                @if (Model.objCRMDocumentLST != null)
+                {
+                    @Html.Partial("~/Views/Documents/_documentList.cshtml", Model.objCRMDocumentLST)
+                }
             </div>
 
         </div>
@@ -49,8 +55,7 @@
     </div>
 }
 <script>
-    var docList = [];
-    var srNo = 0;
+
     $(document).ready(function () {
         document.getElementById("FileUpload").addEventListener('change', handleFileSelect, false);
         $('#btnDocAdd').on("click", function () {
@@ -62,8 +67,16 @@
     });
 
     function AddLocation() {
-        var clientId = $('#ddlclientlist').val();
+        var clientId = $('#ddlclientdoclist').val();
         var link = $('#txtDocLink').val();
+        if (clientId == "") {
+            toastr.error('Please select Client');
+            return false;
+        }
+        if (link == "") {
+            toastr.error('Please enter document path');
+            return false;
+        }
 
         $("#divLoader").show();
         $.ajax({
@@ -94,6 +107,22 @@
 
 
     function AddDocToDB() {
+        var clientId = $('#ddlclientdoclist').val();
+        if (clientId == "") {
+            toastr.error('Please select Client');
+            return false;
+        }
+        var DocName = $('#txtDocName').val();
+        if (DocName == "") {
+            toastr.error('Please enter document name');
+            return false;
+        }
+        var selectedFile = $("#documentData").val();
+        if (selectedFile == "") {
+            toastr.error('Please select document');
+            return false;
+        }
+
         $("#divLoader").show();
         var data = $('#frmadddocument').serialize();
 
@@ -104,7 +133,7 @@
             data: data,
             success: function (response) {
                 toastr.success("Document Uploaded Successfully!");
-                $('#ddlclientlist option').each(function (index) {
+                $('#ddlclientdoclist option').each(function (index) {
                     if (($(this).is(':selected'))) {
                         var id = this.value;
                         if (id != null && id != "") {
@@ -117,7 +146,7 @@
             },
             error: function (response) {
                 toastr.success("Document Uploaded Successfully!");
-                $('#ddlclientlist option').each(function (index) {
+                $('#ddlclientdoclist option').each(function (index) {
                     if (($(this).is(':selected'))) {
                         var id = this.value;
                         if (id != null && id != "") {
@@ -151,8 +180,8 @@
         reader.readAsBinaryString(f);
     }
 
-    $('#ddlclientlist').change(function () {
-        $('#ddlclientlist option').each(function (index) {
+    $('#ddlclientdoclist').change(function () {
+        $('#ddlclientdoclist option').each(function (index) {
             if (($(this).is(':selected'))) {
                 var id = this.value;
                 if (id != null && id != "") {

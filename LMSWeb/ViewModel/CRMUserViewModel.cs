@@ -21,6 +21,8 @@ namespace LMSWeb.ViewModel
         public tblCRMNote ObjCRMNote { get; set; }
         public List<tblCRMNote> ObjCRMNoteLST { get; set; }
         public List<FileNotesDetails> lstNotes { get; set; }
+        public tblCRMDocument ObjCRMDocument { get; set; }
+        public List<tblCRMDocument> ObjCRMDocumentLST { get; set; }
         public List<string> lstNotesSubStages { get; set; }
 
         public List<SelectListItem> VisaCountriesList { get; set; }
@@ -51,6 +53,8 @@ namespace LMSWeb.ViewModel
         {
             return new SelectListItem[3] { new SelectListItem() { Text = "ASH" }, new SelectListItem() { Text = "ASH with Conditions" }, new SelectListItem() { Text = "Not ASH" } };
         }
+
+        public string Clone { get; set; }
     }
 
 
