@@ -227,6 +227,7 @@
     <Compile Include="ViewModel\QuizSession.cs" />
     <Compile Include="ViewModel\QuizViewModel.cs" />
     <Compile Include="ViewModel\SCORMJSON.cs" />
+    <Compile Include="ViewModel\TblUserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\BodyImages\5.jpeg" />

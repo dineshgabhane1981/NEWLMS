@@ -1,4 +1,4 @@
-﻿@model LMSWeb.ViewModel.CRMNotesViewModel
+﻿@model LMSWeb.ViewModel.TblUserViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
@@ -12,10 +12,10 @@
 
     /* Style tab links */
     .tablink {
-        background-color: #555;
+        background-color: darkblue;
         color: white;
         float: left;
-        border: none;
+        border: solid white;
         outline: none;
         cursor: pointer;
         padding: 14px 16px;
@@ -24,61 +24,148 @@
     }
 
         .tablink:hover {
-            background-color: #777;
+            background-color: darkblue;
+            color:black;
         }
 
     /* Style the tab content (and add height:100% for full page content) */
     .tabcontent {
-        color: white;
+        color: black;
         display: none;
         padding: 100px 20px;
         height: 100%;
     }
-</style>
-@*@using (Html.BeginForm("", "", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddNotes", @class = "multisteps-form__form" }))
-{*@
+    #Home {
+        background-color: red;
+    }
 
-    <button class="tablink" onclick="openPage('dvUpdateStages', this)">Update Stages</button>
-    <button class="tablink" onclick="openPage('dvprofile', this)" id="defaultOpen">profile</button>
-    <button class="tablink" onclick="openPage('dvmanageuser', this)">Manage User</button>
+    #dvmanageuser {
+        background-color: white;
+    }
+
+    #dvprofile {
+        background-color: white;
+    }
+
+    #dvUpdateStages {
+        background-color: white;
+    }
+
+</style>
+@using (Html.BeginForm("UpdateUser", "AdminSettings", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmupdateUser", @class = "multisteps-form__form" }))
+{
+
+    
+    <button class="tablink" onclick="openPage('dvprofile', this,'darkblue')" id="defaultOpen">profile</button>
+    <button class="tablink" onclick="openPage('dvmanageuser', this,'orange')">Manage User</button>
+    <button class="tablink" onclick="openPage('dvUpdateStages', this,'red')">Update Stages</button>
 
     <div id="dvmanageuser" class="tabcontent">
-        @Html.Partial("~/Views/AdminSettings/_ManageUser.cshtml")
+        @Html.Partial("~/Views/AdminSettings/_ManageUser.cshtml",Model)
     </div>
 
     <div id="dvUpdateStages" class="tabcontent">
-        @Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml")
+        @Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml",Model)
     </div>
 
     <div id="dvprofile" class="tabcontent">
-        @*@Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml", Model)*@
-        <h3>profile</h3>
+        <div class="col-md-8 profile-details list-box" style="padding-left:20px;">
+            <div class="row pt-5 pl-4">
+                <div class="col-sm-12 col-lg-6">
+                    <h4 class="mb-4">Personal Info</h4>
+                    @Html.HiddenFor(model => model.objtbluser.UserId)
+                    @Html.HiddenFor(model => model.objtbluser.RoleId)
+                    @Html.HiddenFor(model => model.objtbluser.IsMyProfile)
+                    @Html.TextBoxFor(model => model.objtbluser.FirstName, new { @class = "input100", placeholder = "First Name" })
+                    @Html.TextBoxFor(model => model.objtbluser.LastName, new { @class = "input100", placeholder = "Last Name" })
+                    @Html.TextBoxFor(model => model.objtbluser.EmailId, new { @class = "input100", @readonly = "readonly", placeholder = "Email Id" })
+                    @Html.TextBoxFor(model => model.objtbluser.DOB, "{0:MM/dd/yyyy}", new { @class = "input100 datepicker", @id = "dtDOB", @readonly = "readonly", @autocomplete = "off", placeholder = "Date of Birth" })
+                    @Html.TextBoxFor(model => model.objtbluser.ContactNo, new { @class = "input100", placeholder = "Contact No" })
+
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <h4 class="mb-4">Password Settings</h4>
+                    @Html.PasswordFor(model => model.objtbluser.OldPassword, new { @class = "input100", placeholder = "Current Password" })
+                    @Html.PasswordFor(model => model.objtbluser.Password, new { @class = "input100", placeholder = "New Password" })
+                    @Html.PasswordFor(model => model.objtbluser.ConfirmPassword, new { @class = "input100", placeholder = "Confirm Password" })
+                    <div class="col-3 p-0">
+                        Upload Logo
+                    </div>
+                    <div class="form-group col-5 pl-0">
+                        <input type="file" name="file" id="file" style="width: 50%;" accept=".zip" />
+                        <div>
+                            <small>(File should not exceed 20 MB)</small>
+                        </div>
+                    </div>
+                    <div class="col-3 p-0" id="lnkCourseFile">
+                        <a href="#">
+                            @*@Model.objtblCRMClient.ClientLogo*@
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end pr-4">
+                <button type="button" id="btnUsersubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                <button type="button" onclick="location.href='@Url.Action("Index", "Home")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+            </div>
+        </div>
     </div>
-@*}  *@
+    } 
     <script>
-        function openPage(pageName, elmnt) {
+        $(document).ready(function () {
+           
+
+            //$('#btnUsersubmit').on("click", function () {
+            //    UpdateToDB();
+            //});
+        });
+        function UpdateToDB() {
+
+           
+            var data = $('#frmupdateUser').serialize();
+                console.log(data);
+                $.ajax({
+                    url: $('#frmupdateUser').attr('action'),
+                    type: 'post',
+                    dataType: "html",
+                    data: data,
+                    success: function (data) {
+                        console.log(data)
+                        if (data == "True") {
+                            toastr.success("user Updated");
+                            //console.log(sucess);
+
+                        }
+                        else {
+                            toastr.error('error occured while adding data');
+                        }
+                    }
+                });
+            }
+        
+        function openPage(pageName, elmnt, color) {
             // Hide all elements with class="tabcontent" by default */
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
+            console.log(tabcontent);
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
                 // console.log('inside');
             }
-
-            // Remove the background color of all tablinks/buttons
+           //  Remove the background color of all tablinks/buttons
             tablinks = document.getElementsByClassName("tablink");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].style.backgroundColor = "";
             }
 
-            // Show the specific tab content
+           //  Show the specific tab content
             document.getElementById(pageName).style.display = "block";
 
-            // Add the specific color to the button used to open the tab content
-            //  elmnt.style.backgroundColor = color;
+           //  Add the specific color to the button used to open the tab content
+              elmnt.style.backgroundColor = color;
         }
 
-        // Get the element with id="defaultOpen" and click on it
+       //  Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
     </script>
 
