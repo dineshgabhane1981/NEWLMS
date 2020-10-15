@@ -214,6 +214,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\CRMClientStagesViewModel.cs" />
     <Compile Include="ViewModel\CRMClientViewModel.cs" />
     <Compile Include="ViewModel\CRMDocumentsViewModel.cs" />
     <Compile Include="ViewModel\CRMInvoiceViewModel.cs" />
@@ -911,6 +912,7 @@
     <Content Include="Views\AdminSettings\_ManageUser.cshtml" />
     <Content Include="Views\AdminSettings\_UpdateStages.cshtml" />
     <Content Include="Views\Documents\_documentList.cshtml" />
+    <Content Include="Views\AdminSettings\_UserProfile.cshtml" />
     <Content Include="Views\Invoice\_InvoiceList.cshtml" />
   </ItemGroup>
   <ItemGroup>

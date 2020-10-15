@@ -10,6 +10,7 @@ using LMSWeb.App_Start;
 using System.Net;
 using System.Collections;
 using LMSWeb.ViewModel;
+using LMSBL.DBModels.CRMNew;
 
 namespace LMSWeb.Controllers
 {
@@ -20,6 +21,7 @@ namespace LMSWeb.Controllers
         RolesRepository rr = new RolesRepository();
         TenantRepository tr = new TenantRepository();
         Exceptions newException = new Exceptions();
+        CRMRepository cr = new CRMRepository();
         // GET: AdminSettings
         public ActionResult Index()
         {
@@ -33,20 +35,46 @@ namespace LMSWeb.Controllers
             objEditData = userDetails[0];
             objEditData.UserRoles = rr.GetAllRoles();
             //objEditData.Tenants = tr.GetAllTenants();
-
             objEditData.IsMyProfile = true;
+            List<tblCRMClient> clientdetails = new List<tblCRMClient>();
+            clientdetails = cr.GetClientById(Convert.ToInt32(model.CRMClientId));
+            tblCRMClient objcrmclient = new tblCRMClient();
+            objcrmclient = clientdetails[0];
+            objuserviewmodel.objtblCRMClient = objcrmclient;
             objuserviewmodel.objtbluser = objEditData;
             return View("Index", objuserviewmodel);
 
 
         }
         [HttpPost]
-        public ActionResult UpdateUser(TblUserViewModel objUserviewmodel)
+        public ActionResult UpdateUser(TblUserViewModel objUserviewmodel, HttpPostedFileBase file)
         {
             LMSBL.DBModels.TblUser model = new LMSBL.DBModels.TblUser();
             model = (LMSBL.DBModels.TblUser)Session["UserSession"];
             int rows = 0;
+            bool ResultUpdate;
+
+            if (file != null)
+            {
+                //var profileURL = System.Configuration.ConfigurationManager.AppSettings["ProfileImages"];
+                //var profilePhysicalURL = System.Configuration.ConfigurationManager.AppSettings["ProfileImagesPhysicalURL"];
+
+                //if (!System.IO.Directory.Exists(profilePhysicalURL + "\\" + objUser.TenantId))
+                //{
+                //    System.IO.Directory.CreateDirectory(profilePhysicalURL + "\\" + objUser.TenantId);
+                //}
+
+                //string filePhysicalPath = System.IO.Path.Combine(profilePhysicalURL + "\\" + objUser.TenantId + "\\" + objUser.UserId + ".jpg");
+                //string path = System.IO.Path.Combine(profileURL + "\\" + objUser.TenantId + "\\" + objUser.UserId + ".jpg");
+                //file.SaveAs(filePhysicalPath);
+                //objUser.profileImage = path;
+            }
+
             rows = ur.EditUser(objUserviewmodel.objtbluser);
+            if(!string.IsNullOrEmpty(objUserviewmodel.objtblCRMClient.ClientLogo))
+            {
+                ResultUpdate = cr.UpdateCRMClient(Convert.ToInt32(model.CRMClientId), objUserviewmodel.objtblCRMClient.ClientLogo);
+            }
             if (objUserviewmodel.objtbluser.IsMyProfile)
             {
                 if (!string.IsNullOrEmpty(objUserviewmodel.objtbluser.OldPassword) && !string.IsNullOrEmpty(objUserviewmodel.objtbluser.Password))
@@ -57,6 +85,7 @@ namespace LMSWeb.Controllers
                     var result = ur.ChangePassword(objUserviewmodel.objtbluser, objUserviewmodel.objtbluser.Password);
 
                 }
+
             }
             if (objUserviewmodel.objtbluser.IsMyProfile)
             {

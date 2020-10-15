@@ -56,68 +56,34 @@
 {
 
     
-    <button class="tablink" onclick="openPage('dvprofile', this,'darkblue')" id="defaultOpen">profile</button>
-    <button class="tablink" onclick="openPage('dvmanageuser', this,'orange')">Manage User</button>
-    <button class="tablink" onclick="openPage('dvUpdateStages', this,'red')">Update Stages</button>
+    <button type="button" class="tablink" onclick="openPage('dvprofile', this,'darkblue')" id="defaultOpen">profile</button>
+    <button type="button"class="tablink" onclick="openPage('dvmanageuser', this,'orange')">Manage User</button>
+    <button type="button" class="tablink" onclick="openPage('dvUpdateStages', this,'red')">Update Stages</button>
 
     <div id="dvmanageuser" class="tabcontent">
         @Html.Partial("~/Views/AdminSettings/_ManageUser.cshtml",Model)
     </div>
 
     <div id="dvUpdateStages" class="tabcontent">
-        @Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml",Model)
+        @Html.Partial("~/Views/AdminSettings/_UpdateStages.cshtml")
     </div>
 
     <div id="dvprofile" class="tabcontent">
-        <div class="col-md-8 profile-details list-box" style="padding-left:20px;">
-            <div class="row pt-5 pl-4">
-                <div class="col-sm-12 col-lg-6">
-                    <h4 class="mb-4">Personal Info</h4>
-                    @Html.HiddenFor(model => model.objtbluser.UserId)
-                    @Html.HiddenFor(model => model.objtbluser.RoleId)
-                    @Html.HiddenFor(model => model.objtbluser.IsMyProfile)
-                    @Html.TextBoxFor(model => model.objtbluser.FirstName, new { @class = "input100", placeholder = "First Name" })
-                    @Html.TextBoxFor(model => model.objtbluser.LastName, new { @class = "input100", placeholder = "Last Name" })
-                    @Html.TextBoxFor(model => model.objtbluser.EmailId, new { @class = "input100", @readonly = "readonly", placeholder = "Email Id" })
-                    @Html.TextBoxFor(model => model.objtbluser.DOB, "{0:MM/dd/yyyy}", new { @class = "input100 datepicker", @id = "dtDOB", @readonly = "readonly", @autocomplete = "off", placeholder = "Date of Birth" })
-                    @Html.TextBoxFor(model => model.objtbluser.ContactNo, new { @class = "input100", placeholder = "Contact No" })
+        @Html.Partial("~/Views/AdminSettings/_UserProfile.cshtml", Model)
 
-                </div>
-                <div class="col-sm-12 col-lg-6">
-                    <h4 class="mb-4">Password Settings</h4>
-                    @Html.PasswordFor(model => model.objtbluser.OldPassword, new { @class = "input100", placeholder = "Current Password" })
-                    @Html.PasswordFor(model => model.objtbluser.Password, new { @class = "input100", placeholder = "New Password" })
-                    @Html.PasswordFor(model => model.objtbluser.ConfirmPassword, new { @class = "input100", placeholder = "Confirm Password" })
-                    <div class="col-3 p-0">
-                        Upload Logo
-                    </div>
-                    <div class="form-group col-5 pl-0">
-                        <input type="file" name="file" id="file" style="width: 50%;" accept=".zip" />
-                        <div>
-                            <small>(File should not exceed 20 MB)</small>
-                        </div>
-                    </div>
-                    <div class="col-3 p-0" id="lnkCourseFile">
-                        <a href="#">
-                            @*@Model.objtblCRMClient.ClientLogo*@
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-end pr-4">
-                <button type="button" id="btnUsersubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-                <button type="button" onclick="location.href='@Url.Action("Index", "Home")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
-            </div>
-        </div>
     </div>
     } 
     <script>
         $(document).ready(function () {
            
 
-            //$('#btnUsersubmit').on("click", function () {
-            //    UpdateToDB();
-            //});
+            $('#btnUsersubmit').on("click", function () {
+                UpdateToDB();
+            });
+            $('#btnProfilePic').on("click", function () {
+                $('#file').click();
+            });
+
         });
         function UpdateToDB() {
 
@@ -142,7 +108,19 @@
                     }
                 });
             }
-        
+        function show(input) {
+          //  console.log(input);
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#user_img').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+               // $("#user_img").val(input.files[0]);
+                
+               
+            }
+        }
         function openPage(pageName, elmnt, color) {
             // Hide all elements with class="tabcontent" by default */
             var i, tabcontent, tablinks;
