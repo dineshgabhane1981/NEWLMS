@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using LMSBL.Common;
 using LMSBL.DBModels;
 using LMSBL.DBModels.CRMNew;
+using System.Data.Entity.Migrations;
 
 namespace LMSBL.Repository
 {
@@ -44,6 +45,21 @@ namespace LMSBL.Repository
                 newException.AddException(ex);
                 throw ex;
             }
+        }
+
+        public bool UpdateCRMClient(int ClientId,string clientlogo)
+        {
+            bool result = false;
+            using (var context = new CRMContext())
+            {
+                var objcrmclient = context.tblCRMClients.FirstOrDefault(a => a.ClientID == ClientId);
+                objcrmclient.ClientLogo = clientlogo;
+                context.tblCRMClients.AddOrUpdate(objcrmclient);
+                context.SaveChanges();
+                result = true;
+            }
+            return result;
+
         }
     }
 }

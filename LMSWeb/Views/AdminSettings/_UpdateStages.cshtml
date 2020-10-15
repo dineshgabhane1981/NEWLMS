@@ -1,9 +1,30 @@
-﻿@model LMSWeb.ViewModel.TblUserViewModel
+﻿@model LMSWeb.ViewModel.CRMClientStagesViewModel
 <style>
-    .optionClass {
-        background-color: blue;
-    }
+    
 </style>
 <div id="dvUpdateStages">
     <h1> Update changes</h1>
+    <div class="col-md-8 profile-details list-box" style="padding-left:20px;">
+        <div class="row pt-5 pl-4">
+            <div class="col-sm-12 col-lg-6">
+                <h4 class="mb-4">Stages</h4>
+                @*@Html.HiddenFor(model => model.objtbluser.UserId)
+                    @Html.HiddenFor(model => model.objtbluser.TenantId)
+                    @Html.HiddenFor(model => model.objtbluser.RoleId)
+                    @Html.HiddenFor(model => model.objtbluser.IsMyProfile)*@
+                @Html.TextBoxFor(model => model.objtblCRMClientStage.StageName, new { @class = "input100", placeholder = "First Name" })
+
+
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <h4 class="mb-4">Sub Stages</h4>
+                @Html.TextBoxFor(model => model.objtblCRMClientSubStage.SubStageName, new { @class = "input100", placeholder = "First Name" })
+
+            </div>
+            <div class="row justify-content-end pr-4">
+                <button type="button" id="btnUsersubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                <button type="button" onclick="location.href='@Url.Action("Index", "Home")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
