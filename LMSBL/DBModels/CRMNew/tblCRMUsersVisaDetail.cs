@@ -28,7 +28,7 @@ namespace LMSBL.DBModels.CRMNew
         public string UpdateVisaStatus { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime? VisaExpiryDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
         [StringLength(250)]
         public string AnyPreviousVisaDecline { get; set; }

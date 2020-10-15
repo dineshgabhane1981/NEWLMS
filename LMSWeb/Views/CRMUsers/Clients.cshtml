@@ -68,15 +68,26 @@
                                                     {
                                                         counter++;
                                                         var cardUserId = "cd" + itemUser.UserId;
+                                                        LMSWeb.App_Start.CommonFunctions common = new LMSWeb.App_Start.CommonFunctions();
+                                                        string userId = common.EncryptString(Convert.ToString(itemUser.UserId));
                                                         <div class="card cardPaddingInner draggable shadow-sm" id="@cardUserId" draggable="true" ondragstart="drag(event)">
                                                             <div class="card-body p-2">
                                                                 <div class="card-title">
                                                                     @*<img src="//placehold.it/30" class="rounded-circle float-right">*@
-                                                                    <a href="@Url.Action("AddClient", "CRMUsers", new { id = itemUser.UserId })" class="lead font-weight-light">@itemUser.UserName</a>
+                                                                    <div  style="float:left;">
+                                                                        <a href="@Url.Action("AddClient", "CRMUsers", new { myid = userId })" class="lead font-weight-light">@itemUser.UserName</a>
+                                                                    </div>
+                                                                    <div style="text-align: end;"><a href="@Url.Action("AddClient", "CRMUsers", new { myid = userId, clone="yes" })" class="lead font-weight-light"><b>Clone</b></a></div>
                                                                 </div>
                                                                 <p>
                                                                     @itemUser.VisaIntrested <br />
-                                                                    @itemUser.ContactNo
+                                                                    @itemUser.ContactNo <br />
+                                                                    @if (!string.IsNullOrEmpty(Convert.ToString(itemUser.DueDate)))
+                                                                    {
+                                                                        var dueDate = ((DateTime)@itemUser.DueDate).ToString("MM/dd/yyyy");
+                                                                        @dueDate
+                                                                    }
+
                                                                 </p>
 
                                                                 @*<button class="btn btn-primary btn-sm">View</button>*@

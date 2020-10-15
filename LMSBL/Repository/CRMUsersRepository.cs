@@ -349,6 +349,43 @@ namespace LMSBL.Repository
 
             return status;
         }
+
+        public bool CloneUserData(tblCRMUser ObjCRMUser, tblCRMUsersVisaDetail ObjCRMUsersVisaDetail, tblCRMUsersINZLoginDetail ObjCRMUsersINZLoginDetail)
+        {
+            bool status = false;
+            using (var context = new CRMContext())
+            {
+
+                using (DbContextTransaction transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        ObjCRMUser.Id = 0;
+                        context.tblCRMUsers.AddOrUpdate(ObjCRMUser);
+                        context.SaveChanges();
+
+                        ObjCRMUsersVisaDetail.CRMUserId = ObjCRMUser.Id;
+                        context.tblCRMUsersVisaDetails.AddOrUpdate(ObjCRMUsersVisaDetail);
+                        context.SaveChanges();
+
+                        ObjCRMUsersINZLoginDetail.CRMUserId = ObjCRMUser.Id;
+                        context.tblCRMUsersINZLoginDetails.AddOrUpdate(ObjCRMUsersINZLoginDetail);
+                        context.SaveChanges();
+
+                        transaction.Commit();
+                        status = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        newException.AddException(ex);
+                        throw ex;
+                    }
+                }
+            }
+
+            return status;
+        }
         public List<EnquiryListing> GetCRMUsersAll(int ClientId, int stage)
         {
             List<tblCRMUser> lstCRMUsers = new List<tblCRMUser>();
@@ -521,7 +558,8 @@ namespace LMSBL.Repository
                                      UserName = a.FirstName + " " + a.LastName,
                                      CurrentSubStage = a.CurrentSubStage,
                                      ContactNo = a.MobileNoCountry + " " + a.MobileNo,
-                                     VisaIntrested = d.VisaName
+                                     VisaIntrested = d.VisaName,
+                                     DueDate=b.DueDate
 
                                  }).ToList();
 
