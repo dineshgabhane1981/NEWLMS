@@ -35,6 +35,9 @@ namespace LMSBL.DBModels.CRMNew
         public virtual DbSet<tblCRMClientStage> tblCRMClientStages { get; set; }
         public virtual DbSet<tblCRMClientSubStage> tblCRMClientSubStages { get; set; }
 
+        public virtual DbSet<tblCRMInvoice> tblCRMInvoices { get; set; }
+        public virtual DbSet<tblCRMInvoiceItem> tblCRMInvoiceItems { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }

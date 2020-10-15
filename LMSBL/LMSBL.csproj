@@ -87,6 +87,8 @@
     <Compile Include="DBModels\CRMNew\tblCRMCountry.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMCountryCode.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMDocument.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMInvoice.cs" />
+    <Compile Include="DBModels\CRMNew\tblCRMInvoiceItem.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMNote.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMUser.cs" />
     <Compile Include="DBModels\CRMNew\tblCRMUsersBillingAddress.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Repository\EmailTemplateRepository.cs" />
     <Compile Include="Repository\ForumRepository.cs" />
     <Compile Include="Repository\HomeRepository.cs" />
+    <Compile Include="Repository\InvoiceRepository.cs" />
     <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\QuizRepository.cs" />
     <Compile Include="Repository\ReportRepository.cs" />
