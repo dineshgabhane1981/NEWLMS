@@ -1,8 +1,57 @@
-﻿
+﻿@model LMSWeb.ViewModel.CRMInvoiceViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutCRM.cshtml";
 }
 
-<h2>Index</h2>
 
+@using (Html.BeginForm("AddInvoice", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmaddInvoice", @class = "multisteps-form__form" }))
+{
+
+    <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+        <h5 class="multisteps-form__title">Invoices</h5>
+        <div class="multisteps-form__content" style="display:flex;">
+            <div class="col-sm-6">
+                @Html.DropDownListFor(model => model.ObjCRMInvoivce.ClientId, new SelectList(Model.lstCRMclient, "Value", "Text"), "Select Client", htmlAttributes: new { id = "ddlclientlist", @class = "input100" })
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(model => model.ObjCRMInvoivce.InvoiceNumber) : @Model.ObjCRMInvoivce.InvoiceNumber
+            </div>
+        </div>
+        <div class="multisteps-form__content" style="display:flex;">
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.ObjCRMInvoivce.InvoiceDate, "{0:MM/dd/yyyy}", new { @class = "input100 datepicker", @id = "dtInvoiceDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Invoice Date" })
+                @Html.TextBoxFor(model => model.ObjCRMInvoivce.Reference, new { @class = "input100", placeholder = "Reference" })
+            </div>
+            <div class="col-sm-6">
+                @Html.TextBoxFor(model => model.ObjCRMInvoivce.InvoiceDueDate, "{0:MM/dd/yyyy}", new { @class = "input100 datepicker", @id = "dtInvoiceDueDate", @readonly = "readonly", @autocomplete = "off", placeholder = "Invoice Due Date" })
+                @Html.TextBoxFor(model => model.ObjCRMInvoivce.GSTNumber, new { @class = "input100", placeholder = "GST Number" })
+            </div>
+        </div>
+        <br />
+        <div class="button-row d-flex mt-4">
+            <button type="button" id="btnReplySubmit" class="btn btn-primary ml-auto js-btn-next"> Save Changes</button>
+        </div>
+        <br />
+    </div>
+    <br />
+    <br />
+
+    <div id="dvClientInvoice" style="display:none;">
+
+        @Html.Partial("~/Views/Invoice/_InvoiceList.cshtml", Model)
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#dtInvoiceDate').datepicker({
+            format: 'mm/dd/yyyy',
+            showWeek: true
+        });
+        $('#dtInvoiceDueDate').datepicker({
+            format: 'mm/dd/yyyy',
+            showWeek: true
+        });
+    });
+</script>

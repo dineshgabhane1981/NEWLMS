@@ -216,6 +216,7 @@
     <Compile Include="ViewModel\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModel\CRMClientViewModel.cs" />
     <Compile Include="ViewModel\CRMDocumentsViewModel.cs" />
+    <Compile Include="ViewModel\CRMInvoiceViewModel.cs" />
     <Compile Include="ViewModel\CRMNotesViewModel.cs" />
     <Compile Include="ViewModel\CRMUserViewModel.cs" />
     <Compile Include="ViewModel\CurriculumActivities.cs" />
@@ -910,6 +911,7 @@
     <Content Include="Views\AdminSettings\_ManageUser.cshtml" />
     <Content Include="Views\AdminSettings\_UpdateStages.cshtml" />
     <Content Include="Views\Documents\_documentList.cshtml" />
+    <Content Include="Views\Invoice\_InvoiceList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
