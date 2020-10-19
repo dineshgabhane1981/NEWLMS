@@ -25,5 +25,7 @@ namespace LMSBL.DBModels.CRMNew
         public bool? isLMS { get; set; }
 
         public int? TenantId { get; set; }
+
+        public string Address { get; set; }
     }
 }

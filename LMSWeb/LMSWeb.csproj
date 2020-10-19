@@ -67,6 +67,12 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="IronPdf, Version=2020.10.3.0, Culture=neutral, PublicKeyToken=94e1c31412563c75, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPdf.2020.10.3.3\lib\net45\IronPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPdf.Assets.Rendering.Windows, Version=18.0.0.0, Culture=neutral, PublicKeyToken=94e1c31412563c75, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iron.Assets.Rendering.Windows.20.0.0\lib\net40\IronPdf.Assets.Rendering.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
     </Reference>
@@ -234,7 +240,12 @@
   <ItemGroup>
     <Content Include="assets\BodyImages\5.jpeg" />
     <Content Include="assets\BodyImages\appbg.jpeg" />
+    <Content Include="assets\CRM\bootstrap.min.css" />
     <Content Include="assets\CRM\bootstrap.min.js" />
+    <Content Include="assets\CRM\DateFormat.js" />
+    <Content Include="assets\CRM\font-awesome.min.css" />
+    <Content Include="assets\CRM\googlefonts.css" />
+    <Content Include="assets\CRM\jquery.dataTables.min.css" />
     <Content Include="assets\CRM\jquery.min.js" />
     <Content Include="assets\CRM\main.js" />
     <Content Include="assets\CRM\popper.js" />
@@ -259,7 +270,6 @@
     <Content Include="assets\images\details_open.png" />
     <Content Include="assets\images\favicon.ico" />
     <Content Include="assets\images\Logiciel_Logo.png" />
-    <Content Include="assets\images\PotentialClient.jpg" />
     <Content Include="assets\images\rt_logo.png" />
     <Content Include="assets\images\course.png" />
     <Content Include="assets\images\gettyimages-157318827-2048x2048.jpg" />
@@ -914,6 +924,8 @@
     <Content Include="Views\Documents\_documentList.cshtml" />
     <Content Include="Views\AdminSettings\_UserProfile.cshtml" />
     <Content Include="Views\Invoice\_InvoiceList.cshtml" />
+    <Content Include="Views\Invoice\_DownloadInvoice.cshtml" />
+    <Content Include="Views\Invoice\DownloadInvoice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

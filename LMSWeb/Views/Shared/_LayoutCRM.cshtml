@@ -34,45 +34,50 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 
-    <script src="~/assets/SweetAlert.js"></script>
-<style>
-    #loader {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        opacity: 1;
-        z-index: 1021;
-        background: rgba(255, 255, 255, .7);
-    }
-    .loader-inner {
-        width: 100px;
-        height: 100px;
-        border-radius: 100%;
-        position: relative;
-        margin: auto;
-    }
 
-    .loader-inner:before,
-    .loader-inner:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 100%;
-        border: 10px solid transparent;
-        border-top-color: #365229;
-    }
-    .loader-inner:before {
-        z-index: 100;
-        animation: spinner-border 1s infinite;
-    }
-    .loader-inner:after {
-        border: 10px solid #c8d092;       
-    }
-</style>
+    <script src="~/assets/CRM/DateFormat.js"></script>
+    <script src="~/assets/SweetAlert.js"></script>
+    <style>
+        #loader {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            opacity: 1;
+            z-index: 1021;
+            background: rgba(255, 255, 255, .7);
+        }
+
+        .loader-inner {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            position: relative;
+            margin: auto;
+        }
+
+            .loader-inner:before,
+            .loader-inner:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+                border: 10px solid transparent;
+                border-top-color: #365229;
+            }
+
+            .loader-inner:before {
+                z-index: 100;
+                animation: spinner-border 1s infinite;
+            }
+
+            .loader-inner:after {
+                border: 10px solid #c8d092;
+            }
+    </style>
 </head>
 <body>
     @{

@@ -69,8 +69,8 @@
                                         <h5 class="multisteps-form__title">Personal Info</h5>
                                         <div class="multisteps-form__content" style="display:flex;">
                                             <div class="col-sm-6">
-                                                @Html.DropDownListFor(model => model.ObjCRMUser.VisaCountry, new SelectList(Model.VisaCountriesList, "Value", "Text"), "Visa Country", htmlAttributes: new { @class = "input150" })
-                                                @Html.TextBoxFor(model => model.ObjCRMUser.Title, new { @class = "input150", placeholder = "Title" })
+                                                @Html.DropDownListFor(model => model.ObjCRMUser.VisaCountry, new SelectList(Model.VisaCountriesList, "Value", "Text"), "Visa Country", htmlAttributes: new { @class = "input150", tabindex = 1 })
+                                                @Html.TextBoxFor(model => model.ObjCRMUser.Title, new { @class = "input150", placeholder = "Title", tabindex = 3 })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.MiddleName, new { @class = "input150", placeholder = "Middle Name" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.OtherName, new { @class = "input150", placeholder = "Other Name" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.Email, new { @class = "input150", placeholder = "Email" })
@@ -84,8 +84,8 @@
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.Occupation, new { @class = "input150", placeholder = "Occupation" })
                                             </div>
                                             <div class="col-sm-6">
-                                                @Html.TextBoxFor(model => model.ObjCRMUser.FirstName, new { @class = "input150", placeholder = "First Name" })
-                                                @Html.TextBoxFor(model => model.ObjCRMUser.LastName, new { @class = "input150", placeholder = "Last Name" })
+                                                @Html.TextBoxFor(model => model.ObjCRMUser.FirstName, new { @class = "input150", placeholder = "First Name",tabindex = 2 })
+                                                @Html.TextBoxFor(model => model.ObjCRMUser.LastName, new { @class = "input150", placeholder = "Last Name", tabindex = 4 })
                                                 @Html.DropDownListFor(model => model.ObjCRMUser.Gender, Model.Gender(), "Select Gender", htmlAttributes: new { @class = "input150" })
                                                 @Html.DropDownListFor(model => model.ObjCRMUser.CountryResideIn, new SelectList(Model.UserCountryList, "Value", "Text"), "Country Reside in", htmlAttributes: new { @class = "input150" })
                                                 @Html.TextBoxFor(model => model.ObjCRMUser.AlternateEmail, new { @class = "input150", placeholder = "Alternate Email" })

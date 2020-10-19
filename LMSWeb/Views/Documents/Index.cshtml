@@ -93,12 +93,10 @@
             error: function (response) {
                 console.log(response.responseText)
                 if (response.responseText == "True") {
-                    toastr.success("Document Link Saved");
-                    $("#divLoader").hide();
+                    toastr.success("Document Link Saved");                    
                 }
                 else {
-                    toastr.error('error occured while saving Document Link');
-                    $("#divLoader").hide();
+                    toastr.error('error occured while saving Document Link');                    
                 }
                 $("#divLoader").hide();
             }
