@@ -676,7 +676,15 @@ namespace LMSBL.Repository
             return result;
         }
 
-
+        public tblCRMClient GetClientDetails(int ClientId)
+        {
+            tblCRMClient objCRMClient = new tblCRMClient();
+            using (var context = new CRMContext())
+            {
+                objCRMClient = context.tblCRMClients.FirstOrDefault(a => a.ClientID == ClientId);
+            }
+            return objCRMClient;
+        }
 
     }
 }

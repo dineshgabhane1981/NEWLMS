@@ -18,9 +18,6 @@ namespace LMSBL.DBModels.CRMNew
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ItemId { get; set; }
 
-        [StringLength(250)]
-        public string ItemName { get; set; }
-
         public string ItemDescription { get; set; }
 
         [Column(TypeName = "numeric")]

@@ -1,0 +1,75 @@
+﻿@model LMSWeb.ViewModel.CRMInvoiceViewModel
+@{
+    ViewBag.Title = "DownloadInvoice";
+    Layout = "~/Views/Shared/_LayoutCRM.cshtml";
+}
+
+    <div class="multisteps-form__panel shadow p-4 list-box bg-white" data-animation="scaleIn">
+
+        <hr />
+        <h5 class="multisteps-form__title" style="text-align:center;">Invoice</h5>
+        <hr />
+        <div class="row">
+            <div class="col-8">
+                @if (Model.ObjCRMInvoivce.Status == "Draft")
+                {
+                    <h5 class="multisteps-form__title" style="padding-left:50px;padding-top:50px;">Draft Invoice</h5>
+
+                }
+                else
+                {
+                    <h5 class="multisteps-form__title" style="padding-left:50px;padding-top:50px;">Invoice</h5>
+
+                }
+            </div>
+            <div class="col-4" style="padding-top:30px;"><img width="80%" src="~/assets/images/Logiciel_Logo.png" /></div>
+        </div>
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-3">To</div>
+            <div class="col-3">@Model.ObjCRMUser.FirstName @Model.ObjCRMUser.FirstName</div>
+            <div class="col-2" style="text-align:end;">From</div>
+            <div class="col-4">@Model.ObjCRMClient.ClientName <br /> @Model.ObjCRMClient.Address</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Invoice Number</div>
+            <div class="col-3">@Model.ObjCRMInvoivce.InvoiceNumber</div>
+            <div class="col-2"></div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-3">GST Number</div>
+            <div class="col-3">@Model.ObjCRMInvoivce.GSTNumber</div>
+            <div class="col-2"></div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-3">Issued Date</div>
+            @if (!string.IsNullOrEmpty(Convert.ToString(Model.ObjCRMInvoivce.InvoiceDate)))
+            {
+                <div class="col-3"> @Convert.ToDateTime(Model.ObjCRMInvoivce.InvoiceDate).ToString("MMM-dd-yyyy")</div>
+            }
+            else
+            {
+                <div class="col-3"></div>
+            }
+            <div class="col-2"></div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-3">Due Date</div>
+            @if (!string.IsNullOrEmpty(Convert.ToString(Model.ObjCRMInvoivce.InvoiceDueDate)))
+            {
+                <div class="col-3"> @Convert.ToDateTime(Model.ObjCRMInvoivce.InvoiceDueDate).ToString("MMM-dd-yyyy")</div>
+            }
+            else
+            {
+                <div class="col-3"></div>
+            }
+            <div class="col-2"></div>
+            <div class="col-4"></div>
+        </div>
+        <hr />
+
+    </div>

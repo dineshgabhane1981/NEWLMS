@@ -13,7 +13,6 @@ namespace LMSBL.DBModels.CRMNew
 
         public int ClientId { get; set; }
 
-        [Display(Name = "Invoice Number")]
         [StringLength(50)]
         public string InvoiceNumber { get; set; }
 
@@ -26,6 +25,9 @@ namespace LMSBL.DBModels.CRMNew
 
         [StringLength(50)]
         public string GSTNumber { get; set; }
+
+        [StringLength(50)]
+        public string InvoiceCurrency { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal? SubTotal { get; set; }
