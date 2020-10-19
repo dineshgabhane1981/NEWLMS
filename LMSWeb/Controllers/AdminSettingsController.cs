@@ -22,6 +22,7 @@ namespace LMSWeb.Controllers
         TenantRepository tr = new TenantRepository();
         Exceptions newException = new Exceptions();
         CRMRepository cr = new CRMRepository();
+        CRMUsersRepository cur = new CRMUsersRepository();
         // GET: AdminSettings
         public ActionResult Index()
         {
@@ -33,8 +34,7 @@ namespace LMSWeb.Controllers
             userDetails = ur.GetUserById(model.UserId);
             TblUser objEditData = new TblUser();
             objEditData = userDetails[0];
-            objEditData.UserRoles = rr.GetAllRoles();
-            //objEditData.Tenants = tr.GetAllTenants();
+            objEditData.UserRoles = rr.GetAllRoles();            
             objEditData.IsMyProfile = true;
             List<tblCRMClient> clientdetails = new List<tblCRMClient>();
             clientdetails = cr.GetClientById(Convert.ToInt32(model.CRMClientId));
@@ -42,7 +42,15 @@ namespace LMSWeb.Controllers
             objcrmclient = clientdetails[0];
             objuserviewmodel.objtblCRMClient = objcrmclient;
             objuserviewmodel.objtbluser = objEditData;
+            List<tblCRMClientStage> stagesdetails = new List<tblCRMClientStage>();
+            List<tblCRMClientSubStage> substagesdetails = new List<tblCRMClientSubStage>();
+            stagesdetails = cur.GetCRMClientStages(Convert.ToInt32(model.CRMClientId));
+            substagesdetails = cur.GetCRMClientSubStagesAll(Convert.ToInt32(model.CRMClientId));
+            objuserviewmodel.lstCRMClientStage = stagesdetails;
+            objuserviewmodel.lstCRMClientSubStage = substagesdetails;
             return View("Index", objuserviewmodel);
+
+            
 
 
         }
@@ -108,5 +116,13 @@ namespace LMSWeb.Controllers
 
                return View("Index", objUserviewmodel.objtbluser);
             }
+
+        public bool UpdateStages(TblUserViewModel objuserviewmodel,string id)
+        {
+            TblUser sessionUser = (TblUser)Session["UserSession"];
+            var status = cur.UpdateStageName(Convert.ToInt32(sessionUser.CRMClientId), objuserviewmodel.objtblCRMClientStage.StageName, objuserviewmodel.objtblCRMClientStage.StageId);
+            
+            return status;
+        }
         }
     }

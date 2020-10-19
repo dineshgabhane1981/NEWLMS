@@ -1,30 +1,82 @@
-﻿@model LMSWeb.ViewModel.CRMClientStagesViewModel
+﻿@model LMSWeb.ViewModel.TblUserViewModel
 <style>
-    
 </style>
-<div id="dvUpdateStages">
+@using (Html.BeginForm("UpdateStages", "AdminSettings", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmupdatestages", @class = "multisteps-form__form" }))
+    {
+<div>
     <h1> Update changes</h1>
     <div class="col-md-8 profile-details list-box" style="padding-left:20px;">
         <div class="row pt-5 pl-4">
             <div class="col-sm-12 col-lg-6">
                 <h4 class="mb-4">Stages</h4>
-                @*@Html.HiddenFor(model => model.objtbluser.UserId)
-                    @Html.HiddenFor(model => model.objtbluser.TenantId)
-                    @Html.HiddenFor(model => model.objtbluser.RoleId)
-                    @Html.HiddenFor(model => model.objtbluser.IsMyProfile)*@
-                @Html.TextBoxFor(model => model.objtblCRMClientStage.StageName, new { @class = "input100", placeholder = "First Name" })
+                <div class="form-group">
+                    <table style="text-align:left; margin-bottom:10px;">
+                        <tr>
+                            @Html.HiddenFor(model => model.objtblCRMClientStage.StageId)
+                            @foreach (var item in Model.lstCRMClientStage)
+                            {
+                                var idStage = "txtStageId" + item.StageId;
+                                <tr>
 
+                                <td>
+                                
+                                    @Html.TextBoxFor(modelItem => item.StageName, new {id= idStage, @class = "input100" })
+                                 </td>
+                                 </tr>
 
-            </div>
-            <div class="col-sm-12 col-lg-6">
-                <h4 class="mb-4">Sub Stages</h4>
-                @Html.TextBoxFor(model => model.objtblCRMClientSubStage.SubStageName, new { @class = "input100", placeholder = "First Name" })
+                            }
+                        
+                        </table>
+                        <h4 class="mb-4">Sub Stages</h4>
+                        <div>
+                            <table>
 
-            </div>
-            <div class="row justify-content-end pr-4">
-                <button type="button" id="btnUsersubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
-                <button type="button" onclick="location.href='@Url.Action("Index", "Home")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+                                @foreach (var item1 in Model.lstCRMClientSubStage)
+                                {
+                                    
+                                    <tr>
+                                        <td>
+
+                                            @Html.TextBoxFor(modelItem => item1.SubStageName, new { @class = "input100" })
+                                        </td>
+                                        <td colspan="3">
+                                            @functions {
+                                                bool getHtmlAttributes(bool? isChecked)
+                                                {
+                                                    if (isChecked != null)
+                                                    {
+                                                        return true;
+                                                    }
+                                                    else
+                                                    {
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+
+                                            @Html.CheckBox("IsActive", @getHtmlAttributes(item1.IsActive), new { @class = "" })
+
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-12 col-lg-6">
+
+                </div>
+
+                <div class="row justify-content-end pr-4">
+                    <button type="button" id="btnUpdateStagesubmit" class="btn btn-primary profle-submit-btn mr-4"><img src="~/assets/images/check-img.png" /> Save Changes</button>
+                    <button type="button" onclick="location.href='@Url.Action("Index", "Home")';return false;" class="btn btn-outline-primary cancel-btn"><i class="far fa-times-circle"></i> Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+     }
+    <script>
+        
+
+    </script>
