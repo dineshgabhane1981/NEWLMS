@@ -11,6 +11,7 @@ using System.Net;
 using System.Collections;
 using LMSWeb.ViewModel;
 using LMSBL.DBModels.CRMNew;
+using System.Web.Script.Serialization;
 
 namespace LMSWeb.Controllers
 {
@@ -117,11 +118,25 @@ namespace LMSWeb.Controllers
                return View("Index", objUserviewmodel.objtbluser);
             }
 
-        public bool UpdateStages(TblUserViewModel objuserviewmodel,string id)
+        public bool UpdateStages(List<tblCRMClientStage> objlist)
         {
-            TblUser sessionUser = (TblUser)Session["UserSession"];
-            var status = cur.UpdateStageName(Convert.ToInt32(sessionUser.CRMClientId), objuserviewmodel.objtblCRMClientStage.StageName, objuserviewmodel.objtblCRMClientStage.StageId);
-            
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            json_serializer.MaxJsonLength = int.MaxValue;
+           // object[] objInvoiceData = (object[])json_serializer.DeserializeObject(objlist.JsonData);
+            List<tblCRMClientStage> lstcrmclientstage = new List<tblCRMClientStage>();
+            //foreach (Dictionary<string, object> item in objInvoiceData)
+            //{
+            //    tblCRMClientStage InvoiveItem = new tblCRMClientStage();
+            //    //InvoiveItem.ItemDescription = Convert.ToString(item["ItemDesc"]);
+            //    //InvoiveItem.Price = Convert.ToDecimal(item["ItemPrice"]);
+            //    //InvoiveItem.Amount = Convert.ToDecimal(item["ItemAmount"]);
+            //    //lstcrmclientstage.Add(InvoiveItem);
+            //}
+
+
+            //TblUser sessionUser = (TblUser)Session["UserSession"];
+            //var status = cur.UpdateStageName(Convert.ToInt32(sessionUser.CRMClientId), objuserviewmodel.objtblCRMClientStage.StageName, objuserviewmodel.objtblCRMClientStage.StageId);
+            var status = true;
             return status;
         }
         }

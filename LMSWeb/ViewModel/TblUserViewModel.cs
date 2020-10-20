@@ -21,6 +21,7 @@ namespace LMSWeb.ViewModel
 
         public List<tblCRMClientStage> lstCRMClientStage { get; set; }
         public List<tblCRMClientSubStage> lstCRMClientSubStage { get; set; }
+        public string JsonData { get; set; }
 
     }
 }

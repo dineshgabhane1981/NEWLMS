@@ -12,17 +12,19 @@
                 <div class="form-group">
                     <table style="text-align:left; margin-bottom:10px;">
                         <tr>
-                            @Html.HiddenFor(model => model.objtblCRMClientStage.StageId)
+                            @Html.HiddenFor(model => model.JsonData)
+                            @Html.HiddenFor(model => model.objtblCRMClientStage.StageId,new { @id="hdfid"})
                             @foreach (var item in Model.lstCRMClientStage)
                             {
-                                var idStage = "txtStageId" + item.StageId;
-                                <tr>
+                                var idStage = "txtStagename" + item.StageId;
+                        <tr>
 
                                 <td>
-                                
-                                    @Html.TextBoxFor(modelItem => item.StageName, new {id= idStage, @class = "input100" })
-                                 </td>
-                                 </tr>
+                                    @*onkeyup="durationFormat(this)"*@
+                                    @*@Html.TextBoxFor(modelItem => item.StageName, new {id= idStage, @class = "input100" })*@
+                                    <input type="text" name="@item.StageId" class="input100" id= "idStagetxt" value="@item.StageName "   />
+                                </td>
+                           </tr>
 
                             }
                         

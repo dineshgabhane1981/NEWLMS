@@ -87,21 +87,28 @@
             });
 
         });
-
+        
         function UpdateStagesToDB() {
-            var data = $('#frmupdatestages').serialize();
-           // console.log(data);
-            var ID = {};
-           //  ID = $('#txtstagename').val();
-            var stage = '1';
-            var currentstage = '2'
-            console.log(ID);
+
+            var firstname = [];
+            $("#dvUpdateStages input[id^='idStagetxt']").each(function () {
+               // var updatestring = $(this).val();
+                firstname.push($(this).val());               
+                
+            });
+            console.log(firstname);
+           
+                   
+            console.log(document.getElementById("JsonData").value);
+
+            var data = $("#JsonData").val(JSON.stringify(firstname));  
+            console.log(data);
             $.ajax({
                 type: "POST",
                 url: "/AdminSettings/UpdateStages",
                // data: '{id: "' + ID + '",stage: "' + stage + '",currentstage: "' + currentstage + '" }',
                 //data: '{fDate: "' + fDate + '",tDate: "' + tDate + '",ReportName: "LearningCompletionReport" }',
-                data:data,
+                data: data,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -115,6 +122,8 @@
                    
                 }
             });
+           
+
         }
         function UpdateToDB() {
             
@@ -129,9 +138,7 @@
                         console.log(data)
                         if (data == "True") {
                             toastr.success("user Updated");
-                            //console.log(sucess);
-
-                        }
+                            }
                         else {
                             toastr.error('error occured while adding data');
 
