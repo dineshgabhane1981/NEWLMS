@@ -25,7 +25,8 @@ namespace LMSWeb.Controllers
                 var model = (TblUser)Session["UserSession"];
                 if (model.RoleId == 1)
                 {
-                    return View();
+                    //return View();
+                    return View("Index");
                 }
                 if (model.RoleId == 2)
                 {
@@ -35,11 +36,11 @@ namespace LMSWeb.Controllers
                     return View("AdminHome", adminHomeViewModel);
                 }
                 if (model.RoleId == 3)
-                {                   
+                {
                     HomeViewModel homeViewModel = new HomeViewModel();
                     homeViewModel.lstActivities = hm.GetAllLearnerActivities(model.TenantId, model.UserId, "Total");
-                    homeViewModel.TotalCount = homeViewModel.lstActivities.Count;                    
-                    homeViewModel.CompletedCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus== "Completed");
+                    homeViewModel.TotalCount = homeViewModel.lstActivities.Count;
+                    homeViewModel.CompletedCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus == "Completed");
                     homeViewModel.InProgressCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus == "InProgress");
                     homeViewModel.NotStartedCount = homeViewModel.lstActivities.Count(p => p.ActivityStatus == "Not Started");
 
@@ -49,6 +50,7 @@ namespace LMSWeb.Controllers
 
 
                     return View("LearnerHome", homeViewModel);
+                    //return View("Index");
                 }                
             }
             catch (Exception ex)
