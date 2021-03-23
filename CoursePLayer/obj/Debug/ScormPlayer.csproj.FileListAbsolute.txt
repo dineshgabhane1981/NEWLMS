@@ -171,8 +171,8 @@ C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\bin\System.Data.SqlServerCe.
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\bin\System.Data.SQLite.dll
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\bin\Mono.Security.dll
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\bin\Elmah.xml
+C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\ScormPlayer.csprojAssemblyReference.cache
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\ScormPlayer.csproj.CoreCompileInputs.cache
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\ScormPlayer.csproj.CopyComplete
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\CoursePlayer.dll
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\CoursePlayer.pdb
-C:\Users\ROHAN\Documents\GitHub\NEWLMS\CoursePLayer\obj\Debug\ScormPlayer.csprojAssemblyReference.cache

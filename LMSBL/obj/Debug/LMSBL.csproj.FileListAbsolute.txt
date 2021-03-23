@@ -139,8 +139,8 @@ C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\bin\Debug\EntityFramework.SqlServer
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\bin\Debug\ICSharpCode.SharpZipLib.pdb
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\bin\Debug\ICSharpCode.SharpZipLib.xml
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\bin\Debug\System.Web.Mvc.xml
+C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.csprojAssemblyReference.cache
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.csproj.CoreCompileInputs.cache
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.csproj.CopyComplete
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.dll
 C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.pdb
-C:\Users\ROHAN\Documents\GitHub\NEWLMS\LMSBL\obj\Debug\LMSBL.csprojAssemblyReference.cache
