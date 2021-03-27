@@ -1,7 +1,9 @@
-﻿<footer class="footer">
-    <div class="container-fluid">
-        <nav class="float-left">
-            <ul>
+﻿    <div class="container-fluid">
+        <div class="copyright float-left">
+            <span class="text-muted">&copy; 2020 Logiciel Softtech Pvt. Ltd.</span>
+        </div>
+        <nav class="float-right">
+            @*<ul>
                 <li>
                     <a href="https://www.creative-tim.com">
                         Creative Tim
@@ -22,14 +24,10 @@
                         Licenses
                     </a>
                 </li>
+            </ul>*@
+            <ul>
+                <li><a href="@Url.Action("TermsAndConditions", "Home")" target="_blank">Terms & Conditions</a></li>
+                <li><a href="http://www.logicieltech.com/#about" target="_blank">About us</a></li>
             </ul>
         </nav>
-        <div class="copyright float-right">
-            &copy;
-            <script>
-                            document.write(new Date().getFullYear())
-            </script>, made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
-        </div>
     </div>
-</footer>

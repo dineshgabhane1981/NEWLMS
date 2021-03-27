@@ -240,6 +240,7 @@
     <Content Include="assets\img\faces\marc.jpg" />
     <Content Include="assets\img\favicon.png" />
     <Content Include="assets\img\Logiciel_Logo.png" />
+    <Content Include="assets\img\login-btn-img.png" />
     <Content Include="assets\img\mask.png" />
     <Content Include="assets\img\new_logo.png" />
     <Content Include="assets\img\sidebar-1.jpg" />

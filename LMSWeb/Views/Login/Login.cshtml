@@ -1,7 +1,7 @@
 ﻿@model LMSBL.DBModels.TblUser
 @{
     Layout = null;
-    var logo = "../assets/img/rt_logo.png";
+    var logo = "../assets/img/Logicial_logo.png";
     if (!string.IsNullOrEmpty(Model.TenantLogo))
     {
         logo = Model.TenantLogo;
@@ -55,7 +55,7 @@
             <a href="@Url.Action("ResetPassword", "Login")"><small>Forgot Password?</small></a>
         </div>
                 <div class="mt-3">
-                    <button type="submit" onclick="return CheckRequired();" class="btn btn-primary login-btn"><img src="~/assets/images/login-btn-img.png" /> Login</button>
+                    <button type="submit" onclick="return CheckRequired();" class="btn btn-primary login-btn"><img src="~/assets/img/login-btn-img.png" /> Login</button>
                 </div>
 
             }

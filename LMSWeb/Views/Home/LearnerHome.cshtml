@@ -10,136 +10,127 @@
     var CourseOtherBaseURL = System.Configuration.ConfigurationManager.AppSettings["CourseOtherBaseURL"];
 }
 
-    <div class="container-fluid mt-4 mb-4 pl-4 pr-4">
-
-        <div class="row mb-1">
-            <div class="col">
-                <h4 class="title-color">Recent Announcement</h4>
-            </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h4 class="title-color">Recent Announcement</h4>
         </div>
-        <div class="row">
-            <div class="user-quiz-top-section learning-completion mb-2 mt-3 p-2" style="border-radius: 15px;">
-                <div class="col-12">
-                    <span class="grey-color"></span>
-                    <div style="height:50px;padding-top:15px;">
-                        <h6>@Model.announcement.Title</h6>
+    </div>
+    <div class="alert alert-info">
+        <span>@Model.announcement.Title</span>
+    </div>    
+    <div class="row float-md-right">
+        <a href="@Url.Action("ForumList", "Forum")" class="col no-underline title-color"><span _ngcontent-bah-c19="" class="material-icons icon-image-preview">visibility</span> View All</a>
+    </div>
 
+    <div class="row">
+        <div class="col">
+            <h4 class="title-color">Progress</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Not Started');">
+                <div class="card-header card-header-danger card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">content_copy</i>
+                    </div>
+                    <h3 class="card-title">
+                        @Model.NotStartedCount
+                    </h3>
+                    <p class="card-category">Not Started</p>
+
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        @*<i class="material-icons text-danger">warning</i>
+                            <a href="javascript:;">Get More Space...</a>*@
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mt-2 row text-md-right">
-            <a href="@Url.Action("ForumList", "Forum")" class="col no-underline title-color" ><i class="far fa-eye"></i> View All</a>
-        </div>
-
-        <div class="row mb-1">
-            <div class="col">
-                <h4 class="title-color">Progress</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Not Started');">
-                    <div class="card-header card-header-warning card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">content_copy</i>
-                        </div>
-                        <h3 class="card-title">
-                            @Model.NotStartedCount
-                        </h3>
-                        <p class="card-category">Not Started</p>
-
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('InProgress');">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">content_copy</i>
                     </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            @*<i class="material-icons text-danger">warning</i>
-                        <a href="javascript:;">Get More Space...</a>*@
-                        </div>
+                    <h3 class="card-title">
+                        @Model.InProgressCount
+                    </h3>
+                    <p class="card-category">In Progress</p>
+
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        @*<i class="material-icons text-danger">warning</i>
+                            <a href="javascript:;">Get More Space...</a>*@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('InProgress');">
-                    <div class="card-header card-header-warning card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">content_copy</i>
-                        </div>
-                        <h3 class="card-title">
-                            @Model.InProgressCount
-                        </h3>
-                        <p class="card-category">In Progress</p>
-
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Completed');">
+                <div class="card-header card-header-success card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">content_copy</i>
                     </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            @*<i class="material-icons text-danger">warning</i>
-                        <a href="javascript:;">Get More Space...</a>*@
-                        </div>
+                    <h3 class="card-title">
+                        @Model.CompletedCount
+                    </h3>
+                    <p class="card-category">Completed</p>
+
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        @*<i class="material-icons text-danger">warning</i>
+                            <a href="javascript:;">Get More Space...</a>*@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Completed');">
-                    <div class="card-header card-header-warning card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">content_copy</i>
-                        </div>
-                        <h3 class="card-title">
-                            @Model.CompletedCount
-                        </h3>
-                        <p class="card-category">Completed</p>
-
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Total');">
+                <div class="card-header card-header-info card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">content_copy</i>
                     </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            @*<i class="material-icons text-danger">warning</i>
-                        <a href="javascript:;">Get More Space...</a>*@
-                        </div>
+                    <h3 class="card-title">
+                        @Model.TotalCount
+                    </h3>
+                    <p class="card-category">Total</p>
+
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        @*<i class="material-icons text-danger">warning</i>
+                            <a href="javascript:;">Get More Space...</a>*@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats" style="cursor:pointer;" onclick="FilterResult('Total');">
-                    <div class="card-header card-header-warning card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">content_copy</i>
-                        </div>
-                        <h3 class="card-title">
-                            @Model.TotalCount
-                        </h3>
-                        <p class="card-category">Total</p>
-
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            @*<i class="material-icons text-danger">warning</i>
-                        <a href="javascript:;">Get More Space...</a>*@
-                        </div>
-                    </div>
-                </div>
-            </div>                                   
         </div>
-        <div class="row mb-1" style="margin-top:20px;">
-            <div class="col">
-                <h4 class="title-color">Recent Activities</h4>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4 class="title-color">Recent Activities</h4>
+        </div>
+    </div>
+
+    @*<div class="pt-3 pl-3 pr-3 course-list-container">*@
+    @if (Model != null)
+    {
+        <div class="row" id="dvActivityData">
+
+            @Html.Partial("~/Views/Home/_ActivityData.cshtml", Model.lstActivities)
+
         </div>
 
-        @*<div class="pt-3 pl-3 pr-3 course-list-container">*@
-        @if (Model != null)
-        {
-            <div class="row" id="dvActivityData">
+    }
 
-                @Html.Partial("~/Views/Home/_ActivityData.cshtml", Model.lstActivities)
-
-            </div>
-           
-        }
-
-        <div class="mt-2 row text-right">
-            <a href="@Url.Action("MyAssignments", "Assignment")" class="col no-underline title-color" ><i class="far fa-eye"></i> View All</a>
-        </div>
-        @*<div class="row">
+    <div class="mt-2 row text-right">
+        <a href="@Url.Action("MyAssignments", "Assignment")" class="col no-underline title-color"><span _ngcontent-bah-c19="" class="material-icons icon-image-preview">visibility</span> View All</a>
+    </div>
+    @*<div class="row">
             <div class="col search-container">
                 <i class="fas fa-search"></i>
                 <input class="search-box" type="text" id="txtSearch" placeholder="Search activity..." />
@@ -158,11 +149,11 @@
             @Html.Partial("~/Views/Home/_ActivityData.cshtml", Model.lstActivities)
 
         </div>*@
-        @*<div><a href="http://localhost:7777/LaunchPlayer.aspx?AID=4&LID=8" target="_blank">Test Course Link4</a></div>
+    @*<div><a href="http://localhost:7777/LaunchPlayer.aspx?AID=4&LID=8" target="_blank">Test Course Link4</a></div>
         <div><a href="http://localhost:7777/LaunchPlayer.aspx?AID=1&LID=8" target="_blank">Test Course Link1</a></div>
         <div><a href="http://localhost:7777/LaunchPlayer.aspx?AID=5&LID=8" target="_blank">Test Course Link5</a></div>*@
 
-    </div>
+</div>
 
 @*</div>*@
 <script>
